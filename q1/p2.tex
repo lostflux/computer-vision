@@ -1,0 +1,21 @@
+\begin{problem}
+  In class, we talked about finite-difference approximation
+  to the derivative of the univariate function $f(x)$.
+  Using Taylor polynomial approximations of $f(x + h)$ and $f(x - h)$,
+  we can easily show that \[ f'(x) = \frac{f(x + h) - f(x - h)}{2h} + O(h2), \]
+  so that the derivative can be approximated by convolving
+  a discrete version of $f(x)$ --- a vector of values
+  $(\ldots,\ f(x_{o} - \Delta), f(x_{o}), f(x_{o}+ \Delta), \ldots)$
+  with kernel (1/2, 0, -1/2).
+  This is termed a central difference because its interval is symmetric about a sample point.
+
+  \begin{enumroman}
+    \item Derive a higher order central-difference approximation
+      to $f'(x)$ such that the truncation error tends to zero
+      as $h^4$ instead of $h^2$.
+      \emph{Hint : consider Taylor polynomial approximations of $f(x \pm 2h)$
+        in addition to $f(x \pm h)$}. (7 points)
+    \item What is the corresponding convolution (not correlation!) kernel? (3 points)
+
+  \end{enumroman}
+\end{problem}

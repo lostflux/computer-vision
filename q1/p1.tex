@@ -1,0 +1,50 @@
+
+\begin{problem}
+  The continuous convolution of two functions $f(x)$ and $g(x)$
+  is given as
+  \[
+    (f*g)(x) = \int_{-\infty}^{+\infty} f(y)\ g(x-y)\ \d y.
+  \]
+  \\
+  the Gaussian function at scale is defined as
+  \[
+    G_s(x) = \frac{1}{\sqrt{2\pi s}}\ e^{-\frac{x^2}{2s}},
+  \]
+  and has the property that
+  \[
+    \int_{-\infty}^{+\infty} G_s(x) \d x = 1.
+  \]
+  \\
+  Prove that this class of function satisfies the \emph{semigroup property}
+   --- the convolution of one Gaussian function with another produces a third
+   Gaussian function with scale equal to their sum, i.e.
+   \[
+    (G_{s_1} * G_{s_2})(x) = G_{s_1 + s_2}(x).
+   \]
+\end{problem}
+\newpage
+\begin{Answer}
+  Let \[ G_{\alpha}(x) = \frac{1}{\sqrt{2\pi \alpha}}\ e^{(-\frac{x^2}{2\alpha})}, \quad
+  G_{\beta}(x) = \frac{1}{\sqrt{2\pi \beta}}\ e^{(-\frac{x^2}{2\beta})} \]
+  be Gaussian functions of scale $\alpha$ and $\beta$ respectively.
+  \\
+  Through direct construction, we see that:
+  \begin{align*}
+    (G_{\alpha} * G_{\beta})(x) &= \int_{-\infty}^{+\infty} G_{\alpha}(y)\ G_{\beta}(x-y)\ \d y \\
+      &= \left(\frac{1}{\sqrt{2\pi \alpha}} 
+        \cdot \frac{1}{\sqrt{2\pi \beta}} \right)\ \ 
+        \int_{-\infty}^{+\infty} e^{\left(-\frac{y^2}{2\alpha}\right)}\ \cdot e^{\left(-\frac{(x-y)^2}{2\beta}\right)}\ \d y \\
+      &= \frac{1}{2\pi \sqrt{\alpha \beta}}\ 
+        \int_{-\infty}^{+\infty} e^{ -\frac{y^2}{2\alpha} -\frac{(x-y)^2}{2\beta} }\ \d y \\
+    \text{By integrating, we get: } \\
+    % \\
+    %   &= \frac{1}{2\pi \sqrt{\alpha \beta}}\ \int_{-\infty}^{+\infty} e^{\left( Hy + \frac{x}{2H\beta} \right)^2 - \frac{x^2}{2\beta} - \frac{x^2}{4\beta^2 H^2}}  \d y
+    %   \quad \text{where } H = \sqrt{-\frac{1}{2\alpha} - \frac{1}{2\beta}} \\
+    &= \frac{1}{\sqrt{2^3\pi (\alpha + \beta)}}\left[ e^{-\frac{x^2}{2(\alpha + \beta)} \erf{\frac{\frac{(\alpha + \beta)y}{\alpha \beta} - x}{\beta \sqrt{\frac{2(\alpha + \beta)}{\alpha \beta}}}}  } \right]_{-\infty}^{\infty} \\
+    \\
+    \rlap{\text{$\erf{x}$ is an \emph{even} function, and $\erf{x} = 1$ at $x = \infty$.}} \\
+    &= \frac{1}{\sqrt{2^3\pi (\alpha + \beta)}} \cdot 2 e^{-\frac{x^2}{2(\alpha + \beta)}} \\
+    &= \frac{1}{\sqrt{2\pi (\alpha + \beta)}} \cdot e^{-\frac{x^2}{2(\alpha + \beta)}} \\
+    &= G_{\alpha + \beta}(x).\\
+    \end{align*}
+\end{Answer}
