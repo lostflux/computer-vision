@@ -168,7 +168,9 @@
 % Problem counter
 \newenvironment{problem}[1][]%
 {%
-\stepcounter{problem} \vspace{.2cm} \noindent {\center  \textbf{\\ Problem \arabic{problem}.} \\ } {\textit{#1}}~%
+\stepcounter{problem}
+\addtocounter{section}{1}
+\vspace{.2cm} \noindent {\center  \textbf{\\ Problem \arabic{problem}.} \\ } {\textit{#1}}~%
 }{%
 \vspace{.2cm}%
 }
