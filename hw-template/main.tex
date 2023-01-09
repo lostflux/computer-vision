@@ -1,0 +1,51 @@
+\documentclass[11pt]{amsart}
+
+% Include the macros file from `../common'
+\input{../common/macros.tex}
+
+\pagestyle{fancy}                       % fancy (allow headers, footers)
+\fancyhf{}                              % clear all header/footer settings.
+\cfoot{\thepage}                        % set page-numbers in footer.
+\lhead{\textit{\textbf{ Amittai, S}}}   % set name in header, left.
+\rhead{\textsc{CXX 01:\@Title}}         % set class name in header, right.
+
+\newcounter{problem}
+\setcounter{problem}{0}
+
+\renewcommand{\theenumi}{\alph{enumi}}
+
+\begin{document}
+\setlength{\headheight}{13.0pt}.
+\setlength{\footskip}{13.0pt}.
+\input{cover.tex}
+\bigskip
+
+\noindent 
+\begin{center} {\bf Problems} \end{center}
+
+% PROBLEM 1
+\input{p1.tex}
+
+\newpage
+
+% PROBLEM 2
+\input{p2.tex}
+
+\newpage
+
+% PROBLEM 3
+\input{p3.tex}
+
+% \newpage
+
+% PROBLEM 4
+% \input{problem4.tex}
+
+% \newpage
+
+% PROBLEM 5
+% \input{problem5.tex}
+
+\vfill
+
+\end{document}

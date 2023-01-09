@@ -1,0 +1,54 @@
+
+\begin{problem}
+  In the Rijndael field $F=\F_2[X]/(X^8+X^4+X^3+X+1)$,
+  where bytes are associated to polynomials modulo $X^8+X^4+X^3+X+1$,
+  compute the product $01010010 \cdot 10010010 \in F$.
+  \end{problem}
+  
+  \begin{Answer}
+  
+  We can represent polynomials in $F$ as binary numbers,
+  where the state of each bit (whether $0$ or $1$) represents whether the
+  corresponding power in the polynomial has a factor of $0$ or $1$.
+  
+  \noindent
+  Then:
+  \begin{align*}
+    X^8+X^4+X^3+X+1 &= 100011011
+  \end{align*}
+  
+  \noindent
+  Then, we can perform the multiplication modulo 2:
+  \bigskip
+  \center{}
+  \opmul[displayshiftintermediary=all]{1 0 0 1 0 0 1 0}{0 1 0 1 0 0 1 0}
+  
+  \flushleft{}
+  Shifting back to base $2$, we get:
+  $1 0 1 1 0 0 1 0 0 0 0 1 0 0$
+  
+  \noindent
+  We then need to find this number $\mod 100011011$
+  
+  \center{}
+  $\mod{1 0 1 1 0 0 1 0 0 0 0 1 0 0},{1 0 0 0 1 1 0 1 1}$
+  
+  \begin{tabular}{c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}|c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}c@{\,}}
+    1 & 0 & 0 & 0 & 1 & 1 & 0 & 1 & 1    & 1 & 0 & 1 & 1 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 1 & 0 & 0\\
+      &   &   & 1 & 0 & 0 & 0 & 0 & 0    & 1 & 0 & 0 & 0 & 1 & 1 & 0 & 1 & 1 &.  &.  &.  &.  &. \\
+      &   &   &   &   &   &   &   &      &   &   & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 0 & 0 &.  &.  &. \\
+      &   &   &   &   & 1 & 0 & 0 & 0    &   &   & 1 & 0 & 0 & 0 & 1 & 1 & 0 & 1 & 1 &.  &.  &. \\
+      &   &   &   &   &   &   &   &      &   &   &   & 1 & 1 & 1 & 0 & 0 & 1 & 1 & 1 & 1 &.  &. \\
+      &   &   &   &   &   & 1 & 0 & 0    &   &   &   & 1 & 0 & 0 & 0 & 1 & 1 & 0 & 1 & 1 &.  &. \\
+      &   &   &   &   &   &   &   &      &   &   &   &   & 1 & 1 & 0 & 1 & 0 & 1 & 0 & 0 & 0 &. \\
+      &   &   &   &   &   &   & 1 & 0    &   &   &   &   & 1 & 0 & 0 & 0 & 1 & 1 & 0 & 1 & 1 &. \\
+      &   &   &   &   &   &   &   &      &   &   &   &   &   & 1 & 0 & 1 & 1 & 0 & 0 & 1 & 1 & 0\\
+      &   &   &   &   &   &   &   & 1    &   &   &   &   &   & 1 & 0 & 0 & 0 & 1 & 1 & 0 & 1 & 1\\
+  \hline{}
+      &   &   & 1 & 0 & 1 & 1 & 1 & 1    &   &   &   &   &   &   &   & 1 & 1 & 1 & 1 & 1 & 0 & 1\\
+  \end{tabular}
+  
+  \flushleft{}
+  \noindent
+  Thus, the product in $F$ is $1 1 1 1 1 0 1$
+  \end{Answer}

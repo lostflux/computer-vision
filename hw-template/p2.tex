@@ -1,0 +1,84 @@
+
+\begin{problem}
+  Encrypt the message $001100001010$ using two rounds of SDES and (9 bit) key
+  $111000101$, as explained in lecture.  Show all your steps! \emph{[Hint: After one round, the output is $001010010011$.]}
+  \end{problem}
+  
+  \begin{Answer}
+  \bigskip
+  
+  \newcommand{\perm}[1]{\mathbf{permute}\;(#1)}
+  \newcommand{\xor}[1]{\;\mathbf{xor}\; #1}
+  
+  First, let's define our permutation function:
+  
+  \noindent
+  $\perm{123456} = 12434356$
+  
+  \bigskip
+  \noindent
+  And tables:
+  
+  \centering
+  \begin{tabular}{||c | c | c  | c | c | c ||} 
+  \hline
+    $s_{1}$ & $1$ & $2$ & $s_{2}$ & $1$ & $2$\\
+  \hline
+    000 & 101 & 001 &   & 100 & 101\\
+  \hline
+    001 & 010 & 100 &   & 000 & 011\\
+  \hline
+    010 & 001 & 110 &   & 110 & 000\\
+  \hline
+    011 & 110 & 010 &   & 101 & 111\\
+  \hline
+    100 & 011 & 000 &   & 111 & 110\\
+  \hline
+    101 & 100 & 111 &   & 001 & 010\\
+  \hline
+    110 & 111 & 101 &   & 011 & 001\\
+  \hline
+    111 & 000 & 011 &   & 010 & 100\\
+  \hline
+  \end{tabular}
+  \bigskip
+  \flushleft{}
+  \begin{multicols}{2}
+  \centering{\textsc{Round 1}}
+  
+  \begin{align*}
+  L_{0} &= 001100\\
+  R_{0} &= 001010\\
+  K_{0} &= 11100010\\
+  \perm{R_{0}} &= 00010110\\
+  00010110 \xor K_{0} &= 11110100\\
+  S_{1}(1111) &= 011\\
+  S_{2}(0100) &= 111\\
+  011111 \xor L_{0} &= 010011\\
+  \\
+  L_{1} &\gets R_{0}\\
+  R_{1} &\gets 010011\\
+  \text{\crim{Excryption after 1 round: }} &001010010011\\
+  \end{align*}
+  
+  \bigskip
+  \centering{\textsc{Round 2}}
+  
+  \begin{align*}
+  L_{1} &= 001010\\
+  R_{1} &= 010011\\
+  K_{1} &= 11000101\\
+  \perm{R_{1}} &= 01000011\\
+  01000011 \xor K_{1} &= 10000110\\
+  S_{1}(1000) &= 001\\
+  S_{2}(0110) &= 011\\
+  001011 \xor L_{1} &= 000001\\
+  \\
+  L_{2} &\gets R_{1}\\
+  R_{2} &\gets 000001\\
+  \text{\crim{Excryption after 2 rounds: }} &010011000001\\
+  \end{align*}
+  
+  \end{multicols}
+  
+  \end{Answer}
