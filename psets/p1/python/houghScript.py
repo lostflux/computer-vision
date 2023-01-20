@@ -78,4 +78,3 @@ for file in os.listdir(datadir):
 			print(f"({coords[0]}, {coords[1]}) -> ({coords[2]}, {coords[3]})")
 
 		cv2.imwrite(fname, 255 * img_lines)
-
