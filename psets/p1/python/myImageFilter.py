@@ -3,30 +3,37 @@
 
 from typing import Type
 import numpy as np
+import scipy
 
-NpArray = np.ndarray
+NdArray = np.ndarray
 
-def myImageFilter(img0: NpArray, h: NpArray) -> NpArray:
-	"""This is a function that convolves an image with a filter
+def myImageFilter(img0: NdArray, h: NdArray) -> NdArray:
+	"""
+		This is a function that convolves an image with a filter
 
-	Parameters
-	----------
-		img0: Type(np.array)
-			The image to be filtered
-		h (_type_): _description_
+		Parameters
+		----------
+			img0: NdArray
+				The image to be filtered.
+			h: NdArray
+				The convolution filter.
+
+		Returns
+		-------
+			filtered_image: NdArray
+				The image obtained after applying the filter on the image.
 	"""
 	
 	image_height = img0.shape[0]
 	image_width = img0.shape[1]
 	filter_dims = h.shape
 
-	# pad zeros at the edges of the image.
+	# pad zeros at the edges of the image as appropriate.
 	pad_height, pad_width = map(lambda x: x//2, filter_dims)
 	padded_image = np.pad(img0, ((pad_height, pad_height), (pad_width, pad_width)))
 
-	# create the filtered image and compute values.
+	# compute filtered image..
 	filtered_image = np.zeros((image_height, image_width))
-
 	for row in range(image_height):
 		for column in range(image_width):
 			window_start = (row, column)
@@ -36,20 +43,37 @@ def myImageFilter(img0: NpArray, h: NpArray) -> NpArray:
 
 	return filtered_image
 
-def test_filter() -> None:
-	img = np.array([[1,2,3],[4,5,6],[7,8,9]])
-	h = np.array([[1,1],[1,1]])
-	filtered = myImageFilter(img, h)
+def test_image_filter() -> None:
+	img = np.array([[1,1,1],[1,1,1],[1,1,1]])
+	h = np.array([[0,0,0],[0,1,0],[0,0,0]])
+	h2 = np.array([[1,1,1],[1,1,1],[1,1,1]])
+	h3 = np.array([[1,1],[1,1]])
 
+	for filter in [h, h2, h3]:
+		
+		# filtered = myImageFilter(img, i)
+
+		print(f"""
+			Image: \t\t{[ list(i) for i in img ]}
+			Filter: \t{[ list(j) for j in filter] }
+			Result: \t{[ list(j) for j in myImageFilter(img, filter) ]}
+			NumPy Result: \t{[ list(j) for j in scipy.signal.convolve2d(img, filter, mode="same") ]}
+		""")
+
+	# assert np.allclose(filtered, np.array([[2.0, 2.0, -2.0], [5.0, 2.0, -5.0], [8.0, 2.0, -8.0]]))
+
+	# generate 1000 x 1000 numpy array containing random numbers between 0 and 1.
+	img = np.random.rand(1000, 1000)
+
+	# create a 3x3 filter with all 1s.
+	h = np.ones((3,3))
+	print(f"h: {h}")
 	print(f"""
-		Image: \t\t{[ list(i) for i in img ]}
-		Filter: \t{[ list(i) for i in h] }
-		Expected: \t[[1,3,5],[5,12,16],[11,24,28]]
-		Actual: \t{[ list(i) for i in filtered ]}
+		Result: \n{myImageFilter(img, h)}
+		Numpy Result: \n{scipy.signal.convolve2d(img, h, mode="same")}
+	
 	""")
 
-	assert np.allclose(filtered, np.array([[1,3,5],[5,12,16],[11,24,28]]))
-
 if __name__ == "__main__":
-	test_filter()
+	test_image_filter()
 	
