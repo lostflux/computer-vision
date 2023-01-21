@@ -278,4 +278,5 @@ TSWLatexianTemp*
 # Mac OS X
 *.DS_Store
 
-
+# ignore assignment results
+results
