@@ -10,7 +10,7 @@ NdArray = np.ndarray
 
 from myImageFilter import myImageFilter
 
-def myEdgeFilter(img0: NdArray, sigma: int | float) -> None:
+def myEdgeFilter(img0: NdArray, sigma: int | float) -> NdArray:
 	
 	hsize = 2 * ceil(3 * sigma) + 1
 
@@ -31,23 +31,24 @@ def myEdgeFilter(img0: NdArray, sigma: int | float) -> None:
 
 	image_gradients["xy"] = np.sqrt(image_gradients["x"]**2 + image_gradients["y"]**2)
 
-	thetas = np.arctan2(image_gradients["y"], image_gradients["x"]) % np.pi
-	thetas = normalize(np.rad2deg(thetas))
+	gradient_direction = np.arctan2(image_gradients["y"], image_gradients["x"]) % np.pi
+	gradient_direction = normalize(np.rad2deg(gradient_direction))
 
-	print(f"thetas:\n{thetas}")
+	# print(f"thetas:\n{gradient_direction}")
 
-	for row in range(thetas.shape[0]):
-		for column in range(thetas.shape[1]):
-			gratitude_direction = thetas[row, column]
+	for row in range(gradient_direction.shape[0]):
+		for column in range(gradient_direction.shape[1]):
+			gratitude_direction = gradient_direction[row, column]
 			image_gradients["xy"] = non_max_suppression(image_gradients["xy"], row, column, gratitude_direction)
 
-	print(f"""
-		image: {img0}
-		smooth_image: {smooth_image}
-		image_gradients["x"]: {image_gradients["x"]}
-		image_gradients["y"]: {image_gradients["y"]}
-		image_gradients["xy"]: {image_gradients["xy"]}
-	""")
+	# print(f"""
+	# 	image: {img0}
+	# 	smooth_image: {smooth_image}
+	# 	image_gradients["x"]: {image_gradients["x"]}
+	# 	image_gradients["y"]: {image_gradients["y"]}
+	# 	image_gradients["xy"]: {image_gradients["xy"]}
+	# """)
+	return image_gradients["xy"]
 
 
 def normalize(theta: NdArray) -> NdArray:
@@ -55,57 +56,82 @@ def normalize(theta: NdArray) -> NdArray:
 		Normalize the angles in the array
 		to the nearest 45-degree angle.
 	"""
-	norm = lambda x: np.round(x / 45) * 45
+	norm = lambda x: (np.round(x / 45) * 45) % 180
 	return np.vectorize(norm)(theta)
 
-def non_max_suppression(image: NdArray, row: int, column: int, theta: float) -> NdArray:
+def non_max_suppression(image: NdArray, row: int, column: int, angle: float) -> NdArray:
 	"""
 		Perform non-maximum suppression on the image.
-	"""
 
-	def in_range(direction="row") -> bool:
-		if direction == "row":
-			return row >= 0 and row < image.shape[0]
-		else:
-			return column >= 0 and column < image.shape[1]
+		Parameters
+		----------
+		image : NdArray
+			The image to perform non-maximum suppression on.
+		row : int
+			The row of the pixel to perform non-maximum suppression on.
+		column : int
+			The column of the pixel to perform non-maximum suppression on.
+		angle : float
+			The angle of the gradient at the pixel.
+	"""
 
 	before, after = -inf, -inf
 	current = image[row, column]
 
-	if theta == 0: # E/W
+	if angle == 0:
+		"""
+			. . .
+			x c x
+			. . .
+		"""
 		if column >= 1:
 			before = image[row, column-1]
 		if column < image.shape[1]-1: 
 			after = image[row, column+1]
 
-	elif theta == 45: # NW/SE
+	elif angle == 45:
+		"""
+			x . .
+			. c .
+			. . x
+		"""
 		if row >= 1 and column >= 1:
 			before = image[row-1, column-1]
 		if row < image.shape[0]-1 and column < image.shape[1]-1:
 			after = image[row+1, column+1]
 
-	elif theta == 90: # N/S
+	elif angle == 90:
+		"""
+			. x .
+			. c .
+			. x .
+		"""
 		if row >= 1:
 			before = image[row-1, column]
 		if row < image.shape[0]-1:
 			after = image[row+1, column]
 
-	elif theta == 135: # NE/SW
+	elif angle == 135:
+		"""
+			. . x
+			. c .
+			x . .
+		"""
 		if row >= 1 and column < image.shape[1]-1:
 			before = image[row-1, column+1]
 		if row < image.shape[0]-1 and column >= 1:
 			after = image[row+1, column-1]
 		
-	else: raise ValueError(f"Invalid theta value: {theta}")
+	else: raise ValueError(f"Invalid angle: {angle}")
 				
 	highest = max(before, current, after)
 	if current != highest: image[row, column] = 0
-	print(f"""
-		before: {before}
-		current: {current}
-		after: {after}
-		image[{row}, {column}]: {image[row, column]}
-	""")
+	# print(f"""
+	# 	before: {before}
+	# 	current: {current}
+	# 	after: {after}
+	# 	image[{row}, {column}]: {image[row, column]}
+	# """)
 
 	return image
 

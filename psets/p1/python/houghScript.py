@@ -1,3 +1,6 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import cv2
 import numpy as np
 import os
@@ -21,6 +24,8 @@ for file in os.listdir(datadir):
 	if file.endswith('.jpg'):
 
 		file = os.path.splitext(file)[0]
+
+		print(f"Processing {file}...")
 		
 		# read in images
 		img = cv2.imread('%s/%s.jpg' % (datadir, file))
@@ -78,3 +83,5 @@ for file in os.listdir(datadir):
 			print(f"({coords[0]}, {coords[1]}) -> ({coords[2]}, {coords[3]})")
 
 		cv2.imwrite(fname, 255 * img_lines)
+
+		print(f"Done processing {file}.")
