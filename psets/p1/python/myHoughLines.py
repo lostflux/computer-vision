@@ -17,36 +17,27 @@ def myHoughLines(H: NdArray, num_lines: int) -> Tuple[List, List]:
 	num_lines : int
 		The number of lines to return.
 	"""
-	# first, pick out the n strongest lines
 
-	print(f"H: \n{H}")
-	print(f"H.shape: {H.shape}")
-	height, width = H.shape
-	# raise NotImplementedError
+	rho_count, theta_count = H.shape
+	threshold = 1  							#? 1 = 3x3, 2 = 5x5, 3 = 7x7, etc.
 
-	# rhos, thetas = [], []
-	threshold = 1  # The threshold for adjacent pixels
-
-	for row in range(height):
-		for col in range(width):
-			for adjacent_row in range(-threshold, threshold+1):
-				row_index = row + adjacent_row
-				if 0 <= row_index < H.shape[0]:
-					for adjacent_column in range(-threshold, threshold+1):
-						col_index = col + adjacent_column
-						if 0 <= col_index < H.shape[1]:
-							if H[row_index, col_index] > H[row, col]:
-								H[row, col] = 0
-
-
+	for rho in range(rho_count):
+		for theta in range(theta_count):
+			for adjacent_rho in range(-threshold, threshold+1):
+				rho_index = rho + adjacent_rho
+				if 0 <= rho_index < H.shape[0]:
+					for adjacent_theta in range(-threshold, threshold+1):
+						theta_index = theta + adjacent_theta
+						if 0 <= theta_index < H.shape[1]:
+							if H[rho_index, theta_index] > H[rho, theta]:
+								H[rho, theta] = 0
 
 	rhos, thetas = [], []
-	ind = np.argpartition(H.ravel(), H.size - num_lines)[-num_lines:]
-	ind = np.column_stack(np.unravel_index(ind, H.shape))
-	print(ind)
+	lines = np.argpartition(H.ravel(), H.size - num_lines)[-num_lines:]
+	lines = np.column_stack(np.unravel_index(lines, H.shape))
 	
 	for line in range(num_lines):
-		rhos.append(int(ind[line][0]))
-		thetas.append(int(ind[line][1]))
+		rhos.append(int(lines[line][0]))
+		thetas.append(int(lines[line][1]))
 
 	return rhos, thetas

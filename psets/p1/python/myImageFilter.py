@@ -62,10 +62,7 @@ def test_image_filter() -> None:
 			Result: \t{[ list(j) for j in myImageFilter(img, filter) ]}
 			NumPy Result: \t{[ list(j) for j in scipy.signal.convolve2d(img, filter, mode="same") ]}
 		""")
-
-	# assert np.allclose(filtered, np.array([[2.0, 2.0, -2.0], [5.0, 2.0, -5.0], [8.0, 2.0, -8.0]]))
-
-	# generate 1000 x 1000 numpy array containing random numbers between 0 and 1.
+		
 	img = np.random.rand(1000, 1000)
 
 	# create a 3x3 filter with all 1s.

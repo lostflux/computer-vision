@@ -19,8 +19,9 @@ rhoRes    = 2
 thetaRes  = np.pi / 90
 nLines    = 15
 
-sigma = 3
+sigma = 2
 threshold = 0.3
+rhoRes = 2
 nLines = 30
 # end of parameters
 
@@ -28,6 +29,9 @@ for file in sorted(os.listdir(datadir)):
 	if file.endswith('.jpg'):
 
 		file = os.path.splitext(file)[0]
+
+		if file != 'img09':
+			continue
 
 		print(f"Processing {file}...")
 		
