@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+__author__ = "Amittai Siavava"
+__github__ = "@siavava"
+
 import cv2
 import numpy as np
 import os
