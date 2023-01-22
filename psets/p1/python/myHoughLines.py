@@ -2,41 +2,49 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
-import cv2  # For cv2.dilate function
 
 from typing import Tuple, List
 
 NdArray = np.ndarray
 
-def myHoughLines(H: NdArray, nLines: int) -> Tuple[List, List]:
-	"""This is a function that finds the nLines strongest lines in the Hough
+def myHoughLines(H: NdArray, num_lines: int) -> Tuple[List, List]:
+	"""Find the `n` strongest lines in the Hough accumulator array.
 
-	Args:
-		H {int}: _description_
-		nLines (_type_): _description_
+	Parameters
+	----------
+	H : NdArray
+		The Hough accumulator array.
+	num_lines : int
+		The number of lines to return.
 	"""
-	# YOUR CODE HERE
+	# first, pick out the n strongest lines
+
+	print(f"H: \n{H}")
+	print(f"H.shape: {H.shape}")
+	height, width = H.shape
+	# raise NotImplementedError
+
 	rhos, thetas = [], []
+	threshold = 1  # The threshold for adjacent pixels
 
-	# Create a copy of H
-	# H = np.copy(H)
-	
-	threshold = 2
-	for line_number in range(nLines):
-		line_candidate = np.argmax(H)
-		line_location = np.unravel_index(line_candidate, H.shape)
-		rhos.append(line_location[0])
-		thetas.append(line_location[1])
-		# H[line_location[0], line_location[1]] = 0
-
-		for adjacent_row in range(-threshold, threshold+1):
-			row_index = line_location[0] + adjacent_row
-			if 0 <= row_index < H.shape[0]:
-				for adjacent_column in range(-threshold, threshold+1):
-					if adjacent_row == 0 and adjacent_column == 0:
-						col_index = line_location[1] + adjacent_column
+	for row in range(height):
+		for col in range(width):
+			for adjacent_row in range(-threshold, threshold+1):
+				row_index = row + adjacent_row
+				if 0 <= row_index < H.shape[0]:
+					for adjacent_column in range(-threshold, threshold+1):
+						col_index = col + adjacent_column
 						if 0 <= col_index < H.shape[1]:
-							# do nothing if the point is the line candidate
-							H[row_index, col_index] = 0
+							if H[row_index, col_index] > H[row, col]:
+								H[row, col] = 0
+
+
+	ind = np.argpartition(H.ravel(), H.size - num_lines)[-num_lines:]
+	ind = np.column_stack(np.unravel_index(ind, H.shape))
+	print(ind)
+
+	for x in range(num_lines):
+		rhos.append(int(ind[x][0]))
+		thetas.append(int(ind[x][1]))
 
 	return rhos, thetas

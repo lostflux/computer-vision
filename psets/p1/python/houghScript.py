@@ -20,7 +20,7 @@ thetaRes  = np.pi / 90
 nLines    = 15
 # end of parameters
 
-for file in os.listdir(datadir):
+for file in sorted(os.listdir(datadir)):
 	if file.endswith('.jpg'):
 
 		file = os.path.splitext(file)[0]
@@ -80,7 +80,7 @@ for file in os.listdir(datadir):
 			cv2.line(img_lines, (coords[0], coords[1]), (coords[2], coords[3]), \
 					 (0, 255, 0), 1)
 
-			print(f"({coords[0]}, {coords[1]}) -> ({coords[2]}, {coords[3]})")
+			# print(f"({coords[0]}, {coords[1]}) -> ({coords[2]}, {coords[3]})")
 
 		cv2.imwrite(fname, 255 * img_lines)
 
