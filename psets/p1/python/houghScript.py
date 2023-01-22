@@ -18,6 +18,10 @@ threshold = 0.03
 rhoRes    = 2
 thetaRes  = np.pi / 90
 nLines    = 15
+
+sigma = 3
+threshold = 0.3
+nLines = 30
 # end of parameters
 
 for file in sorted(os.listdir(datadir)):

@@ -1,0 +1,138 @@
+\section{Groups of Prime Order}~\label{sec:prime-order}
+
+Next, let's look at groups of prime order through some motivating theorems.
+
+\begin{theorem}[Lagrange]\label{thm:lagrange}
+  If $G$ is a finite group and $H$ is a subgroup of $G$,
+  then $\abs{H}$ divides $\abs{G}$ and the number of left cosets of $H$
+  in $G$ is equal to $\frac{\abs{H}}{\abs{G}}$.~\cite[p.89, Theorem 8]{DummitFoote}
+\end{theorem}
+
+\begin{proposition}~\label{prop:prime-order-p}
+  If $G$ is a finite group of prime order $p$ then
+  every non-identity element of $G$ has order $p$.
+  
+  \begin{proof}
+    Let $g$ be a non-identity element of $G$, without loss of generality,
+    such that the order of $g$ is $x \in \Z_{\ge 0}$.
+    Then $g^x = \epsilon$.
+    This immediately tells us that $x$ cannot be $1$, since
+    $g$ is clearly not the group is identity.
+    Let $\langle g \rangle$ be the set of all elements $g^i, i \in \Z$.
+    Notice that $\langle g \rangle$ contains \emph{at least} two elements:
+    $g^x = \epsilon$, and $g^1 = g$.
+    Now, for arbitrary powers $n \in \Z$, let $ax + b = n$. Then:
+    \[ g^n = g^{ax + b} = {(g^x)}^a \cdot g^b \epsilon^a \cdot g^b
+       = \epsilon \cdot g^b = g^b \]
+    This tells us that $\langle g \rangle$ has at most $x$ elements.
+    In fact, $\langle g \rangle$ has exactly $x$ elements since we took distinct
+    powers of $g$ and $g^x = \epsilon$ is the smallest power that cycles back to $0$.
+    So;
+    \begin{enumerate}
+      \item The set $\langle g \rangle$ is finite (it has $x$ elements).
+      \item The set $\langle g \rangle$ is closed under the group operation
+        (since the equivalence of every power of $g$ is in the set).
+      \item The set $\langle g \rangle$ contains the identity element.
+    \end{enumerate}
+    Therefore, $\langle g \rangle$ is a group.
+    Remember that we picked $g$ from $G$, and $G$ is itself a group that
+    is closed under the group operation, so $\langle g \rangle \le G$.
+    The first part of Lagrange's theorem tells us that the order of any
+    subgroup $S \le G$ \emph{must} divide the order of $G$.
+    So $x$ must divide $p$, but $p$ is prime so $x = p$.
+    Therefore, the order of the element $g$ is $p$.
+  \end{proof}
+\end{proposition}
+
+\begin{proposition}~\label{prop:n-has-n-cyclic}
+  If a group of order $n$ contains an element of order $n$
+  then the group is cyclic.
+
+  \begin{proof}
+    Let $g \in G$ such that the order of $g$ is $n$.
+    Then $g^n = \epsilon$.
+    Consider the set $\langle g \rangle$.
+    As we saw in Proposition \ref{prop:prime-order-p}, $\langle g \rangle$ is a group
+    of order $n$, and it is contained in $G$.
+    Therefore, $\langle g \rangle = G$ since $G$ has order $n$.
+    Therefore, $G$ is cyclic.
+  \end{proof}
+\end{proposition}
+
+\begin{proposition}~\label{prop:cyclic-same-order-isomorphic}
+  All cyclic groups of a fixed order $n$ are isomorphic.
+
+  \begin{proof}
+    Let $G$ and $H$ be cyclic groups of order $n$.
+    Let $g \in G$ and $h \in H$ be generators.
+    Then the map $\psi: G \to H$ defined by $\psi(g) = h$ is an isomorphism.
+    \begin{align*}
+      \psi(g) &= h \\
+      \psi(g^i) &= \psi \left( \prod_{j=0}^{i-1} g \right)
+                 = \prod_{j=0}^{i-1} \psi(g)
+                 = \prod_{j=0}^{i-1} h
+                 = h^i \\
+      \psi(g^i \cdot g^k) &= \psi(g^{i+k})
+                           = h^{i+k} = h^i \cdot h^k = \psi(g^i) \cdot \psi(g^k)
+    \end{align*}
+    Therefore, the two groups are isomorphic.
+  \end{proof}
+\end{proposition}
+
+
+\begin{proposition}
+  If $G$ is a cyclic group then $G$ is abelian.~\label{prop:cyclic-then-abelian}
+
+  \begin{proof}
+    Let $G$ be a cyclic group of order $p$, with $g \in G$ as a generator.
+    Then every element can be expressed as $g^i$ for some $i \in \{0,1,\ldots,p-1\}$,
+    with powers interpreted as repeated application of the group operation.
+    Let $x \in G$ and $y \in G$ such that $x = g^a$ and $y = g^b$. Then:
+    \begin{align}
+      xy &= g^a \cdot g^b = g^{a+b}  = g^b \cdot g^a = yx
+    \end{align}
+    Therefore, for any $x,y \in G$, $xy = yx$, and $G$ is abelian.
+  \end{proof}
+\end{proposition}
+
+\begin{corollary}~\label{cor:prime-then-abelian}
+  If $G$ is a finite group of prime order, then $G$ abelian.
+  \begin{proof}
+    In combining propositions~\ref{prop:prime-order-p}, \ref{prop:n-has-n-cyclic},
+    \ref{prop:cyclic-same-order-isomorphic}, and \ref{prop:cyclic-then-abelian},
+    we see that any group of prime order has a generating element,
+    and by expressing every element in the group as a power of the generating element,
+    we see that the group operation commutes for all elements.
+    We also see that all groups of a given prime order $p$ are isomorphic.
+    Therefore, every group of prime order is abelian.
+  \end{proof}
+\end{corollary}
+
+\begin{definition}~\label{def:C_n}
+  The cyclic group of order $p$ is denoted as $C_p$ (or $Z_p$,
+  in parallel to the integers $\Z \pmod p$).
+\end{definition}
+
+In summary, we have shown that every group of prime order is
+cyclic and abelian. This tells us that there is only a single
+structure for any groups of a given prime order $p$: the group $C_p$.
+For instance, the only groups of order $2, 3, 5, 7, 11$, and $13$
+are the groups $C_2, C_3, C_5, C_7, C_{11}$, and $C_{13}$ respectively.
+
+\bigskip
+
+\begin{center}
+  \begin{table}[H]
+    \begin{tabular}{ l r r }
+      Order & Group & Isomorphisms \\
+      \midrule
+      $2$ & $C_2$ & $\Z/2\Z$ \\
+      $3$ & $C_3$ & $\Z/3\Z$ \\
+      $5$ & $C_5$ & $\Z/5\Z$ \\
+      $7$ & $C_7$ & $\Z/7\Z$ \\
+      $11$ & $C_{11}$ & $\Z/11\Z$ \\
+      $13$ & $C_{13}$ & $\Z/13\Z$ \\
+    \end{tabular}
+    \caption{Groups of prime order $n \le 15$}~\label{tab:prime-groups}
+  \end{table}
+\end{center}

@@ -153,7 +153,10 @@
 
 % Header BOX
 \newcommand{\PSET}[5]{\handout{#1}{#2}{Prof.\ #3}{Student: #4}{PSET #1}{#5}}
-\newcommand{\quiz}[5]{\handout{#1}{#2}{Prof.\ #3}{Student: #4}{Quiz #1}{#5}}
+
+\newcommand{\homework}[5]{\handout{#1}{#2}{Prof.\ #3}{Student: #4}{Homework assigned #1}{#5}}
+
+\newcommand{\reading}[5]{\handout{#1}{#2}{Prof.\ #3}{Student: #4}{Reading assigned #1}{#5}}
 
 % Credit Statement
 \newcommand{\CreditStatement}[1]{
@@ -165,16 +168,15 @@
   { #1 }
 }
 
-% Problem counter
+% Problem Counter
 \newenvironment{problem}[1][]%
 {%
 \stepcounter{problem}
-\addtocounter{section}{1}
-\vspace{.2cm} \noindent {\center  \textbf{\\ Problem \arabic{problem}.} \\ } {\textit{#1}}~%
+% \setcounter{section}{\value{problem}}
+\vspace{.2cm} \noindent {\center  \textbf{\\ Problem \arabic{problem}.\\}} {\noindent}~%
 }{%
-\vspace{.2cm}%
+% \vspace{.2cm}%
 }
-
 % Package Imports
 \usepackage{amssymb,amsthm,amsmath,amstext}
 \usepackage{mathdots} % for \dots
@@ -200,6 +202,9 @@
 \newcommand{\black}{\textcolor{black}}
 \newcommand{\darkgreen}{\textcolor{DarkOliveGreen}}
 \newcommand{\green}{\textcolor{OliveGreen}}
+
+% Block coloring
+\newenvironment{blockcolor}{\par \color{crimson} {\par}}
 
 % \newcommand{\id}{\mathbf{id}\;}
 
@@ -242,21 +247,16 @@
 
 \newcommand{\cvsubsection}[1]{\subsection*{\hspace{1.45em}#1}}
 
+\usepackage{enumitem}
 
 % enumalph
 \newenvironment{enumalph}{
-  \begin{enumerate}
-  \renewcommand{\labelenumi}{
-    \textnormal{(\alph{enumi})}
-  }
+  \begin{enumerate}[label=(\alph*)]
 }{\end{enumerate}}
 
 % enumroman
 \newenvironment{enumroman}{
-  \begin{enumerate}
-  \renewcommand{\labelenumi}{
-    \textnormal{(\roman{enumi})}
-  }
+  \begin{enumerate}[label=(\roman*)]
 }{\end{enumerate}}
 
 \newenvironment{problab}[1]
@@ -390,5 +390,22 @@
 \def\rightouterjoin{\mathbin{\bowtie\mkern-5.8mu\ojoin}}
 \def\fullouterjoin{\mathbin{\ojoin\mkern-5.8mu\bowtie\mkern-5.8mu\ojoin}}
 
-\def\d{\; \mathrm{d}}
-\newcommand\erf[1]{\; \textbf{erf} \left( #1 \right) }
+\newcounter{problem}
+\setcounter{problem}{0}
+
+\renewcommand{\theenumi}{\alph{enumi}}
+
+\usepackage{MnSymbol}
+\def \backmodels{\leftmodels}
+
+
+\usepackage[english]{cleveref}
+
+\def \vbar{\overline{v}}
+\DeclareRobustCommand\iff{\;\Longleftrightarrow\;}
+\DeclareRobustCommand\lto{\rightarrow}
+\DeclareRobustCommand\backimplies{\Longleftarrow}
+
+\DeclareRobustCommand{\step}{\vspace{0.5em}\noindent}
+
+\DeclareRobustCommand{\set}[1]{\left\{#1\right\}}

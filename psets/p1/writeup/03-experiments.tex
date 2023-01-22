@@ -1,0 +1,27 @@
+\section{Experiments and Results}
+
+\subsection{Design Challenges}
+\begin{enumroman}
+  \item I was not sure if this is a standard change,
+    but \lstinline{scipy.signal.gaussian} seems to have been
+    migrated to \lstinline{scipy.signal.windows.gaussian}
+    in Python 3.11 (see \href{https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.windows.gaussian.html}{here}).
+  \item I spent a few hours debugging my hough transform,
+    only to realize that writing into and reading from
+    an array concurrently was resulting in
+    inaccuracies.
+    Fixing this issue made everything work.
+  \item I also had a bug in my gaussian kernel
+     --- I was resizing the kernel but not normalizing it
+    back to sum up to $1$, which resulted in
+    a lot of spurious and inaccurate lines.
+    This was a definitive fix, but debugging it took a while.
+\end{enumroman}
+
+\subsection{Experiments}
+
+I played around with some of the parameters to see how the results
+are affected.
+I eventually use the 
+
+\subsection{Results}
