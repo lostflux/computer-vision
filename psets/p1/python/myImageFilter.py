@@ -7,7 +7,7 @@ import scipy
 
 NdArray = np.ndarray
 
-def myImageFilter(img0: NdArray, h: NdArray) -> NdArray:
+def myImageFilter(image: NdArray, h: NdArray) -> NdArray:
 	"""
 		This is a function that convolves an image with a filter
 
@@ -24,15 +24,14 @@ def myImageFilter(img0: NdArray, h: NdArray) -> NdArray:
 				The image obtained after applying the filter on the image.
 	"""
 	
-	image_height = img0.shape[0]
-	image_width = img0.shape[1]
+	image_height, image_width = image.shape
 	filter_dims = h.shape
 
-	# pad zeros at the edges of the image as appropriate.
+	#? pad zeros at the edges of the image as appropriate.
 	pad_height, pad_width = map(lambda x: x//2, filter_dims)
-	padded_image = np.pad(img0, ((pad_height, pad_height), (pad_width, pad_width)))
+	padded_image = np.pad(image, ((pad_height, pad_height), (pad_width, pad_width)))
 
-	# compute filtered image..
+	#? compute filtered image...
 	filtered_image = np.zeros((image_height, image_width))
 	for row in range(image_height):
 		for column in range(image_width):
@@ -42,6 +41,10 @@ def myImageFilter(img0: NdArray, h: NdArray) -> NdArray:
 			filtered_image[row, column] = np.sum(window * h)
 
 	return filtered_image
+
+
+
+#####################? TESTS #####################
 
 def test_image_filter() -> None:
 	img = np.array([[1,1,1],[1,1,1],[1,1,1]])
@@ -71,7 +74,6 @@ def test_image_filter() -> None:
 	print(f"""
 		Result: \n{myImageFilter(img, h)}
 		Numpy Result: \n{scipy.signal.convolve2d(img, h, mode="same")}
-	
 	""")
 
 if __name__ == "__main__":

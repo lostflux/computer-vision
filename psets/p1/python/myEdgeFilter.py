@@ -15,13 +15,26 @@ SOBEL_FILTER = {
 }
 
 
-def myEdgeFilter(img0: NdArray, sigma: int | float) -> NdArray:
+def myEdgeFilter(image: NdArray, sigma: int | float) -> NdArray:
 	"""
-	
+		Find edges in an image using the Sobel filter.
+
+		Parameters
+		----------
+		image : NdArray
+			The image to find edges in.
+
+		sigma : int | float
+			The standard deviation of the Gaussian filter.
+
+		Returns
+		-------
+		NdArray
+			The image with edges highlighted.
 	"""
 
 	gaussian_filter = generate_gaussian(sigma)
-	smooth_image = normalized_image(myImageFilter(img0, gaussian_filter))
+	smooth_image = normalized_image(myImageFilter(image, gaussian_filter))
 	image_gradients = {
 		"x": myImageFilter(smooth_image, SOBEL_FILTER["x"]),
 		"y": myImageFilter(smooth_image, SOBEL_FILTER["y"]),
@@ -41,11 +54,8 @@ def myEdgeFilter(img0: NdArray, sigma: int | float) -> NdArray:
 
 	return output
 
-"""
 
-							HELPER METHODS
-
-"""
+###################! HELPER FUNCTIONS ####################
 
 def normalized_image(image: NdArray) -> NdArray:
 	"""

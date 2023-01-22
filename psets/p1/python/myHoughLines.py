@@ -24,7 +24,7 @@ def myHoughLines(H: NdArray, num_lines: int) -> Tuple[List, List]:
 	height, width = H.shape
 	# raise NotImplementedError
 
-	rhos, thetas = [], []
+	# rhos, thetas = [], []
 	threshold = 1  # The threshold for adjacent pixels
 
 	for row in range(height):
@@ -39,12 +39,14 @@ def myHoughLines(H: NdArray, num_lines: int) -> Tuple[List, List]:
 								H[row, col] = 0
 
 
+
+	rhos, thetas = [], []
 	ind = np.argpartition(H.ravel(), H.size - num_lines)[-num_lines:]
 	ind = np.column_stack(np.unravel_index(ind, H.shape))
 	print(ind)
-
-	for x in range(num_lines):
-		rhos.append(int(ind[x][0]))
-		thetas.append(int(ind[x][1]))
+	
+	for line in range(num_lines):
+		rhos.append(int(ind[line][0]))
+		thetas.append(int(ind[line][1]))
 
 	return rhos, thetas
