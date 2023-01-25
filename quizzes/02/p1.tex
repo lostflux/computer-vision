@@ -1,0 +1,57 @@
+\begin{problem}
+  In class, we discussed how, given a windowing function $w(s,t)$,
+  we can use the following \emph{covariance} metric:
+\begin{equation}\label{eq:covariance}
+  E_w(u,v;x,y) = \sum_{s,t} w(s,t) \left[I(x-s+u,y-t+v) - I(x-s,y-t)\right]^2,
+\end{equation}
+in order to identify whether an image patch centered at $(x,y)$ looks like a corner.
+In particular, large values of $E_w$ for all possible displacements
+$(u,v)$ of the window indicate that the patch is a corner.
+
+\step
+Assuming that the displacements $u$ and $v$ are small,
+show that the metric of Equation~\eqref{eq:covariance} can be approximated as:
+\begin{equation}
+  E_w(u,v; x, y) \approx [u, v] \cdot {\calM}_w(x,y) \cdot [u, v]^T,~\label{eq:approx}
+\end{equation}
+where ${\calM}_w(x,y)$ is the \emph{covariance matrix}:
+\begin{align}
+&{\calM}_w(x,y)=\nonumber\\
+&\left[\begin{array}{cc} \sum\limits_{s,t} w(s,t)I_x(x-s,y-t)I_x(x-s,y-t)
+& \sum\limits_{s,t} w(s,t)I_x(x-s,y-t)I_y(x-s,y-t)\\
+\sum\limits_{s,t} w(s,t)I_y(x-s,y-t)I_x(x-s,y-t) &
+\sum\limits_{s,t} w(s,t)I_y(x-s,y-t)I_y(x-s,y-t)
+\end{array}\right].
+\end{align}
+\end{problem}
+\begin{Answer}
+  Since the displacements of $u$ and $v$ are small,
+  consider the first-order Taylor approximation of $I(x-s+u,y-t+v)$ around the point $(x-s, y-t)$.
+  Following the expansion
+  \[ f(x,y) \approx f(a,b) + f_x(a,b)(x-a) + f_y(a,b)(y-b), \]
+  we have:
+  \begin{align}
+    I(x-s+u,y-t+v) &\approx I(x-s,y-t) + I_x(x-s,y-t)u + I_y(x-s,y-t)v ~\label{eq:1.5}
+  \end{align}
+
+  \step
+  Plugging equation ~\eqref{eq:1.5} into equation ~\eqref{eq:covariance} and simplifying,
+  we have:
+  \begin{align}
+    E_w(u,v;x,y) &= \sum_{s,t} w(s,t) \left[\crim{I(x-s+u,y-t+v)} - I(x-s,y-t)\right]^2 \nonumber \\
+    &\approx \sum_{s,t} w(s,t) \left[\crim{I(x-s,y-t) + I_x(x-s,y-t)u + I_y(x-s,y-t)v} - I(x-s,y-t)\right]^2 \nonumber \\
+    &\approx \sum_{s,t} w(s,t) \left[I_x(x-s,y-t)u + I_y(x-s,y-t)v\right]^2 \nonumber \\
+    &\approx \sum_{s,t} w(s,t) \left[\left(I_x(x-s,y-t)u\right)^2 + 2\left(I_x(x-s,y-t) \cdot I_y(x-s,y-t) \cdot uv\right) + \left(I_y(x-s,y-t)v\right)^2\right] \nonumber \\
+    &\approx \sum_{s,t} w(s,t) [u, v]
+      \begin{bmatrix}
+        I_x(x-s,y-t)^2 & I_x(x-s,y-t)I_y(x-s,y-t) \\
+        I_x(x-s,y-t)I_y(x-s,y-t) & I_y(x-s,y-t)^2
+      \end{bmatrix}
+    [u, v]^T ~\label{eq:estimation-derived}
+  \end{align}
+
+  \step
+  Therefore, we can estimate $E_w(u,v; x, y)$ as in equation ~\eqref{eq:estimation-derived},
+  (which is equivalent to equation ~\ref{eq:approx} when the covariance matrix
+  is factored out).
+\end{Answer}

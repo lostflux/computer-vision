@@ -1,0 +1,76 @@
+\begin{problem}
+  Show that the covariance matrix can be written equivalently as:
+\begin{equation}
+  {\calM}_w(x,y) = w(x,y)
+    \ast
+    \begin{bmatrix}
+      I_x(x,y)I_x(x,y) & I_x(x,y)I_y(x,y)\\
+      I_y(x,y)I_x(x,y) & I_y(x,y)I_y(x,y)
+    \end{bmatrix},
+\end{equation}
+where $\ast$ indicates convolution of the windowing function $w(x,y)$ with each element of the matrix.
+\end{problem}
+
+\begin{Answer}
+  Covariance matrix:
+  \begin{align}
+    &\calM_w(x,y)=\nonumber \\
+    &\begin{bmatrix}
+      \sum\limits_{s,t} w(s,t)I_x(x-s,y-t)I_x(x-s,y-t)
+      & \sum\limits_{s,t} w(s,t)I_x(x-s,y-t)I_y(x-s,y-t)\\
+      \sum\limits_{s,t} w(s,t)I_y(x-s,y-t)I_x(x-s,y-t) &
+      \sum\limits_{s,t} w(s,t)I_y(x-s,y-t)I_y(x-s,y-t)
+    \end{bmatrix}
+  \end{align}
+
+  \step
+  These are the elements in the covariance matrix:
+  \zaff{
+  \begin{align}
+    \sum\limits_{s,t} w(s,t)I_x(x-s,y-t)I_x(x-s,y-t)\\
+    \sum\limits_{s,t} w(s,t)I_x(x-s,y-t)I_y(x-s,y-t)\\
+    \sum\limits_{s,t} w(s,t)I_y(x-s,y-t)I_x(x-s,y-t)\\
+    \sum\limits_{s,t} w(s,t)I_y(x-s,y-t)I_y(x-s,y-t)
+  \end{align}
+  }
+
+  \step
+  Recall discrete function convolution:
+  \crim{
+  \begin{align}
+    (f \ast g)(x, y) = \sum\limits_{s,t} f(s,t)g(x-s,y-t)
+  \end{align}
+  }
+
+  \step
+  We notice that:
+  \begin{align*}
+    \zaff{\sum\limits_{s,t} w(s,t)I_x(x-s,y-t)I_x(x-s,y-t)} &= \crim{w(x,y) \ast I_x(x,y)I_x(x,y)}\\
+    \zaff{\sum\limits_{s,t} w(s,t)I_x(x-s,y-t)I_y(x-s,y-t)} &= \crim{w(x,y) \ast I_x(x,y)I_y(x,y)}\\
+    \zaff{\sum\limits_{s,t} w(s,t)I_y(x-s,y-t)I_x(x-s,y-t)} &= \crim{w(x,y) \ast I_x(x,y)I_y(x,y)}\\
+    \zaff{\sum\limits_{s,t} w(s,t)I_y(x-s,y-t)I_y(x-s,y-t)} &= \crim{w(x,y) \ast I_y(x,y)I_y(x,y)}
+  \end{align*}
+
+  \step
+  Therefore, we can express the covariance matrix as:
+  \begin{align}
+    \calM_w(x,y) &= 
+    \begin{bmatrix}
+      w(x, y) \ast I_x(x,y)I_x(x,y) & w(x, y) \ast I_x(x,y)I_y(x,y)\\
+      w(x, y) \ast I_y(x,y)I_x(x,y) & w(x, y) \ast I_y(x,y)I_y(x,y)
+    \end{bmatrix}
+  \end{align}
+
+  \step
+  Equivalently, if we define $\ast$ to be the convolution of the
+  windowing function $w(x,y)$ with each element of the matrix,
+  we can write 
+  \begin{equation}
+    {\calM}_w(x,y) = w(x,y)
+      \ast
+      \begin{bmatrix}
+        I_x(x,y)I_x(x,y) & I_x(x,y)I_y(x,y)\\
+        I_y(x,y)I_x(x,y) & I_y(x,y)I_y(x,y)
+      \end{bmatrix},
+  \end{equation}
+\end{Answer}

@@ -1,0 +1,60 @@
+\begin{problem}
+  As we discussed in class, we can derive various ``cornerness'' metrics
+  that take the form of functionals of \emph{only} the product
+  and sum of the eigenvalues of the covariance matrix.
+  
+  \step
+  Pick your favorite one (or propose your own),
+  and explain how you would compute this metric efficiently
+  for the entire image, using only convolutions and
+  element-wise operations between images
+  without explicitly computing eigenvalues.
+  You can explain this either verbally, or using pseudocode.
+\end{problem}
+
+  \bigskip
+  
+  \step
+  I chose to implement the Harris corner metric, which is defined as:
+  \begin{align}
+    \zaff{R(x,y)} &= \det \calM_w(x,y) - \kappa \cdot {(\tr \calM_w(x,y))}^2
+  \end{align}
+  where $\kappa$ is a constant.
+% \end{Answer}
+
+
+  \step
+  \textbf{Pseudocode for the Harris Corner Metric} (see next page)
+  \begin{algorithm}
+    \caption{Compute the Harris Corner Metric for an Image}\label{alg:harris-metric}
+    \begin{algorithmic}
+      \Procedure{Harris}{$I,\;w,\; \kappa$}
+        % sobel derivative filters
+        \State $G_\sigma^x \gets \begin{bmatrix} 1 & 0 & -1 \\ 2 & 0 & -2 \\ 1 & 0 & -1 \end{bmatrix}$ \Comment{Sobel derivative filter.}
+        \State $I_x \gets G_\sigma^x \ast I$
+        \State $I_{x^2} \gets I_x \times I_x$
+        \State $I_y \gets {(G_\sigma^x)}^T \ast I$
+        \State $I_{y^2} \gets I_y \times I_y$
+        \State $I_{xy} \gets I_x \times I_y$
+        \State $R \gets [[0\; \mathbf{for}\;  y \in I]\; \mathbf{for}\; x \in I]$ \Comment{Initialize corner metric to zero for each pixel.}
+        \For{$x \in I$}
+          \For{$y \in I$}
+            \State $M \gets w(x, y) \ast \begin{bmatrix} I_{x^2}[x,y] & I_{xy}[x,y] \\ I_{xy}[x,y] & I_{y^2}[x,y] \end{bmatrix}$ \Comment{Covariance matrix for current pixel.}
+            \State $R[x,y] \gets \det M - \kappa \cdot {(\tr M)}^2$ \Comment{Corner metric for current pixel.}
+          \EndFor
+        \EndFor
+        \For {$x \in I$}
+          \For {$y \in I$}
+            \For{$(i, j) \in \set{-1,0,1} \times \set{-1, 0, 1}$}
+              \If{$R[x+i,y+j] > R[x,y]$}
+                \State $R[x,y] \gets 0$ \Comment{Non-maximum suppression.}
+                % break the inner loop.
+                \State \textbf{break}
+              \EndIf
+            \EndFor
+          \EndFor
+        \EndFor
+        \State \Return $R$
+      \EndProcedure
+    \end{algorithmic}
+  \end{algorithm}

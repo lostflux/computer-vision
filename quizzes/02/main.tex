@@ -1,16 +1,14 @@
 \documentclass[11pt, reqno]{amsart}
 
 % Include the macros file from `../common'
-\input{../common/macros.tex}
+\input{../../common/macros}
+% \input{../../common/accode.sty}
 
 \pagestyle{fancy}                       % fancy (allow headers, footers)
 \fancyhf{}                              % clear all header/footer settings.
 \cfoot{\thepage}                        % set page-numbers in footer.
 \lhead{\textit{\textbf{ Amittai, S}}}   % set name in header, left.
 \rhead{\textsc{CS 83:\@ Computer Vision}}         % set class name in header, right.
-
-\newcounter{problem}
-\setcounter{problem}{0}
 
 \renewcommand{\theenumi}{\alph{enumi}}
 
@@ -19,9 +17,6 @@
 \setlength{\footskip}{13.0pt}
 \input{cover.tex}
 \bigskip
-
-\noindent 
-\begin{center} {\bf Problems} \end{center}
 
 % PROBLEM 1
 \input{p1.tex}
