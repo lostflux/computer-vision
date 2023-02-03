@@ -1,0 +1,60 @@
+\begin{problem}
+  The affine transform in heterogeneous coordinates
+  is given by
+  $
+    \begin{bmatrix}
+      a & b & c \\
+      d & e & f \\
+      0 & 0 & 1
+    \end{bmatrix}
+  $. Affine transformations are combinations of:
+  \begin{enumroman}
+    \item Arbitrary linear transformations with $4$ degrees
+      of freedom $(a, b, c, d, e)$.
+    \item Translations with $2$ degrees of freedom $(c, f)$.
+  \end{enumroman}
+  
+  \step
+  Does affine transformation apply translation first followed by
+  arbitrary linear transformation, or the other way around?
+  Prove your answer mathematically.
+
+  \step
+  \emph{Hint: check if}\\
+  $
+    \begin{bmatrix}
+      a & b & c \\
+      d & e & f \\
+      0 & 0 & 1
+    \end{bmatrix}
+    = 
+    \begin{bmatrix}
+      1 & 0 & c \\
+      0 & 1 & f \\
+      0 & 0 & 1
+    \end{bmatrix}
+    \begin{bmatrix}
+      a & b & 0 \\
+      d & e & 0 \\
+      0 & 0 & 1
+    \end{bmatrix}
+    \quad \text{ or } \quad 
+    \begin{bmatrix}
+      a & b & c \\
+      d & e & f \\
+      0 & 0 & 1
+    \end{bmatrix}
+    =
+    \begin{bmatrix}
+      a & b & 0 \\
+      d & e & 0 \\
+      0 & 0 & 1
+    \end{bmatrix}
+    \begin{bmatrix}
+      1 & 0 & c \\
+      0 & 1 & f \\
+      0 & 0 & 1
+    \end{bmatrix}
+  $
+
+\end{problem}

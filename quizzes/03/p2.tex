@@ -1,0 +1,48 @@
+\begin{problem}
+  The equation for a conic in the plane using inhomogeneous
+  coordinates $(x, y)$ is
+  \begin{align}
+    ax^2 + bxy + cy^2 + dx + ey + f = 0.~\label{eq:2.1}
+  \end{align}
+
+  \begin{enumalph}
+    \item Suppose you have a given a set of inhomogeneous points
+      $\bx_i = (x_i, y_i)$, $i \in \set{1, \ldots, N}$.
+      Derive an expression for the least squares estimate
+      of a conic $\bc = (a, b, c, d, e, f)$ passing through those points.
+      
+      \step
+      \emph{
+        Note: your expression may take the form of a
+        null vector or eigenvector of a matrix.
+        If so, you must provide expressions
+        for the matrix elements.
+      }
+      \begin{Answer}
+        
+      \end{Answer}
+    \item In general, what is the minimum value of $N$ that
+      allows a unique solution for $\bc$?
+      \begin{Answer}
+
+      \end{Answer}
+
+    \item Homogenize equation ~\ref{eq:2.1} by making the
+      substitutions $x \gets z_1/x_3$ and $y \gets y_1/y_3$,
+      and show that in terms of homogeneous coordinates
+      $(\bx = (x_1, x_2, x_3))$ the conic can be expressed in
+      matrix form
+      \[ \bx^T\bC\bx = 0, \]
+      where $\bC$ is a symmetric matrix.
+      \begin{Answer}
+
+      \end{Answer}
+
+    \item Suppose we apply a projective transformation to our
+      points $\bx_i^{'} = \bH\bx_i$.
+      The transformed points $x_i'$ will lie on a transformed
+      conic represented by a new symmetric matrix $\bC'$.
+      Write an equation that specifies the relationship between
+      $\bC'$ and $\bC$ in terms of the homography $\bH$.
+  \end{enumalph}
+\end{problem}

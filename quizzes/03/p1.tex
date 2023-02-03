@@ -1,0 +1,38 @@
+\begin{problem}
+  Given a set $N$ of points $\bp_i = (x_i, y_i), i \in \set{1, \ldots, N}$,
+  in the image plane, we wish to find the best line passing through those points.
+
+  \begin{enumalph}
+    \item One way to solve this problem is to find $(a, b)$ that most closely
+      satisfy the equations $y_i = ax_i + b$, in a least-squares sense.
+      Write these equations in the form of a \emph{heterogeneous}
+      least-squares problem $A \bx = \bb$, where $\bx = (a, b)^T$,
+      and give an expression for the least-squares estimate of $\bx$.
+      Give a geometric interpretation of the error being minimized,
+      and use a simple graph to visualize the error.
+      Does this make sense when fitting a line to points in an image?
+      \begin{Answer}
+
+      \end{Answer}
+
+    \item Another way to solve this problem is to find
+      $\ell = (a, b, c)$, defined up to scale, that
+      most closely satisfies the equations $ax_i + by_i + c = 0$,
+      in a least-squares sense.
+      Write these equations in the form of a \emph{homogeneous}
+      least-squares problem $A \ell = 0$, where $\ell = (a, b, c)^T$
+      and $\ell \ne 0$.
+      This problem has a trivial solution (zero vector) which is not
+      of much use. Describe some ways of avoiding this trivial solution
+      and corresponding algorithms for solving the resulting
+      optimization problem. Is this approach more or less
+      useful than the previous one? Why?
+      
+      \step
+      \emph{Hint: Think about how we can express the distance of a
+      point from a line.}
+      \begin{Answer}
+
+      \end{Answer}
+  \end{enumalph}
+\end{problem}
