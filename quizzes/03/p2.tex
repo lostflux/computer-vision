@@ -19,23 +19,78 @@
         for the matrix elements.
       }
       \begin{Answer}
-        
+        To determine the matching conic, we need to solve the equation
+        \[
+          \bA\bx = 0,
+        \]
+        where we know the matrix $\bA$ (the points given),
+        and we know the $\vec{0}$ vector, but we need to determine
+        the vector $\bx$ (the conic coefficients).
+
+        \step
+        We compute $\bA$ to be a matrix where the $i$th row, $R_i$, is
+        computed from the $i$th point $\bx_i = (x_i, y_i)$ as follows:
+        \[ 
+          R_i = \begin{bmatrix}
+            x_i^2 & x_iy_i & y_i^2 & x_i & y_i & 1
+          \end{bmatrix}
+        \]
+        We solve the equation $\bA\bx = 0$ by converting $\bA$ into
+        its singular value decomposition
+        \[
+          A = U \Sigma V^T
+        \]
+        so that
+        \[
+          U \Sigma V^T \bx = 0.
+        \]
+
+        \step
+        From the singular value decomposition, we compute $V$
+        (the transpose of $V^T$) and find the column corresponding
+        to the smallest singular value.
+        This column contains the coefficients of the conic
+        fitting the points. 
       \end{Answer}
     \item In general, what is the minimum value of $N$ that
       allows a unique solution for $\bc$?
       \begin{Answer}
-
+        The minimum number of required points is $5$,
+        since there are $5$ degrees of freedom.
       \end{Answer}
 
+    \newpage
     \item Homogenize equation ~\ref{eq:2.1} by making the
-      substitutions $x \gets z_1/x_3$ and $y \gets y_1/y_3$,
+      substitutions $x \gets x_1/x_3$ and $y \gets y_1/y_3$,
       and show that in terms of homogeneous coordinates
       $(\bx = (x_1, x_2, x_3))$ the conic can be expressed in
       matrix form
       \[ \bx^T\bC\bx = 0, \]
       where $\bC$ is a symmetric matrix.
       \begin{Answer}
-
+        \begin{align*}
+          ax^2 + bxy + cy^2 + dx + ey + f &= 0 \\
+          a\parens{\frac{x_1}{x_3}}^2 + b\frac{x_1y_1}{x_3y_3}
+          + c\parens{\frac{y_1}{y_3}}^2
+          + d\frac{x_1}{x_3} + e\frac{y_1}{y_3} + f &= 0 \\
+          \frac{x_1^2}{x_3^2}a + \frac{x_1y_1}{x_3y_3}b
+          + \frac{y_1^2}{y_3^2}c
+          + \frac{x_1}{x_3}d + \frac{y_1}{y_3}e + f &= 0 \\
+          \begin{bmatrix}
+            x & y & 1 \\
+          \end{bmatrix}
+          \begin{bmatrix}
+            a & b/2 & d/2 \\
+            b/2 & c & e/2 \\
+            d/2 & e/2 & f \\
+          \end{bmatrix}
+          \begin{bmatrix}
+            x \\
+            y \\
+            1 \\
+          \end{bmatrix}
+          &= 0
+        \end{align*}
       \end{Answer}
 
     \item Suppose we apply a projective transformation to our
@@ -44,5 +99,8 @@
       conic represented by a new symmetric matrix $\bC'$.
       Write an equation that specifies the relationship between
       $\bC'$ and $\bC$ in terms of the homography $\bH$.
+      \begin{Answer}
+        \[ \bC' = \bH^{-T} \bC \bH^{-1} \]
+      \end{Answer}
   \end{enumalph}
 \end{problem}

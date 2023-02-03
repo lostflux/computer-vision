@@ -12,9 +12,24 @@
       and use a simple graph to visualize the error.
       Does this make sense when fitting a line to points in an image?
       \begin{Answer}
+        % The least-squares estimate of $\bx$ is given by
+        % \[
+        %   \bx = (A^T A)^{-1} A^T \bb.
+        % \]
+        The error being minimized is the sum of the squared distances
+        of the points from the line.
+        This makes sense when fitting a line to points in an image,
+        since the error is the sum of the squared distances of the
+        points from the line.
 
+        % draw graph
+        % \begin{figure}[H]
+        %   \centering
+        %   \caption{Error being minimized}
+        % \end{figure}
       \end{Answer}
 
+    \newpage
     \item Another way to solve this problem is to find
       $\ell = (a, b, c)$, defined up to scale, that
       most closely satisfies the equations $ax_i + by_i + c = 0$,
@@ -32,7 +47,15 @@
       \emph{Hint: Think about how we can express the distance of a
       point from a line.}
       \begin{Answer}
-
+        % The least-squares estimate of $\ell$ is given by
+        % \[
+        %   \ell = \textbf{argmin}_{\ell \ne 0} \sum_{i=1}^N \frac{(\ell^T \bp_i)^2}{\ell^T \ell}.
+        % \]
+        % This problem has a trivial solution (zero vector) which is not
+        % of much use. We can avoid this trivial solution by
+        % normalizing $\ell$ to have unit length.
+        % This approach is more useful than the previous one,
+        % since it is more robust to outliers.
       \end{Answer}
   \end{enumalph}
 \end{problem}

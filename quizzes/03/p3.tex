@@ -1,16 +1,17 @@
 \begin{problem}
   The affine transform in heterogeneous coordinates
   is given by
-  $
+  \begin{align}
     \begin{bmatrix}
       a & b & c \\
       d & e & f \\
       0 & 0 & 1
-    \end{bmatrix}
-  $. Affine transformations are combinations of:
+    \end{bmatrix}~\label{eq:3.1}.
+  \end{align}
+  Affine transformations are combinations of:
   \begin{enumroman}
     \item Arbitrary linear transformations with $4$ degrees
-      of freedom $(a, b, c, d, e)$.
+      of freedom $(a, b, d, e)$.
     \item Translations with $2$ degrees of freedom $(c, f)$.
   \end{enumroman}
   
@@ -56,5 +57,52 @@
       0 & 0 & 1
     \end{bmatrix}
   $
-
 \end{problem}
+
+\begin{Answer}
+  By computing the matrix products, we see that:
+  \begin{align}
+    \begin{bmatrix}
+      1 & 0 & c \\
+      0 & 1 & f \\
+      0 & 0 & 1
+    \end{bmatrix}
+    \begin{bmatrix}
+      a & b & 0 \\
+      d & e & 0 \\
+      0 & 0 & 1
+    \end{bmatrix}
+    &= 
+    \begin{bmatrix}
+      a & b & c \\
+      d & e & f \\
+      0 & 0 & 1
+    \end{bmatrix}~\label{eq:3.2} \\
+    \nonumber \\
+    \begin{bmatrix}
+      a & b & 0 \\
+      d & e & 0 \\
+      0 & 0 & 1
+    \end{bmatrix}
+    \begin{bmatrix}
+      1 & 0 & c \\
+      0 & 1 & f \\
+      0 & 0 & 1
+    \end{bmatrix}
+    &=
+    \begin{bmatrix}
+      a & b & ac + bf \\
+      d & e & dc + ef \\
+      0 & 0 & 1
+    \end{bmatrix}
+  \end{align}
+
+  \step
+  Our desired affine transformation matrix (~\ref{eq:3.1}) matches the first
+  matrix product (~\ref{eq:3.2}).
+
+  \step
+  Therefore, we achieve the affine transformation by doing
+  the equivalent matrix multiplications in order,
+  i.e. doing translation first then doing linear transformation.
+\end{Answer}
