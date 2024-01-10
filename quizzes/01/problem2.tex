@@ -2,7 +2,7 @@
   In class, we talked about finite-difference approximation
   to the derivative of the univariate function $f(x)$.
   Using Taylor polynomial approximations of $f(x + h)$ and $f(x - h)$,
-  we can easily show that \[ f'(x) = \frac{f(x + h) - f(x - h)}{2h} + O(h2), \]
+  we can easily show that \[ f'(x) = \frac{f(x + h) - f(x - h)}{2h} + O(h^2), \]
   so that the derivative can be approximated by convolving
   a discrete version of $f(x)$ --- a vector of values
   $(\ldots,\ f(x_{o} - \Delta), f(x_{o}), f(x_{o}+ \Delta), \ldots)$
@@ -13,8 +13,8 @@
     \item Derive a higher order central-difference approximation
       to $f'(x)$ such that the truncation error tends to zero
       as $h^4$ instead of $h^2$.
-      \emph{Hint : consider Taylor polynomial approximations of $f(x \pm 2h)$
-        in addition to $f(x \pm h)$}. (7 points)
+      \emph{Hint} : consider Taylor polynomial approximations of $f(x \pm 2h)$
+        in addition to $f(x \pm h)$. (7 points)
 
       \begin{Answer}
         Let $c_i$ denote the coefficient for each term containing $h^i$ in the
@@ -33,8 +33,8 @@
         We notice that the $h^2$ term in \ref{eq:2} is $4$ times larger than the $h^2$ term in \ref{eq:1}.
         We can eliminate the $h^2$ term in $f'(x)$ by subtracting \ref{eq:2} from $4$ times \ref{eq:1}:
         \begin{align}
-          3f'(x) &= 4 \frac{f(x+h) - f(x-h)}{2h} - \frac{f(x+2h) - f(x-2h)}{4h} - \left[ 0h^2 + O(h^4) \right] \nonumber \\
-          3f'(x) &= \frac{\crim{8\left(f(x+h) - f(x-h)\right)} - \zaff{\left(f(x+2h) - f(x-2h)\right)}}{4h} + O(h^4 \nonumber) \\
+          3f'(x) &= 4 \parens{\frac{f(x+h) - f(x-h)}{2h}} - \frac{f(x+2h) - f(x-2h)}{4h} - \left[ (4h^2 - 4h^2) + O(h^4) \right] \nonumber \\
+          3f'(x) &= \frac{\crim{8\parens{f(x+h) - f(x-h)}} - \zaff{\parens{f(x+2h) - f(x-2h)}}}{4h} + O(h^4 \nonumber) \\
           3f'(x) &= \frac{-f(x+2h) + 8f(x+h) -8f(x-h) + f(x-2h)}{4h} + O(h^4 \nonumber) \\
           f'(x) &= \frac{-f(x+2h) + 8f(x+h) -8f(x-h) + f(x-2h)}{12h} + O(h^4) ~\label{eq:3}
         \end{align}
@@ -45,18 +45,17 @@
     \item What is the corresponding convolution (not correlation!) kernel? (3 points)
     \begin{Answer}
       The approximation has a correlation kernel of
-      \[ 
-        \begin{pmatrix}
-          -\frac{1}{12}, & \frac{8}{12}, & -\frac{8}{12}, & \frac{1}{12}
-        \end{pmatrix}.
-      \]
-      The convolution kernel is the same as the correlation kernel, but flipped.
       \[
-        \begin{pmatrix}
+        \begin{bmatrix}
+          -\frac{1}{12}, & \frac{8}{12}, & -\frac{8}{12}, & \frac{1}{12}
+        \end{bmatrix}.
+      \]
+      The convolution kernel is the same as the correlation kernel, but flipped:
+      \[
+        \begin{bmatrix}
           \frac{1}{12}, & -\frac{8}{12}, & \frac{8}{12}, & -\frac{1}{12}
-        \end{pmatrix}.  
+        \end{bmatrix}.  
       \]
     \end{Answer}
-
   \end{enumroman}
 \end{problem}
