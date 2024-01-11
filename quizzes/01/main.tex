@@ -6,8 +6,11 @@
 \pagestyle{fancy}                       % fancy (allow headers, footers)
 \fancyhf{}                              % clear all header/footer settings.
 \cfoot{\thepage}                        % set page-numbers in footer.
-\lhead{\textit{\textbf{ Amittai, S}}}   % set name in header, left.
-\rhead{\textsc{CS 83:\@ Computer Vision}}         % set class name in header, right.
+% \lhead{\textit{\textbf{ Amittai, S}}}   % set name in header, left.
+% \rhead{\textsc{CS 83:\@ Computer Vision}}         % set class name in header, right.
+
+% remove header rule
+\renewcommand{\headrulewidth}{0pt}
 
 \renewcommand{\theenumi}{\alph{enumi}}
 
