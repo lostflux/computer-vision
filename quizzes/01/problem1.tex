@@ -2,28 +2,28 @@
   The continuous convolution of two functions $f(x)$ and $g(x)$
   is given as
   \[
-    (f*g)(x) = \int\displaylimits_{-\infty}^{+\infty} f(y)\ g(x-y)\ \d y.
+    [f \ast g](x) = \int\displaylimits_{-\infty}^{+\infty} f(y)\ g(x-y)\ \d y.
   \]
 
   \begin{enumroman}
     \item Prove that the convolution of two functions is commutative,
       i.e., changing the order of operands produces the same result.
-      \[ (f \ast g) = (g \ast f) \]
+      \[ [f \ast g] = [g \ast f] \]
       \textit{Hint:} Perform integration by substitution.
 
       \begin{answer}
         By definition,
         \begin{align*}
-          (f \ast g)(x) &= \int\displaylimits_{-\infty}^{+\infty} f(y)\ g(x-y)\ \d y
+          [f \ast g](x) &= \int\displaylimits_{-\infty}^{+\infty} f(y)\ g(x-y)\ \d y
           \intertext{ Let $u = x - y$, then $\d u = -\d y$ and $y = x - u$.
             Furthermore, when $y = -\infty$, $u = x - (-\infty) \approx +\infty$,
             and when $y = +\infty$, $u = x - (+\infty) \approx -\infty$.  
           }
-          (f \ast g)(x) &= \int\displaylimits_{+\infty}^{-\infty} f(x - u)\ g(u)\ (-\d u) \\
+          [f \ast g](x) &= \int\displaylimits_{+\infty}^{-\infty} f(x - u)\ g(u)\ (-\d u) \\
                         &= - \int\displaylimits_{+\infty}^{-\infty} f(x - u)\ g(u)\ \d u \\
                         &= \int\displaylimits_{-\infty}^{+\infty} f(x - u)\ g(u)\ \d u \\
                         &= \int\displaylimits_{-\infty}^{+\infty} g(u)\ f(x - u)\ \d u \\
-                        &= (g \ast f)(x)
+                        &= [g \ast f](x)
         \end{align*}
 
       \end{answer}
@@ -32,17 +32,17 @@
     \item Prove that the convolution operand is also associative, i.e.,
       rearranging the parentheses on two or more occurrences of the convolution
       operator produces the same result:
-      \[ (f \ast g) \ast h = f \ast (g \ast h) \]
+      \[ [f \ast g] \ast h = f \ast [g \ast h] \]
       \textit{Hint:} Be careful with variables. Understand which variable should
       be integrated, and why.
 
       \begin{answer}
         By definition,
         \begin{align*}
-          (\phi \ast \zeta)(x)    &= \int\displaylimits_{-\infty}^{+\infty} \phi(y)\ \zeta(x-y)\ \d y.
-          \intertext{Plugging in $(f \ast g)$ for $\phi$ and $h$ for $\zeta$, we get: }
-          ((f \ast g) \ast h)(x)  &= \int\displaylimits_{-\infty}^{+\infty} (f \ast g)(y)\ h(x-y)\ \d y \\
-          \intertext{ Let us expand $(f \ast g)(y)$: }
+          [\phi \ast \zeta](x)    &= \int\displaylimits_{-\infty}^{+\infty} \phi(y)\ \zeta(x-y)\ \d y.
+          \intertext{Plugging in $[f \ast g]$ for $\phi$ and $h$ for $\zeta$, we get: }
+          ([f \ast g] \ast h)(x)  &= \int\displaylimits_{-\infty}^{+\infty} [f \ast g](y)\ h(x-y)\ \d y \\
+          \intertext{ Let us expand $[f \ast g](y)$: }
                                   &= \int\displaylimits_{-\infty}^{+\infty} \parens{\int\displaylimits_{-\infty}^{+\infty} f(z)\ g(y-z)\ \d z}\ h(x-y)\ \d y \\
                                   &= \int\displaylimits_{-\infty}^{+\infty} \int\displaylimits_{-\infty}^{+\infty} f(z)\ g(y-z)\ h(x-y)\ \d z\ \d y \\
           \intertext{ Rearranging the integrals:}
@@ -50,9 +50,9 @@
                                   &= \int\displaylimits_{-\infty}^{+\infty} f(z)\ \parens{\int\displaylimits_{-\infty}^{+\infty} g(y-z)\ h(x-y)\ \d y}\ \d z \\
           \intertext{ To simplify the inner integral, substitute $u = y - z$, then $\d u = \d y$ and $y = z + u$. }
                                   &= \int\displaylimits_{-\infty}^{+\infty} f(z)\ \parens{\int\displaylimits_{-\infty}^{+\infty} g(u)\ h(x - (z + u))\ \d u}\ \d z \\
-                                  &= \int\displaylimits_{-\infty}^{+\infty} f(z)\ \parens{\int\displaylimits_{-\infty}^{+\infty} g(u)\ h( (x - z) - u)\ \d u}\ \d z \\
-                                  &= \int\displaylimits_{-\infty}^{+\infty} f(z)\ (g \ast h)(x - z)\ \d z \\
-                                  &= (f \ast (g \ast h))(x)
+                                  &= \int\displaylimits_{-\infty}^{+\infty} f(z)\ \underbrace{\parens{\int\displaylimits_{-\infty}^{+\infty} g(u)\ h( (x - z) - u)\ \d u}}_{[g \ast h](x-z)}\ \d z \\
+                                  &= \int\displaylimits_{-\infty}^{+\infty} f(z)\ [g \ast h](x - z)\ \d z \\
+                                  &= \brackets{f \ast [g \ast h]}(x)
         \end{align*}
       \end{answer}
   \end{enumroman}
