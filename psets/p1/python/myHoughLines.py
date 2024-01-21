@@ -7,40 +7,60 @@ __github__ = "@siavava"
 import numpy as np
 
 from typing import Tuple, List
-
+import cv2
 NdArray = np.ndarray
 
 def myHoughLines(H: NdArray, num_lines: int) -> Tuple[List, List]:
-	"""Find the `n` strongest lines in the Hough accumulator array.
+    """
+    Find the `n` strongest lines in the Hough accumulator array.
 
-	Parameters
-	----------
-	H : NdArray
-		The Hough accumulator array.
-	num_lines : int
-		The number of lines to return.
-	"""
+    Parameters
+    ----------
+    H : NdArray
+        The Hough accumulator array.
+    num_lines : int
+        The number of lines to return.
+        
+    Returns
+    -------
+    Tuple[List, List]
+        The rhos and thetas of the `n` strongest lines.
+    """
 
-	rho_count, theta_count = H.shape
-	threshold = 1  							#? 1 = 3x3, 2 = 5x5, 3 = 7x7, etc.
+    img = H.copy()
+    
+    #? suppress non-maxima
+    nms(img)
 
-	for rho in range(rho_count):
-		for theta in range(theta_count):
-			for adjacent_rho in range(-threshold, threshold+1):
-				rho_index = rho + adjacent_rho
-				if 0 <= rho_index < H.shape[0]:
-					for adjacent_theta in range(-threshold, threshold+1):
-						theta_index = theta + adjacent_theta
-						if 0 <= theta_index < H.shape[1]:
-							if H[rho_index, theta_index] > H[rho, theta]:
-								H[rho, theta] = 0
+    #? return the top N lines
+    return topN(img, num_lines)
+    
+def nms(img: NdArray) -> NdArray:
+    """Performs non-maxima suppression on the image."""
+    
+    #? 3X3 kernel to look at all neighbors
+    kernel = np.ones(shape=(3, 3))
+    
+    #? dilation replaces each pixel with the max of its 3x3 window
+    dilated = cv2.dilate(img, kernel)
+    
+    #? find non-maxima pixels indices
+    non_maxima = np.where(img != dilated)
+    
+    #? suppress
+    img[non_maxima] = 0
 
-	rhos, thetas = [], []
-	lines = np.argpartition(H.ravel(), H.size - num_lines)[-num_lines:]
-	lines = np.column_stack(np.unravel_index(lines, H.shape))
-	
-	for line in range(num_lines):
-		rhos.append(int(lines[line][0]))
-		thetas.append(int(lines[line][1]))
+    return img
 
-	return rhos, thetas
+def topN(arr: NdArray, n: int) -> Tuple[List, List]:
+    """
+    Extracts the indices of the top-N largest largest rhos and thetas in the accumulator array.
+    """
+    
+    #? get the top N indices
+    # NOTE: https://numpy.org/doc/stable/reference/generated/numpy.argpartition.html
+    ind = np.argpartition(-arr, n, None)[:n]
+    
+    #? unravel to rho and theta indices
+    # NOTE: https://numpy.org/doc/stable/reference/generated/numpy.unravel_index.html
+    return np.unravel_index(ind, arr.shape)

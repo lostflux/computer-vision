@@ -11,46 +11,49 @@ from math import sqrt
 NdArray = np.ndarray
 
 def myHoughTransform(image: NdArray, rhoRes, thetaRes) -> Tuple[NdArray, NdArray, NdArray]:
-	"""
-		Computes the Hough Transform of the image.
+    """
+        Computes the Hough Transform of the image.
 
-		Parameters
-		----------
-		image : NdArray
-			The image to compute the Hough Transform of.
-		rhoRes : float
-			The resolution of the rho axis.
-		thetaRes : float
-			The resolution of the theta axis.
+        Parameters
+        ----------
+        image : NdArray
+            The image to compute the Hough Transform of.
+        rhoRes : float
+            The resolution of the rho axis.
+        thetaRes : float
+            The resolution of the theta axis.
 
-		Returns
-		-------
-		Tuple[NdArray, NdArray, NdArray]
-			The accumulator array, the rho axis, and the theta axis.
-	"""
+        Returns
+        -------
+        Tuple[NdArray, NdArray, NdArray]
+            The accumulator array, the rho axis, and the theta axis.
+    """
 
-	image_width, image_height = image.shape
-	M = sqrt(image_width**2 + image_height**2)
+    diagonal = np.hypot(image.shape[0], image.shape[1])
+    rho_scale = np.arange(0, diagonal, rhoRes)
+    theta_scale = np.arange(0, 2*np.pi, thetaRes)
 
-	rho_scale = np.arange(0, M, rhoRes)
-	theta_scale = np.arange(0, 2 * np.pi, thetaRes)
+    img_hough = np.zeros(shape=(len(rho_scale), len(theta_scale)))
+    edge_points = np.transpose(np.nonzero(image))
 
-	#? accumulate votes
-	accumulator = np.zeros((len(rho_scale), len(theta_scale)))
-	for row in range(image_width):
-		for column in range(image_height):
-			if image[row, column] > 0:
-				for theta_step, theta in enumerate(theta_scale):
-					rho = column * np.cos(theta) + row * np.sin(theta)
-					
-					if rho >= 0:
-						rho_step = int(rho // rhoRes)
-						accumulator[rho_step, theta_step] += 1
-						
-	return accumulator, rho_scale, theta_scale
+    #? for each edge point, calculate the rhos and thetas
+    #? and accumulate votes.
+    for x, y in edge_points:
+        
+        # calculate rhos corresponding to the thetas in thetaScale
+        rhos = x * np.cos(theta_scale) + y * np.sin(theta_scale)
+        theta_index = np.where(rhos >= 0)
+        rhos = rhos[rhos >= 0]
+        
+        # NOTE: used numpy reference for digitize
+        # https://numpy.org/doc/stable/reference/generated/numpy.digitize.html
+        rho_index = np.digitize(rhos, rho_scale)
+        img_hough[rho_index, theta_index] += 1
+    
+    return img_hough, rho_scale, theta_scale
 
 def test_hough_transform() -> None:
-	raise NotImplementedError
+	return NotImplemented
 
 if __name__ == "__main__":
 	test_hough_transform()

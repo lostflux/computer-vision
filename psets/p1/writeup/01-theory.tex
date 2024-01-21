@@ -25,8 +25,10 @@
   \end{Answer}
 \end{problem}
 
+\newpage
 \begin{problem}
-  Why do we parametrize the line in terms of $(\rho, \theta)$
+  \begin{enumroman}
+  \item Why do we parametrize the line in terms of $(\rho, \theta)$
   instead of the slope and the intercept, $(m, c)$?
   \begin{Answer}
     Representing the line in terms of $(\rho, \theta)$
@@ -41,8 +43,7 @@
     compute the accumulator array and find lines in the image.
   \end{Answer}
 
-  \step
-  Express the slope and the intercept in terms of $(\rho, \theta)$.
+  \item Express the slope and the intercept in terms of $(\rho, \theta)$.
   \begin{Answer}
     Recall that $\rho = x \cos \theta + y \sin \theta$.
     by re-arranging the equation, we get:
@@ -60,6 +61,7 @@
       \end{align*}
     \end{multicols}
   \end{Answer}
+  \end{enumroman}
 \end{problem}
 
 \begin{problem}
@@ -76,6 +78,7 @@
   \end{Answer}
 \end{problem}
 
+\newpage
 \begin{problem}
   For point $(10, 10)$ and points $(20, 20)$ and $(30, 30)$
   in the image, plot the corresponding sinusoid waves in Hough space
@@ -83,8 +86,8 @@
   What is $(m, c)$ for this line?
   % \begin{Answer}
     \begin{table}[h!]
-      \begin{tabular}{l c c r}
-        \bottomrule
+      \begin{tabular}{l | c | c | r}
+        \toprule
         Point $(x, y)$ & $r = \sqrt{x^2 + y^2}$ & $\gamma = \arctan (x/y)$ & Sinusoid \\
         \midrule
         $(10, 10)$ & $\sqrt{200}$ & $45$ & $\sqrt{200}\ \sin (\theta + 45)$\\
@@ -92,7 +95,7 @@
         $(20, 20)$ & $\sqrt{800}$ & $45$ & $\sqrt{800}\ \sin (\theta + 45)$\\
         \midrule
         $(30, 30)$ & $\sqrt{1800}$ & $45$ & $\sqrt{1800}\ \sin (\theta + 45)$\\
-        \toprule
+        \bottomrule
       \end{tabular}
       \caption{Point and sinusoid values}
     \end{table}

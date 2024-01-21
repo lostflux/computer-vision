@@ -26,16 +26,15 @@ def myImageFilter(image: NdArray, h: NdArray) -> NdArray:
 			filtered_image: NdArray
 				The image obtained after applying the filter on the image.
 	"""
-	
+
 	image_height, image_width = image.shape
 	filter_dims = h.shape
 
 	#? pad zeros at the edges of the image as appropriate.
 	pad_height, pad_width = map(lambda x: x//2, filter_dims)
-	padded_image = np.pad(image, ((pad_height, pad_height), (pad_width, pad_width)))
+	padded_image = np.pad(image, ((pad_height, pad_height), (pad_width, pad_width))) # type: ignore
 
-	#? compute filtered image...
-	filtered_image = np.zeros((image_height, image_width))
+	filtered_image = np.zeros((image_height, image_width))    
 	for row in range(image_height):
 		for column in range(image_width):
 			window_start = (row, column)
@@ -56,8 +55,6 @@ def test_image_filter() -> None:
 	h3 = np.array([[1,1],[1,1]])
 
 	for filter in [h, h2, h3]:
-		
-		# filtered = myImageFilter(img, i)
 
 		print(f"""
 			Image: \t\t{[ list(i) for i in img ]}
@@ -65,7 +62,7 @@ def test_image_filter() -> None:
 			Result: \t{[ list(j) for j in myImageFilter(img, filter) ]}
 			NumPy Result: \t{[ list(j) for j in scipy.signal.convolve2d(img, filter, mode="same") ]}
 		""")
-		
+
 	img = np.random.rand(1000, 1000)
 
 	# create a 3x3 filter with all 1s.
@@ -78,4 +75,4 @@ def test_image_filter() -> None:
 
 if __name__ == "__main__":
 	test_image_filter()
-	
+

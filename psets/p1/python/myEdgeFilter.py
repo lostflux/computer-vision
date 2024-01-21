@@ -7,186 +7,138 @@ __github__ = "@siavava"
 import numpy as np
 from math import ( ceil, inf )
 from scipy import signal
+import cv2
 
 NdArray = np.ndarray
 
 from myImageFilter import myImageFilter
 
-SOBEL_FILTER = {
-	"x": np.array([[1,0,-1],[2,0,-2],[1,0,-1]]),
-	"y": np.array([[1,2,1],[0,0,0],[-1,-2,-1]])
-}
+def myEdgeFilter(img0: NdArray, sigma):
+    """
+        This is a function that filters an image with a Gaussian filter and then finds the edges
+        using the Sobel operator.
+        
+        Parameters
+        ----------
+        img0: NdArray
+            The image to be filtered.
+        sigma: float
+            The standard deviation of the Gaussian filter.
+        
+        Returns
+        -------
+        image: NdArray
+            The image obtained after applying the edge filter.
+    """
+    #? create 2D gaussian kernel
+    gaussian = generate_gaussian(sigma)
+
+    smoothed = myImageFilter(img0, gaussian)
+
+    #? apply sobel filters in X and Y directions
+    # NOTE: we apply them as two 1D convolutions to be more computationally efficient
+    gradients_x = myImageFilter(myImageFilter(smoothed, np.array([[1], [2], [1]])), np.array([[1, 0, -1]]))
+    gradients_y = myImageFilter(myImageFilter(smoothed, np.array([[1], [0], [-1]])),  np.array([[1, 2, 1]]))
+
+    # NOTE: reference for arctan2 vs arctan:
+    #   https://www.scaler.com/topics/numpy-arctan2/
+    direction = np.rad2deg(np.arctan2(gradients_y, gradients_x))
+    magnitude = np.hypot(gradients_x, gradients_y)
+
+    # NOTE: normalize direction to be between 0 and 180
+    direction[direction < 0] += 180
+
+    #? non-maxima suppression in relevant directions
+    image = nms_directed(magnitude, direction)
+
+    #? mute image edges
+    image[0] = image[:, 0] = image[:, -1] = image[-1, :] = 0
+    
+    return image
+
+def generate_gaussian(sigma) -> NdArray:
+    """
+    Generates a gaussian filter of the specified size and standard deviation.
+    """
+    
+    #? generate 1D gaussian kernel
+    hsize = 2 * np.ceil(3 * sigma) + 1
+    kernel = signal.gaussian(hsize, std=sigma)
+    
+    #? outer product to get 2D kernel
+    h = np.outer(kernel, kernel)
+    
+    #? normalize
+    h /= h.sum()
+    
+    return h
 
 
-def myEdgeFilter(image: NdArray, sigma: int | float) -> NdArray:
-	"""
-		Find edges in an image using the Sobel filter.
+def nms_directed(magnitude: NdArray, direction: NdArray) -> NdArray:
+    """Perform non-maxima suppression in the direction of the gradient."""
 
-		Parameters
-		----------
-		image : NdArray
-			The image to find edges in.
+    #? directional kernels
+    kernels = {
+        0: np.array([[0, 0, 0], [1, 1, 1], [0, 0, 0]], dtype=np.uint8),
+        45: np.array([[0, 0, 1], [0, 1, 0], [1, 0, 0]], dtype=np.uint8),
+        90: np.array([[0, 1, 0], [0, 1, 0], [0, 1, 0]], dtype=np.uint8),
+        135: np.array([[1, 0, 0], [0, 1, 0], [0, 0, 1]], dtype=np.uint8)
+    }
+    
+    dilations = { angle: cv2.dilate(magnitude, kernel) for angle, kernel in kernels.items() }
+    
+    diffs = { angle: np.nonzero(np.absolute(dilations[angle] - magnitude)) for angle in dilations.keys() }
+    
+    # suppress non-maxima in each relevant direction
+    for angle in dilations:
+        dilations[angle][diffs[angle]] = 0
+        
+    #? index angles from range [0, 180) to [0, 3]
+    indices = index(direction)
 
-		sigma : int | float
-			The standard deviation of the Gaussian filter.
-
-		Returns
-		-------
-		NdArray
-			The image with edges highlighted.
-	"""
-
-	gaussian_filter = generate_gaussian(sigma)
-	smooth_image = normalized_image(myImageFilter(image, gaussian_filter))
-	image_gradients = {
-		"x": myImageFilter(smooth_image, SOBEL_FILTER["x"]),
-		"y": myImageFilter(smooth_image, SOBEL_FILTER["y"]),
-	}
-
-	image_gradients["xy"] = np.sqrt((image_gradients["x"]**2) + (image_gradients["y"]**2))
-	grad = gradients(image_gradients["y"], image_gradients["x"])
-
-	
-	#! create copy of gradients to modify.
-	output = image_gradients["xy"].copy()
-
-	for row in range(grad.shape[0]):
-		for column in range(grad.shape[1]):
-			direction = grad[row, column]
-			output = non_max_suppression(output, image_gradients["xy"], row, column, direction)
-
-	return output
+    image = np.choose(indices, np.stack([dilations[0], dilations[45], dilations[90], dilations[135]]))
+    
+    return image
 
 
-###################! HELPER FUNCTIONS ####################
+def index(gradient: NdArray) -> NdArray:
+    """
+    Index angles from range [0, 180) to [0, 3]
+    
+    Mappings
+    --------
+    - 0: 0 <= theta <22.5 UNION 157.5 <= theta < 180
+    - 1: 22.5 <= theta < 67.5
+    - 2: 67.5 <= theta < 112.5
+    - 3: 112.5 <= theta < 157.5
+    
+    Parameters
+    ----------
+    gradient : NdArray
+        The angles of gradients to be indexed.
+    
+    Returns
+    -------
+    NdArray
+        The indices of the angles.
+    
+    """
 
-def normalized_image(image: NdArray) -> NdArray:
-	"""
-		Normalizes an array of pixel images
-		to the range 0 <= x < 256.
-
-		Parameters
-		----------
-		image : NdArray
-			The array of image pixel values.
-
-		Returns
-		-------
-		NdArray
-			The normalized array of image pixel values.
-	"""
-	return image % 255 # np.vectorize(lambda x: x % 255)(image)
-
-
-
-def normalized_gaussian(arr: NdArray) -> NdArray:
-	"""
-		Normalizes an array to sum up to `1` globally.
-	"""
-	return arr / np.sum(arr)
-
-
-
-def gradients(y: NdArray, x: NdArray) -> NdArray:
-	"""
-		Normalize the angles in the array
-		to the nearest 45-degree angle.
-	"""
-	grad = np.rad2deg(np.arctan2(y, x))
-	return ((grad / 45).round() * 45) % 180
-
-
-
-def generate_gaussian(sigma: int | float) -> NdArray:
-	r"""
-		Generates a square Gaussian filter of size 2 * ceil(3 * sigma) + 1
-		NOTE: signal.gaussian is migrated to signal.windows.gaussian in Python 3.11
-
-		See: https://docs.scipy.org/doc/scipy/reference/generated/scipy.signal.windows.gaussian.html
-
-		Parameters
-		----------
-		sigma : int | float
-			The standard deviation of the Gaussian filter.
-	"""
-
-	hsize = 2 * ceil(3 * sigma) + 1
-	gaussian_vector = signal.windows.gaussian(hsize, sigma)
-	gaussian_filter = np.outer(gaussian_vector, gaussian_vector)
-	return normalized_gaussian(gaussian_filter)
-
-
-
-def non_max_suppression(output: NdArray, image: NdArray, row: int, column: int, angle: float) -> NdArray:
-	"""
-		Perform non-maximum suppression on the image.
-
-		Parameters
-		----------
-		image : NdArray
-			The image to perform non-maximum suppression on.
-		row : int
-			The row of the pixel to perform non-maximum suppression on.
-		column : int
-			The column of the pixel to perform non-maximum suppression on.
-		angle : float
-			The angle of the gradient at the pixel.
-	"""
-
-	before, after = -inf, -inf
-
-	if angle == 0:
-		"""
-			. . .
-			x c x
-			. . .
-		"""
-		if column >= 1:
-			before = image[row, column-1]
-		if column < image.shape[1]-1: 
-			after = image[row, column+1]
-
-	elif angle == 45:
-		"""
-			x . .
-			. c .
-			. . x
-		"""
-		if row >= 1 and column >= 1:
-			before = image[row-1, column-1]
-		if row < image.shape[0]-1 and column < image.shape[1]-1:
-			after = image[row+1, column+1]
-
-	elif angle == 90:
-		"""
-			. x .
-			. c .
-			. x .
-		"""
-		if row >= 1:
-			before = image[row-1, column]
-		if row < image.shape[0]-1:
-			after = image[row+1, column]
-
-	elif angle == 135:
-		"""
-			. . x
-			. c .
-			x . .
-		"""
-		if row >= 1 and column < image.shape[1]-1:
-			before = image[row-1, column+1]
-		if row < image.shape[0]-1 and column >= 1:
-			after = image[row+1, column-1]
-
-	current = image[row, column]
-	highest = max(before, current, after)
-
-	#! mute current index if it is not a local maximum.
-	if current != highest:
-		output[row, column] = 0
-
-	return output
+    #? discretize the angles to 0, 45, 90, 135
+    # indices = np.zeros(shape=gradient.shape, dtype=int)
+    # indices = np.where( (22.5 <= gradient)    & (gradient < 67.5), indices, 1)
+    # indices = np.where( (67.5 <= gradient)    & (gradient < 112.5), indices, 2)
+    # indices = np.where( (112.5 <= gradient)   & (gradient < 157.5), indices, 3)
+    
+    m = 22.5
+    
+    indices = np.zeros(shape=gradient.shape, dtype=int)
+    
+    indices = np.where((gradient < (135 + m)) & (gradient >= m), indices, 0)          # change angles in range [0, 22.5) and [157.5, 180] to 0 
+    indices = np.where((gradient < m) | (gradient >= (45 + m)), indices, 1)           # change angles in range [22.5, 67.5) to 1
+    indices = np.where((gradient < (90 - m)) | (gradient >= (90 + m)), indices, 2)    # change angles in range [67.5, 112.5) to 2
+    indices = np.where((gradient < (135 - m)) | (gradient >= (135 + m)), indices, 3)  # change angles in range [112.5, 157.5) to 3
+    return indices
 
 
 def test_edge_filter() -> None:
