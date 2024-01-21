@@ -125,19 +125,11 @@ def index(gradient: NdArray) -> NdArray:
     """
 
     #? discretize the angles to 0, 45, 90, 135
-    # indices = np.zeros(shape=gradient.shape, dtype=int)
-    # indices = np.where( (22.5 <= gradient)    & (gradient < 67.5), indices, 1)
-    # indices = np.where( (67.5 <= gradient)    & (gradient < 112.5), indices, 2)
-    # indices = np.where( (112.5 <= gradient)   & (gradient < 157.5), indices, 3)
-    
-    m = 22.5
-    
     indices = np.zeros(shape=gradient.shape, dtype=int)
+    indices = np.where( (22.5 <= gradient)    & (gradient < 67.5), indices, 1)
+    indices = np.where( (67.5 <= gradient)    & (gradient < 112.5), indices, 2)
+    indices = np.where( (112.5 <= gradient)   & (gradient < 157.5), indices, 3)
     
-    indices = np.where((gradient < (135 + m)) & (gradient >= m), indices, 0)          # change angles in range [0, 22.5) and [157.5, 180] to 0 
-    indices = np.where((gradient < m) | (gradient >= (45 + m)), indices, 1)           # change angles in range [22.5, 67.5) to 1
-    indices = np.where((gradient < (90 - m)) | (gradient >= (90 + m)), indices, 2)    # change angles in range [67.5, 112.5) to 2
-    indices = np.where((gradient < (135 - m)) | (gradient >= (135 + m)), indices, 3)  # change angles in range [112.5, 157.5) to 3
     return indices
 
 

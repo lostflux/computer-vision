@@ -30,7 +30,7 @@ def myHoughTransform(image: NdArray, rhoRes, thetaRes) -> Tuple[NdArray, NdArray
     """
 
     diagonal = np.hypot(image.shape[0], image.shape[1])
-    rho_scale = np.arange(0, diagonal, rhoRes)
+    rho_scale = np.arange(0+rhoRes, diagonal+rhoRes, rhoRes)
     theta_scale = np.arange(0, 2*np.pi, thetaRes)
 
     img_hough = np.zeros(shape=(len(rho_scale), len(theta_scale)))
@@ -38,7 +38,7 @@ def myHoughTransform(image: NdArray, rhoRes, thetaRes) -> Tuple[NdArray, NdArray
 
     #? for each edge point, calculate the rhos and thetas
     #? and accumulate votes.
-    for x, y in edge_points:
+    for y, x in edge_points:
         
         # calculate rhos corresponding to the thetas in thetaScale
         rhos = x * np.cos(theta_scale) + y * np.sin(theta_scale)
