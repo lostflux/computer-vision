@@ -21,7 +21,7 @@
       \rho &= r \sin (\gamma + \theta)
     \end{align*}
     Therefore, the equivalent sinusoid has amplitude $r = \sqrt{x^2 + y^2}$
-    and a phase-shift $\gamma = \arctan \left(\frac{x}{y} \right)$.
+    and a phase-shift $\displaystyle \gamma = \arctan \left(\frac{x}{y} \right)$.
   \end{Answer}
 \end{problem}
 
@@ -46,7 +46,7 @@
   \item Express the slope and the intercept in terms of $(\rho, \theta)$.
   \begin{Answer}
     Recall that $\rho = x \cos \theta + y \sin \theta$.
-    by re-arranging the equation, we get:
+    By re-arranging the equation, we get:
     \begin{multicols}{2}
       \noindent
       \begin{align*}
@@ -56,7 +56,7 @@
       \end{align*}
       \begin{align*}
         y &= mx + c \\
-        &\implies m = - \frac{\cos \theta}{\sin \theta} \\
+        &\implies m = - \frac{\cos \theta}{\sin \theta} = -\cot \theta \\
         &\implies c = \frac{\rho}{\sin \theta}
       \end{align*}
     \end{multicols}
@@ -114,24 +114,28 @@
             ytick={-50, -40, -30, -20, -10, 0, 10, 20, 30, 40, 50},
             xticklabels={$0$, $$, $$, $90^\circ$, $$, $$, $180^\circ$, $$, $$, $270^\circ$, $$, $$, $360^\circ$},
             yticklabels={$-50$, $-40$, $-30$, $-20$, $-10$, $0$, $10$, $20$, $30$, $40$, $50$},
-            grid=major, grid style=dashed
+            grid=major, grid style=dashed,
+            legend pos=outer north east % Position of the legend
           ]
-            \addplot[domain=0:360, samples=360, color=blue, mark=, label=10] {sqrt(200) * sin(x + 45)};
+            \addplot[domain=0:360, samples=360, color=blue, mark=none] {sqrt(200) * sin(x + 45)};
+            \addlegendentry{$\sqrt{200} \sin(x + 45)$} % Legend entry for the first plot
             \addplot[domain=0:360, samples=360, color=red, mark=none] {sqrt(800) * sin(x + 45)};
+            \addlegendentry{$\sqrt{800} \sin(x + 45)$} % Legend entry for the second plot
             \addplot[domain=0:360, samples=360, color=green, mark=none] {sqrt(1800) * sin(x + 45)};
-          % \addplot[domain=0:360, samples=360, color=black, mark=none] {50 * cos(x)};
-          % \addplot[domain=0:360, samples=360, color=black, mark=none] {50 * sin(x)};
+            \addlegendentry{$\sqrt{1800} \sin(x + 45)$} % Legend entry for the third plot
         \end{axis}
-      \end{tikzpicture}
+    \end{tikzpicture}
       \caption{Generated sinusoidal waves}
     \end{figure}
     \begin{Answer}
-      The intersection points are at $r = 0$ and $\theta \in \set{135, 315}$.
+      The intersection points are at $r = 0$, which happens when $\theta \in \set{135, 315}$.
+      To simplify, keep in mind that $\sin 135 = \frac{\sqrt{2}}{2}$ and $\sin 315 = -\frac{\sqrt{2}}{2}$.
+      Furthermore, $\cos 135 = -\frac{\sqrt{2}}{2}$ and $\cos 315 = \frac{\sqrt{2}}{2}$.
+      Therefore; 
       \begin{align*}
-        \cos \theta &= -\sin \theta\\
-        \rho &= x \cos \theta + y \sin \theta = x - y = 0 &\text { \zaff{(since $x = y$)}} \\
-        m &= -\frac{\cos \theta}{\sin \theta} = 1\\
-        c &= \frac{\rho}{\sin \theta} = 0
+        \rho &= x \cos \theta + y \sin \theta = -\frac{\sqrt{2}}{2}x - \parens{-\frac{\sqrt{2}}{2}y} = 0 \\
+        c &= \frac{\rho}{\sin \theta} = 0 \\
+        m &= -\frac{\cos \theta}{\sin \theta} = -\frac{-\frac{\sqrt{2}}{2}}{\frac{\sqrt{2}}{2}} = 1
       \end{align*}
     \end{Answer}
 

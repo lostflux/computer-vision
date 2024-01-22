@@ -17,15 +17,10 @@ resultsdir = '../results'   # the directory for dumping results
 
 # parameters
 sigma     = 2
-# threshold = 0.03
+threshold = 0.3             #? changed from 0.03 in provided code
 rhoRes    = 2
 thetaRes  = np.pi / 90
 nLines    = 15
-
-# sigma 		= 2
-threshold = 0.3
-# rhoRes 		= 2
-# nLines 		= 50
 # end of parameters
 
 for file in sorted(os.listdir(datadir)):
