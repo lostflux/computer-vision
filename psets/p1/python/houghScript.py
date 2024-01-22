@@ -17,7 +17,7 @@ resultsdir = '../results'   # the directory for dumping results
 
 # parameters
 sigma     = 2
-threshold = 0.03
+# threshold = 0.03
 rhoRes    = 2
 thetaRes  = np.pi / 90
 nLines    = 15
@@ -25,7 +25,7 @@ nLines    = 15
 # sigma 		= 2
 threshold = 0.3
 # rhoRes 		= 2
-# nLines 		= 30
+# nLines 		= 50
 # end of parameters
 
 for file in sorted(os.listdir(datadir)):
@@ -51,8 +51,8 @@ for file in sorted(os.listdir(datadir)):
 		[rhos, thetas] = myHoughLines(img_hough, nLines)
 
 		lines = cv2.HoughLinesP(np.uint8(255 * img_threshold), rhoRes, thetaRes, 50, minLineLength = 20, maxLineGap = 5)
-
-		# everything below here just saves the outputs to files
+		
+  # everything below here just saves the outputs to files
 		fname = '%s/%s_01edge.png' % (resultsdir, file)
 		cv2.imwrite(fname, 255 * np.sqrt(img_edge / img_edge.max()))
 		

@@ -52,7 +52,7 @@ def myEdgeFilter(img0: NdArray, sigma):
     image = nms_directed(magnitude, direction)
 
     #? mute image edges
-    image[0] = image[:, 0] = image[:, -1] = image[-1, :] = 0
+    image[0, :] = image[:, 0] = image[:, -1] = image[-1, :] = 0
     
     return image
 
