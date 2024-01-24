@@ -24,6 +24,8 @@ where ${\calM}_w(x,y)$ is the \emph{covariance matrix}:
 \end{array}\right].
 \end{align}
 \end{problem}
+
+\newpage
 \begin{Answer}
   Since the displacements of $u$ and $v$ are small,
   consider the first-order Taylor approximation of $I(x-s+u,y-t+v)$ around the point $(x-s, y-t)$.
@@ -47,11 +49,13 @@ where ${\calM}_w(x,y)$ is the \emph{covariance matrix}:
         I_x(x-s,y-t)^2 & I_x(x-s,y-t)I_y(x-s,y-t) \\
         I_x(x-s,y-t)I_y(x-s,y-t) & I_y(x-s,y-t)^2
       \end{bmatrix}
-    [u, v]^T ~\label{eq:estimation-derived}
+    [u, v]^T\nonumber \\
+    &\approx \sum_{s,t} [u, v]
+    \begin{bmatrix}
+      w(s,t) I_x(x-s,y-t)^2 &  w(s,t) I_x(x-s,y-t)I_y(x-s,y-t) \\
+      w(s,t) I_x(x-s,y-t)I_y(x-s,y-t) &  w(s,t) I_y(x-s,y-t)^2
+    \end{bmatrix}
+  [u, v]^T \nonumber \\
+  &\approx  \sum_{s,t} [u, v] {\calM}_w(x,y) [u, v]^T~\label{eq:estimation-derived}
   \end{align}
-
-  \step
-  Therefore, we can estimate $E_w(u,v; x, y)$ as in equation ~\eqref{eq:estimation-derived},
-  (which is equivalent to equation ~\ref{eq:approx} when the covariance matrix
-  is factored out).
 \end{Answer}
