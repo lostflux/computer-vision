@@ -35,8 +35,11 @@
         \State $G_\sigma^x \gets \begin{bmatrix} 1 & 0 & -1 \\ 2 & 0 & -2 \\ 1 & 0 & -1 \end{bmatrix}$ \Comment{Sobel derivative filter.}
         \State
         \State $I_x \gets G_\sigma^x \ast I$
-        \State $I_{x^2} \gets I_x \times I_x$
         \State $I_y \gets {(G_\sigma^x)}^T \ast I$
+        % subtract mean from I_x and I_y
+        \State $I_x \gets I_x - \mu(I_x)$ \Comment{Subtract mean from $I_x$.}
+        \State $I_y \gets I_y - \mu(I_y)$ \Comment{Subtract mean from $I_y$.}
+        \State $I_{x^2} \gets I_x \times I_x$
         \State $I_{y^2} \gets I_y \times I_y$
         \State $I_{xy} \gets I_x \times I_y$
         \State $R \gets [[0\; \mathbf{for}\;  y \in I]\; \mathbf{for}\; x \in I]$ \Comment{Initialize corner metric to zero for each pixel.}
@@ -63,5 +66,4 @@
       \EndProcedure
     \end{algorithmic}
   \end{algorithm}
-      
 \end{answer}

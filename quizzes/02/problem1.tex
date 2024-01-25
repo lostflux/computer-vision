@@ -50,12 +50,12 @@ where ${\calM}_w(x,y)$ is the \emph{covariance matrix}:
         I_x(x-s,y-t)I_y(x-s,y-t) & I_y(x-s,y-t)^2
       \end{bmatrix}
     [u, v]^T\nonumber \\
-    &\approx \sum_{s,t} [u, v]
+    &\approx[u, v]
     \begin{bmatrix}
-      w(s,t) I_x(x-s,y-t)^2 &  w(s,t) I_x(x-s,y-t)I_y(x-s,y-t) \\
-      w(s,t) I_x(x-s,y-t)I_y(x-s,y-t) &  w(s,t) I_y(x-s,y-t)^2
+      \sum_{s,t} w(s,t) I_x(x-s,y-t)^2 &   \sum_{s,t} w(s,t) I_x(x-s,y-t)I_y(x-s,y-t) \\
+      \sum_{s,t} w(s,t) I_x(x-s,y-t)I_y(x-s,y-t) &   \sum_{s,t} w(s,t) I_y(x-s,y-t)^2
     \end{bmatrix}
   [u, v]^T \nonumber \\
-  &\approx  \sum_{s,t} [u, v] {\calM}_w(x,y) [u, v]^T~\label{eq:estimation-derived}
+  &\approx [u, v] {\calM}_w(x,y) [u, v]^T\nonumber
   \end{align}
 \end{Answer}
