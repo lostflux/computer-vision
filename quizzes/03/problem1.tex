@@ -1,0 +1,317 @@
+\begin{problem}
+  Given a set $N$ of points $\bp_i = (x_i, y_i), i \in \set{1, \ldots, N}$,
+  in the image plane, we wish to find the best line passing through those points.
+
+  \begin{enumroman}
+    \item One way to solve this problem is to find $(a, b)$ that most closely
+      satisfy the equations $y_i = ax_i + b$, in a least-squares sense.
+      Write these equations in the form of a \emph{heterogeneous}
+      least-squares problem $A \bx = \bb$, where $\bx = (a, b)^T$,
+      and give an expression for the least-squares estimate of $\bx$.
+      Give a geometric interpretation of the error being minimized,
+      and use a simple graph to visualize the error.
+      Does this make sense when fitting a line to points in an image?
+      \begin{answer}
+        The set of $N$ points satisfies the following system of equations:
+        \begin{align*}
+          y_1 &= ax_1 + b \\
+          y_2 &= ax_2 + b \\
+          \vdots \\
+          y_N &= ax_N + b.
+        \end{align*}
+        % \newpage
+        We can rewrite the system as the following heterogeneous
+        \emph{least-squares} problem:
+
+        \[
+          \underbrace{\begin{bmatrix}
+            x_1 & 1 \\
+            x_2 & 1 \\
+            \vdots & \vdots \\
+            x_N & 1
+          \end{bmatrix}}_{A}
+          \underbrace{\begin{bmatrix}
+            a \\
+            b
+          \end{bmatrix}}_{\bx}
+          =
+          \underbrace{\begin{bmatrix}
+            y_1 \\
+            y_2 \\
+            \vdots \\
+            y_N
+          \end{bmatrix}}_{\bb}.
+        \]
+
+        To find the least-squares estimate of $\bx$, we solve the
+        normal equations $A^T A \bx = A^T \bb$:
+
+        \begin{align*}
+          A^T A \bx &= A^T \bb \\
+          \underbrace{\begin{bmatrix}
+            x_1 & x_2 & \cdots & x_N \\
+            1 & 1 & \cdots & 1
+          \end{bmatrix}}_{A^T}
+          \underbrace{\begin{bmatrix}
+            x_1 & 1 \\
+            x_2 & 1 \\
+            \vdots & \vdots \\
+            x_N & 1
+          \end{bmatrix}}_{A}
+          \underbrace{\begin{bmatrix}
+            a \\
+            b
+          \end{bmatrix}}_{\bx}
+          &=
+          \underbrace{\begin{bmatrix}
+            x_1 & x_2 & \cdots & x_N \\
+            1 & 1 & \cdots & 1
+          \end{bmatrix}}_{A^T}
+          \underbrace{\begin{bmatrix}
+            y_1 \\
+            y_2 \\
+            \vdots \\
+            y_N
+          \end{bmatrix}}_{\bb} \\ \\
+          \underbrace{\begin{bmatrix}
+            \sum\limits_{i=1}^N x_i^2 & \sum\limits_{i=1}^N x_i \\
+            \sum\limits_{i=1}^N x_i & N
+          \end{bmatrix}}_{A^T A}
+          \underbrace{\begin{bmatrix}
+            a \\
+            b
+          \end{bmatrix}}_{\bx}
+          &=
+          \underbrace{\begin{bmatrix}
+            \sum\limits_{i=1}^N x_i y_i \\
+            \sum\limits_{i=1}^N y_i
+          \end{bmatrix}}_{A^T \bb}
+        \end{align*}
+
+        Square matrix on the left is invertible,
+        ~\footnote{
+          If the matrix is not invertible, then the system of equations
+          has either no solution (i.e. is inconsistent)
+          or infinitely many solutions.
+        }
+        so we can solve for $\bx$ by left-multiplying both sides
+        by its inverse:
+
+        \begin{align*}
+          \underbrace{\begin{bmatrix}
+            a \\
+            b
+          \end{bmatrix}}_{\bx}
+          &=
+          \underbrace{\begin{bmatrix}
+            \sum\limits_{i=1}^N x_i^2 & \sum\limits_{i=1}^N x_i \\
+            \sum\limits_{i=1}^N x_i & N
+          \end{bmatrix}^{-1}}_{(A^T A)^{-1}}
+          \underbrace{\begin{bmatrix}
+            \sum\limits_{i=1}^N x_i y_i \\
+            \sum\limits_{i=1}^N y_i
+          \end{bmatrix}}_{A^T \bb}
+        \end{align*}
+
+        \newpage
+        The error being minimized is the sum of the square
+        distances of each point from the line:
+        \[ \calE = \sum_{i=1}^N \abs{\abs{y_i - \bx \cdot x_i}}^2. \]
+
+        % draw tikz graph visualizing error
+        \begin{figure}[H]
+          \centering
+          \begin{tikzpicture}[domain=0:10]
+            \draw[very thin,color=gray] (-1.1,-1.1) grid (9.9,9.9);
+
+            % initialize total error
+            \pgfmathsetmacro{\totalerror}{0}
+
+            % text expression for terms in summation
+            \pgfmathsetmacro{\sumexpression}{0}
+
+            % add points and calculate total error
+            \foreach \x/\y in {1/4, 2/1, 3/4, 4/3, 5/3, 6/1, 7/6, 8/6, 9/8}{
+
+              %? draw point and offset from line
+              % increase the size of the points (twice as big)
+              \begin{scope}[every node/.style={scale=1.5}]
+                \foreach \x/\y in {1/4, 2/1, 3/4, 4/3, 5/3, 6/1, 7/6, 8/6, 9/8}{
+                  \node at (\x, \y) {\textbullet};
+                }
+              \end{scope}
+
+              \pgfmathsetmacro{\error}{(\y-\x)*(\y-\x)}
+              \draw[-, color=red] (\x, \x) -- (\x, \y) node[left] {$\green{\mathbf{\error}}$};
+              
+              %? concatenate '+ \error' to sum expression
+              \xdef\sumexpression{\sumexpression + \error}
+              
+              %? increment total error
+              \pgfmathparse{\totalerror + \error}
+              \global\let\totalerror\pgfmathresult
+            }
+
+            % display total error
+            \node at (5, -2) {$\calE = \sumexpression = \pgfmathprintnumber{\totalerror}$};
+
+            \draw[->] (-0.2,0) -- (10.2,0) node[right] {$x$};
+            \draw[->] (0,-1.2) -- (0,10.2) node[above] {$f(x)$};
+          
+            \draw[color=blue]    plot (\x,\x)   node[right] {$f(x) =x$};
+
+          \end{tikzpicture}
+          \caption{Graph of points, fitted line, and error measures.}
+        \end{figure}
+        Notice that the error associated to each point varies quadratically.
+        This is often desirable when fitting a line to points in an image
+        since it penalizes points that are farther from the line by a
+        greater scale than points that are closer to the line.
+        \emph{
+          However, if there are outliers in the dataset,
+          then using this method to fit a line to points in an image
+          can result in one outlier point having a large effect on the
+          fitted line and making it less accurate.
+        } \\
+      \end{answer}
+
+    \newpage
+    \item Another way to solve this problem is to find
+      $\ell = (a, b, c)$, defined up to scale, that
+      most closely satisfies the equations $ax_i + by_i + c = 0$,
+      in a least-squares sense.
+      Write these equations in the form of a \emph{homogeneous}
+      least-squares problem $A \ell = 0$, where $\ell = (a, b, c)^T$
+      and $\ell \ne 0$.
+      This problem has a trivial solution (zero vector) which is not
+      of much use. Describe some ways of avoiding this trivial solution
+      and corresponding algorithms for solving the resulting
+      optimization problem. Is this approach more or less
+      useful than the previous one? Why?
+      
+      \step
+      \emph{Hint: Think about how we can express the distance of a
+      point from a line.}
+      \begin{answer}
+        The set of $N$ points satisfies the following system of equations:
+        \begin{align*}
+          ax_1 + by_1 + c &= 0 \\
+          ax_2 + by_2 + c &= 0 \\
+          \vdots \\
+          ax_N + by_N + c &= 0.
+        \end{align*}
+        We can rewrite the system as the following homogeneous
+        \emph{least-squares} problem:
+
+        \[
+          \underbrace{\begin{bmatrix}
+            x_1 & y_1 & 1 \\
+            x_2 & y_2 & 1 \\
+            \vdots & \vdots & \vdots \\
+            x_N & y_N & 1
+          \end{bmatrix}}_{A}
+          \underbrace{\begin{bmatrix}
+            a \\
+            b \\
+            c
+          \end{bmatrix}}_{\ell}
+          =
+          \underbrace{\begin{bmatrix}
+            0 \\
+            0 \\
+            \vdots \\
+            0
+          \end{bmatrix}}_{\mathbf{0}}.
+        \]
+
+        \newpage
+        To find the least-squares estimate of $\ell$, we solve the
+        normal equations $A^T A \ell = A^T \mathbf{0}$:
+
+        \begin{align*}
+          A^T A \ell &= A^T \mathbf{0} \\
+          \underbrace{\begin{bmatrix}
+            x_1 & x_2 & \cdots & x_N \\
+            y_1 & y_2 & \cdots & y_N \\
+            1 & 1 & \cdots & 1
+          \end{bmatrix}}_{A^T}
+          \underbrace{\begin{bmatrix}
+            x_1 & y_1 & 1 \\
+            x_2 & y_2 & 1 \\
+            \vdots & \vdots & \vdots \\
+            x_N & y_N & 1
+          \end{bmatrix}}_{A}
+          \underbrace{\begin{bmatrix}
+            a \\
+            b \\
+            c
+          \end{bmatrix}}_{\ell}
+          &=
+          \underbrace{\begin{bmatrix}
+            x_1 & x_2 & \cdots & x_N \\
+            y_1 & y_2 & \cdots & y_N \\
+            1 & 1 & \cdots & 1
+          \end{bmatrix}}_{A^T}
+          \underbrace{\begin{bmatrix}
+            0 \\
+            0 \\
+            \vdots \\
+            0
+          \end{bmatrix}}_{\mathbf{0}} \\ \\
+          \underbrace{\begin{bmatrix}
+            \sum\limits_{i=1}^N x_i^2 & \sum\limits_{i=1}^N x_i y_i & \sum\limits_{i=1}^N x_i \\
+            \sum\limits_{i=1}^N x_i y_i & \sum\limits_{i=1}^N y_i^2 & \sum\limits_{i=1}^N y_i \\
+            \sum\limits_{i=1}^N x_i & \sum\limits_{i=1}^N y_i & N
+          \end{bmatrix}}_{A^T A}
+          \underbrace{\begin{bmatrix}
+            a \\
+            b \\
+            c
+          \end{bmatrix}}_{\ell}
+          &=
+          \underbrace{\begin{bmatrix}
+            0 \\
+            0 \\
+            0
+          \end{bmatrix}}_{A^T \mathbf{0}}
+        \end{align*}
+
+        The square matrix to the left is invertible,
+        \emph{
+          but the vector on the right is the zero vector,
+          so multiplying it by the inverse of the matrix
+          will not give us useful information about $\ell$.
+        }
+
+        Instead, we want to find the \emph{null space} of $A$,
+        \[ \nul A = \set{\vec{v} \in \R^3 \mid A \vec{v} = \mathbf{0}}. \]
+
+        \textbf{On finding the null space of $A^TA$:} \\
+        We can find a basis for the null space of $A^TA$
+        (called the \emph{null basis}) by reducing the matrix
+        \[ \begin{bmatrix}
+          A^TA & | & \mathbf{0}
+        \end{bmatrix}
+        \] to reduced row echelon form.
+        The null basis will be the set of vectors corresponding
+        to the columns of the reduced matrix that do not have
+        a pivot column in the original matrix.
+
+        \step
+        \textbf{On Comparative Utility of Approaches:}\\
+        The second approach is, in a lot of ways, more useful than the first.
+        
+        \begin{enumarabic}
+          \item The right-hand side of the homogeneous least-squares
+            problem is the zero vector, so we don't have to worry about
+            complicated computation of $A^T \bb$.
+
+          \item The homogeneous approach also gives us a basis for \emph{all}
+            vectors in the null space of $A^TA$.
+            If there were multiple lines that are best fits for the points
+            they they would be easier to find since they would be linear
+            combinations of the null basis vectors.
+        \end{enumarabic}
+      \end{answer}
+  \end{enumroman}
+\end{problem}

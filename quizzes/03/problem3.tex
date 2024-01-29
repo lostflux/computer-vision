@@ -97,12 +97,14 @@
     \end{bmatrix}
   \end{align}
 
-  \step
   Our desired affine transformation matrix (~\ref{eq:3.1}) matches the first
   matrix product (~\ref{eq:3.2}).
+  Since matrices multiply from right to left
+  (i.e. $\bA \bB \bc = \bA (\bB \bc)$),
+  the linear transformations (rotation, shear, scaling, etc.)
+  are applied first before the translation.
 
-  \step
-  Therefore, we achieve the affine transformation by doing
-  the equivalent matrix multiplications in order,
-  i.e. doing translation first then doing linear transformation.
+  Intuitively, this makes sense because translating first would
+  result in the image points being at the wrong coordinates
+  during transformation.
 \end{Answer}

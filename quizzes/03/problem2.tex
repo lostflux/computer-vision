@@ -1,0 +1,211 @@
+\begin{problem}
+  The equation for a conic in the plane using inhomogeneous
+  coordinates $(x, y)$ is
+  \begin{align}
+    ax^2 + bxy + cy^2 + dx + ey + f = 0.~\label{eq:2.1}
+  \end{align}
+
+  \begin{enumalph}
+    \item Suppose you have a given a set of inhomogeneous points
+      $\bx_i = (x_i, y_i)$, $i \in \set{1, \ldots, N}$.
+      Derive an expression for the least squares estimate
+      of a conic $\bc = (a, b, c, d, e, f)$ passing through those points.
+      
+      \step
+      \emph{
+        Note: your expression may take the form of a
+        null vector or eigenvector of a matrix.
+        If so, you must provide expressions
+        for the matrix elements.
+      }
+      \begin{answer}
+        To determine the matching conic, we need to solve the equation
+        $A\bx = \mathbf{0}$:
+        \begin{align*}
+          \underbrace{\begin{bmatrix}
+            x_1^2 & x_1y_1 & y_1^2 & x_1 & y_1 & 1 \\
+            x_2^2 & x_2y_2 & y_2^2 & x_2 & y_2 & 1 \\
+            \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+            x_N^2 & x_Ny_N & y_N^2 & x_N & y_N & 1 \\
+          \end{bmatrix}}_{\bA}
+          \underbrace{\begin{bmatrix}
+            a \\
+            b \\
+            c \\
+            d \\
+            e \\
+            f \\
+          \end{bmatrix}}_{\bc}
+          &=
+          \underbrace{\begin{bmatrix}
+            0 \\
+            0 \\
+            \vdots \\
+            0 \\
+          \end{bmatrix}}_{\mathbf{0}}
+        \end{align*}
+        We solve for $\bc$ by first multiplying both sides
+        by $A^T$ in order to convert the matrix on the left into a square
+        matrix, then either [1] multiplying both sides by the inverse
+        of the square matrix if the right-hand side is nonzero
+        or [2] finding the null space if the right-hand side is zero.
+        In this case, approach [2] is the desired one:
+
+        \begin{align*}
+          \underbrace{\begin{bmatrix}
+            x_1^2 & x_2^2 & \cdots & x_N^2 \\
+            x_1y_1 & x_2y_2 & \cdots & x_Ny_N \\
+            y_1^2 & y_2^2 & \cdots & y_N^2 \\
+            x_1 & x_2 & \cdots & x_N \\
+            y_1 & y_2 & \cdots & y_N \\
+            1 & 1 & \cdots & 1 \\
+          \end{bmatrix}}_{A^T}
+          \underbrace{\begin{bmatrix}
+            x_1^2 & x_1y_1 & y_1^2 & x_1 & y_1 & 1 \\
+            x_2^2 & x_2y_2 & y_2^2 & x_2 & y_2 & 1 \\
+            \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+            x_N^2 & x_Ny_N & y_N^2 & x_N & y_N & 1 \\
+          \end{bmatrix}}_{A}
+          \underbrace{\begin{bmatrix}
+            a \\
+            b \\
+            c \\
+            d \\
+            e \\
+            f \\
+          \end{bmatrix}}_{\bc}
+          &=
+          \underbrace{\begin{bmatrix}
+            0 \\
+            0 \\
+            0 \\
+            0 \\
+            0 \\
+            0 \\
+          \end{bmatrix}}_{A \mathbf{0}}
+        \end{align*}
+
+        \begin{align*}
+          \underbrace{\begin{bmatrix}
+            \sum_{i=1}^N x_i^4 & \sum_{i=1}^N x_i^3y_i & \sum_{i=1}^N x_i^2y_i^2 & \sum_{i=1}^N x_i^3 & \sum_{i=1}^N x_i^2y_i & \sum_{i=1}^N x_i^2 \\
+            \sum_{i=1}^N x_i^3y_i & \sum_{i=1}^N x_i^2y_i^2 & \sum_{i=1}^N x_iy_i^3 & \sum_{i=1}^N x_i^2y_i & \sum_{i=1}^N x_iy_i^2 & \sum_{i=1}^N x_iy_i \\
+            \sum_{i=1}^N x_i^2y_i^2 & \sum_{i=1}^N x_iy_i^3 & \sum_{i=1}^N y_i^4 & \sum_{i=1}^N x_iy_i^2 & \sum_{i=1}^N y_i^3 & \sum_{i=1}^N y_i^2 \\
+            \sum_{i=1}^N x_i^3 & \sum_{i=1}^N x_i^2y_i & \sum_{i=1}^N x_iy_i^2 & \sum_{i=1}^N x_i^2 & \sum_{i=1}^N x_iy_i & \sum_{i=1}^N x_i \\
+            \sum_{i=1}^N x_i^2y_i & \sum_{i=1}^N x_iy_i^2 & \sum_{i=1}^N y_i^3 & \sum_{i=1}^N x_iy_i & \sum_{i=1}^N y_i^2 & \sum_{i=1}^N y_i \\
+            \sum_{i=1}^N x_i^2 & \sum_{i=1}^N x_iy_i & \sum_{i=1}^N y_i^2 & \sum_{i=1}^N x_i & \sum_{i=1}^N y_i & \sum_{i=1}^N 1 \\
+          \end{bmatrix}}_{A^TA}
+          \underbrace{\begin{bmatrix}
+            a \\
+            b \\
+            c \\
+            d \\
+            e \\
+            f \\
+          \end{bmatrix}}_{\bc}
+          &=
+          \underbrace{\begin{bmatrix}
+            0 \\
+            0 \\
+            0 \\
+            0 \\
+            0 \\
+            0 \\
+          \end{bmatrix}}_{A \mathbf{0}}
+        \end{align*}
+        
+        To solve for $\bc$, we need to find the null space of $A^TA$
+        in the same manner as in Problem 1. part (ii).
+      \end{answer}
+    \item In general, what is the minimum value of $N$ that
+      allows a unique solution for $\bc$?
+      \begin{answer}
+        Since there are five unknowns in $\bc$ ---
+        $a, b, c, d, e, f$ --- we need at least five equations
+        to solve for $\bc$.
+        Therefore, the minimum value of $N$ is $5$.
+      \end{answer}
+
+    \newpage
+    \item Homogenize equation ~\ref{eq:2.1} by making the
+      substitutions $x \gets x_1/x_3$ and $y \gets y_1/y_3$,
+      and show that in terms of homogeneous coordinates
+      $(\bx = (x_1, x_2, x_3))$ the conic can be expressed in
+      matrix form
+      \[ \bx^T\bC\bx = 0, \]
+      where $\bC$ is a symmetric matrix.
+      \begin{answer}
+        By substituting $x \gets x_1/x_3$ and $y \gets y_1/y_3$,
+        and simplifying the resulting equation, we get:
+        \begin{align*}
+          ax^2 + bxy + cy^2 + dx + ey + f &= 0 \\ \\
+          a\parens{\frac{x_1}{x_3}}^2 + b\frac{x_1y_1}{x_3y_3}
+          + c\parens{\frac{y_1}{y_3}}^2
+          + d\frac{x_1}{x_3} + e\frac{y_1}{y_3} + f &= 0 \\ \\
+          \frac{x_1^2}{x_3^2}a + \frac{x_1y_1}{x_3y_3}b
+          + \frac{y_1^2}{y_3^2}c
+          + \frac{x_1}{x_3}d + \frac{y_1}{y_3}e + f &= 0 \\ \\
+          \frac{x_1^2}{x_3^2}(a) + \frac{x_1y_1}{x_3y_3}(b/2 + b/2)
+          + \frac{y_1^2}{y_3^2}(c) + \frac{x_1}{x_3}(d/2 + d/2)
+          + \frac{y_1}{y_3}(e/2 + e/2) + f &= 0 \\ \\
+          \begin{bmatrix}
+            (a) \frac{x_1}{x_3} & (b/2) \frac{x_1}{x_3} & (d/2) \frac{x_1}{x_3} \\
+            (b/2) \frac{y_1}{y_3} & (c) \frac{y_1}{y_3} & (e/2) \frac{y_1}{y_3} \\
+            d/2 & e/2 & f \\
+          \end{bmatrix}
+          \begin{bmatrix}
+            \frac{x_1}{x_3} \\
+            \frac{y_1}{y_3} \\
+            1 \\
+          \end{bmatrix} &= 0 \\ \\
+          \begin{bmatrix}
+            \frac{x_1}{x_3} & \frac{y_1}{y_3} & 1 \\
+          \end{bmatrix}
+          \begin{bmatrix}
+            a & b/2 & d/2 \\
+            b/2 & c & e/2 \\
+            d/2 & e/2 & f \\
+          \end{bmatrix}
+          \begin{bmatrix}
+            \frac{x_1}{x_3} \\
+            \frac{y_1}{y_3} \\
+            1 \\
+          \end{bmatrix}
+          &= 0 \\ \\
+          \underbrace{\begin{bmatrix}
+            x & y & 1 \\
+          \end{bmatrix}}_{\bx^T}
+          \underbrace{\begin{bmatrix}
+            a & b/2 & d/2 \\
+            b/2 & c & e/2 \\
+            d/2 & e/2 & f \\
+          \end{bmatrix}}_{\bC}
+          \underbrace{\begin{bmatrix}
+            x \\
+            y \\
+            1 \\
+          \end{bmatrix}}_{\bx}
+          &= 0
+        \end{align*}
+      \end{answer}
+
+    \newpage
+    \item Suppose we apply a projective transformation to our
+      points $\bx_i^{'} = \bH\bx_i$.
+      The transformed points $x_i'$ will lie on a transformed
+      conic represented by a new symmetric matrix $\bC'$.
+      Write an equation that specifies the relationship between
+      $\bC'$ and $\bC$ in terms of the homography $\bH$.
+      \begin{answer}
+        \begin{align*}
+          \bx^T\bC\bx &= 0 \\
+          (\bH\bx)^T\bC(\bH\bx) &= 0 \\
+          \bx^T \underbrace{\bH^T\bC\bH}_{\bC'}\bx &= 0 \qquad \text{ (since ${(Ab)^T = b^TA^T}$) } \\
+          \intertext{
+            The transformed conic satisfies the equation
+            $\bx^T\bC'\bx = 0$ where
+          }
+          \bC' &= \bH^T\bC\bH
+        \end{align*}
+      \end{answer}
+  \end{enumalph}
+\end{problem}
