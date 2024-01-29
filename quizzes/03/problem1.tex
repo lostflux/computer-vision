@@ -116,11 +116,15 @@
         \newpage
         The error being minimized is the sum of the square
         distances of each point from the line:
-        \[ \calE = \sum_{i=1}^N \abs{\abs{y_i - \bx \cdot x_i}}^2. \]
+        \[ \calE = \sum_{i=1}^N \abs{\abs{y_i - 
+            \begin{bmatrix} a & b \end{bmatrix}
+            \begin{bmatrix} x_i \\ 1 \end{bmatrix}}
+          }^2. \]
 
         % draw tikz graph visualizing error
         \begin{figure}[H]
           \centering
+          %  scale down to 0.6\textwidth
           \begin{tikzpicture}[domain=0:10]
             \draw[very thin,color=gray] (-1.1,-1.1) grid (9.9,9.9);
 
@@ -202,7 +206,6 @@
         \end{align*}
         We can rewrite the system as the following homogeneous
         \emph{least-squares} problem:
-
         \[
           \underbrace{\begin{bmatrix}
             x_1 & y_1 & 1 \\
@@ -224,12 +227,10 @@
           \end{bmatrix}}_{\mathbf{0}}.
         \]
 
-        \newpage
+        % \newpage
         To find the least-squares estimate of $\ell$, we solve the
         normal equations $A^T A \ell = A^T \mathbf{0}$:
-
         \begin{align*}
-          A^T A \ell &= A^T \mathbf{0} \\
           \underbrace{\begin{bmatrix}
             x_1 & x_2 & \cdots & x_N \\
             y_1 & y_2 & \cdots & y_N \\
@@ -257,7 +258,7 @@
             0 \\
             \vdots \\
             0
-          \end{bmatrix}}_{\mathbf{0}} \\ \\
+          \end{bmatrix}}_{\mathbf{0}} \\
           \underbrace{\begin{bmatrix}
             \sum\limits_{i=1}^N x_i^2 & \sum\limits_{i=1}^N x_i y_i & \sum\limits_{i=1}^N x_i \\
             \sum\limits_{i=1}^N x_i y_i & \sum\limits_{i=1}^N y_i^2 & \sum\limits_{i=1}^N y_i \\
@@ -297,7 +298,6 @@
         to the columns of the reduced matrix that do not have
         a pivot column in the original matrix.
 
-        \step
         \textbf{On Comparative Utility of Approaches:}\\
         The second approach is, in a lot of ways, more useful than the first.
         
