@@ -23,7 +23,7 @@
         $A\bx = \mathbf{0}$:
         \begin{align*}
           \underbrace{\begin{bmatrix}
-            x_1^2 & x_1y_1 & y_1^2 & x_1 & y_1 & 1 \\
+            x_1^2 & x_1x_2 & x_2^2 & x_1 & x_2 & 1 \\
             x_2^2 & x_2y_2 & y_2^2 & x_2 & y_2 & 1 \\
             \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
             x_N^2 & x_Ny_N & y_N^2 & x_N & y_N & 1 \\
@@ -74,14 +74,14 @@
         % \begin{align*}
         %   \underbrace{\begin{bmatrix}
         %     x_1^2 & x_2^2 & \cdots & x_N^2 \\
-        %     x_1y_1 & x_2y_2 & \cdots & x_Ny_N \\
-        %     y_1^2 & y_2^2 & \cdots & y_N^2 \\
+        %     x_1x_2 & x_2y_2 & \cdots & x_Ny_N \\
+        %     x_2^2 & y_2^2 & \cdots & y_N^2 \\
         %     x_1 & x_2 & \cdots & x_N \\
-        %     y_1 & y_2 & \cdots & y_N \\
+        %     x_2 & y_2 & \cdots & y_N \\
         %     1 & 1 & \cdots & 1 \\
         %   \end{bmatrix}}_{A^T}
         %   \underbrace{\begin{bmatrix}
-        %     x_1^2 & x_1y_1 & y_1^2 & x_1 & y_1 & 1 \\
+        %     x_1^2 & x_1x_2 & x_2^2 & x_1 & x_2 & 1 \\
         %     x_2^2 & x_2y_2 & y_2^2 & x_2 & y_2 & 1 \\
         %     \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
         %     x_N^2 & x_Ny_N & y_N^2 & x_N & y_N & 1 \\
@@ -152,38 +152,38 @@
 
     \newpage
     \item Homogenize equation ~\ref{eq:2.1} by making the
-      substitutions $x \gets x_1/x_3$ and $y \gets y_1/y_3$,
+      substitutions $x \gets x_1/x_3$ and $y \gets x_2/x_3$,
       and show that in terms of homogeneous coordinates
       $(\bx = (x_1, x_2, x_3))$ the conic can be expressed in
       matrix form
       \[ \bx^T\bC\bx = 0, \]
       where $\bC$ is a symmetric matrix.
       \begin{answer}
-        By substituting $x \gets x_1/x_3$ and $y \gets y_1/y_3$,
+        By substituting $x \gets x_1/x_3$ and $y \gets x_2/x_3$,
         and simplifying the resulting equation, we get:
         \begin{align*}
           ax^2 + bxy + cy^2 + dx + ey + f &= 0 \\ \\
-          a\parens{\frac{x_1}{x_3}}^2 + b\frac{x_1y_1}{x_3y_3}
-          + c\parens{\frac{y_1}{y_3}}^2
-          + d\frac{x_1}{x_3} + e\frac{y_1}{y_3} + f &= 0 \\ \\
-          \frac{x_1^2}{x_3^2}a + \frac{x_1y_1}{x_3y_3}b
-          + \frac{y_1^2}{y_3^2}c
-          + \frac{x_1}{x_3}d + \frac{y_1}{y_3}e + f &= 0 \\ \\
-          \frac{x_1^2}{x_3^2}(a) + \frac{x_1y_1}{x_3y_3}(b/2 + b/2)
-          + \frac{y_1^2}{y_3^2}(c) + \frac{x_1}{x_3}(d/2 + d/2)
-          + \frac{y_1}{y_3}(e/2 + e/2) + f &= 0 \\ \\
+          a\parens{\frac{x_1}{x_3}}^2 + b\frac{x_1x_2}{x_3x_3}
+          + c\parens{\frac{x_2}{x_3}}^2
+          + d\frac{x_1}{x_3} + e\frac{x_2}{x_3} + f &= 0 \\ \\
+          \frac{x_1^2}{x_3^2}a + \frac{x_1x_2}{x_3x_3}b
+          + \frac{x_2^2}{x_3^2}c
+          + \frac{x_1}{x_3}d + \frac{x_2}{x_3}e + f &= 0 \\ \\
+          \frac{x_1^2}{x_3^2}(a) + \frac{x_1x_2}{x_3x_3}(b/2 + b/2)
+          + \frac{x_2^2}{x_3^2}(c) + \frac{x_1}{x_3}(d/2 + d/2)
+          + \frac{x_2}{x_3}(e/2 + e/2) + f &= 0 \\ \\
           \begin{bmatrix}
             (a) \frac{x_1}{x_3} & (b/2) \frac{x_1}{x_3} & (d/2) \frac{x_1}{x_3} \\
-            (b/2) \frac{y_1}{y_3} & (c) \frac{y_1}{y_3} & (e/2) \frac{y_1}{y_3} \\
+            (b/2) \frac{x_2}{x_3} & (c) \frac{x_2}{x_3} & (e/2) \frac{x_2}{x_3} \\
             d/2 & e/2 & f \\
           \end{bmatrix}
           \begin{bmatrix}
             \frac{x_1}{x_3} \\
-            \frac{y_1}{y_3} \\
+            \frac{x_2}{x_3} \\
             1 \\
           \end{bmatrix} &= 0 \\ \\
           \begin{bmatrix}
-            \frac{x_1}{x_3} & \frac{y_1}{y_3} & 1 \\
+            \frac{x_1}{x_3} & \frac{x_2}{x_3} & 1 \\
           \end{bmatrix}
           \begin{bmatrix}
             a & b/2 & d/2 \\
@@ -192,12 +192,12 @@
           \end{bmatrix}
           \begin{bmatrix}
             \frac{x_1}{x_3} \\
-            \frac{y_1}{y_3} \\
+            \frac{x_2}{x_3} \\
             1 \\
           \end{bmatrix}
           &= 0 \\ \\
           \underbrace{\begin{bmatrix}
-            x & y & 1 \\
+            x_1 & x_2 & x_3 \\
           \end{bmatrix}}_{\bx^T}
           \underbrace{\begin{bmatrix}
             a & b/2 & d/2 \\
@@ -205,9 +205,9 @@
             d/2 & e/2 & f \\
           \end{bmatrix}}_{\bC}
           \underbrace{\begin{bmatrix}
-            x \\
-            y \\
-            1 \\
+            x_1 \\
+            x_2 \\
+            x_3 \\
           \end{bmatrix}}_{\bx}
           &= 0
         \end{align*}
@@ -222,9 +222,9 @@
       $\bC'$ and $\bC$ in terms of the homography $\bH$.
       \begin{answer}
         \begin{align*}
-          \bx^T\bC\bx &= 0 \\
+          \bx'^T\bC'\bx' &= 0 \\
           (\bH\bx)^T\bC(\bH\bx) &= 0 \\
-          \bx^T \underbrace{\bH^T\bC\bH}_{\bC'}\bx &= 0 \qquad \text{ (since ${(Ab)^T = b^TA^T}$) } \\
+          \bx^T \underbrace{\bH^T\bC\bH}_{\bC'}\bx &= 0 \qquad \text{ (since ${(\bA\bB)^T = \bB^T\bA^T}$) } \\
           \intertext{
             The transformed conic satisfies the equation
             $\bx^T\bC'\bx = 0$ where
