@@ -235,122 +235,37 @@
 
         % \newpage
         \step
+        \textbf{On Avoiding the Trivial Solution} \\
         This equation has a trivial solution $\ell = \mathbf{0}$,
         which is not useful and can be ovoided by normalizing
         the vector $\ell$ so that $\Abs{\ell} = 1$.
-        We would like to multiply both sides by the inverse of the matrix,
-        but the matrix is not square.
-        To get around this, left-multiply both sides by $A^T$
-        so that the matrix on the left becomes square,
-        then solve the normal equations $A^T A \ell = A^T \mathbf{0}$.
-        \begin{align*}
-          \underbrace{\begin{bmatrix}
-            x_1 & x_2 & \cdots & x_N \\
-            y_1 & y_2 & \cdots & y_N \\
-            1 & 1 & \cdots & 1
-          \end{bmatrix}}_{A^T}
-          \underbrace{\begin{bmatrix}
-            x_1 & y_1 & 1 \\
-            x_2 & y_2 & 1 \\
-            \vdots & \vdots & \vdots \\
-            x_N & y_N & 1
-          \end{bmatrix}}_{A}
-          \underbrace{\begin{bmatrix}
-            a \\
-            b \\
-            c
-          \end{bmatrix}}_{\ell}
-          &=
-          \underbrace{\begin{bmatrix}
-            x_1 & x_2 & \cdots & x_N \\
-            y_1 & y_2 & \cdots & y_N \\
-            1 & 1 & \cdots & 1
-          \end{bmatrix}}_{A^T}
-          \underbrace{\begin{bmatrix}
-            0 \\
-            0 \\
-            \vdots \\
-            0
-          \end{bmatrix}}_{\mathbf{0}} \\
-          \underbrace{\begin{bmatrix}
-            \sum\limits_{i=1}^N x_i^2 & \sum\limits_{i=1}^N x_i y_i & \sum\limits_{i=1}^N x_i \\
-            \sum\limits_{i=1}^N x_i y_i & \sum\limits_{i=1}^N y_i^2 & \sum\limits_{i=1}^N y_i \\
-            \sum\limits_{i=1}^N x_i & \sum\limits_{i=1}^N y_i & N
-          \end{bmatrix}}_{A^T A}
-          \underbrace{\begin{bmatrix}
-            a \\
-            b \\
-            c
-          \end{bmatrix}}_{\ell}
-          &=
-          \underbrace{\begin{bmatrix}
-            0 \\
-            0 \\
-            0
-          \end{bmatrix}}_{A^T \mathbf{0}}
-        \end{align*}
 
-        The square matrix to the left is invertible,
-        \emph{
-          but the vector on the right is the zero vector,
-          so multiplying it by the inverse of the matrix
-          will not give us useful information about $\ell$.
-        }
 
-        Instead, we want to use the \emph{singular value decomposition} of $A$ to find
-        the best fit line.
 
         \step
         \textbf{On Finding the Solutions}
-        % We compute $\bA$ to be a matrix where the $i$th row, $R_i$, is
-        % computed from the $i$th point $\bx_i = (x_i, y_i)$ as follows:
-        % \[ 
-        %   R_i = \begin{bmatrix}
-        %     x_i^2 & x_iy_i & y_i^2 & x_i & y_i & 1
-        %   \end{bmatrix}
-        % \]
-        % We solve the equation $\bA\bx = 0$ by converting $\bA$ into
-        % its singular value decomposition
-        % \[
-        %   A = U \Sigma V^T
-        % \]
-        % so that
-        % \[
-        %   U \Sigma V^T \bx = 0.
-        % \]
+          We solve the equation $\bA\bx = 0$ by converting $\bA$ into
+          its singular value decomposition
+          \[
+            A = U \Sigma V^T
+          \]
+          so that
+          \[
+            U \Sigma V^T \ell = 0.
+          \]
+          From the singular value decomposition, we compute $V$
+          (the transpose of $V^T$) and find the column corresponding
+          to the smallest singular value.
+          This column contains the coefficients of the conic
+          fitting the points.
 
-        % \step
-        % From the singular value decomposition, we compute $V$
-        % (the transpose of $V^T$) and find the column corresponding
-        % to the smallest singular value.
-        % This column contains the coefficients of the conic
-        % fitting the points.
-
-        \textbf{On finding the null space of $A^TA$:} \\
-        We can find a basis for the null space of $A^TA$
-        (called the \emph{null basis}) by reducing the matrix
-        \[ \begin{bmatrix}
-          A^TA & | & \mathbf{0}
-        \end{bmatrix}
-        \] to reduced row echelon form.
-        The null basis will be the set of vectors corresponding
-        to the columns of the reduced matrix that do not have
-        a pivot column in the original matrix.
-
+        \step
         \textbf{On Comparative Utility of Approaches:}\\
-        The second approach is, in a lot of ways, more useful than the first.
-        
-        \begin{enumarabic}
-          \item The right-hand side of the homogeneous least-squares
-            problem is the zero vector, so we don't have to worry about
-            complicated computation of $A^T \bb$.
-
-          \item The homogeneous approach also gives us a basis for \emph{all}
-            vectors in the null space of $A^TA$.
-            If there were multiple lines that are best fits for the points
-            they they would be easier to find since they would be linear
-            combinations of the null basis vectors.
-        \end{enumarabic}
+        In the examples above, it is clear that using homogeneous least squares
+        to fit a line to points in an image is much simpler to solve than
+        using the heterogeneous approach,
+        especially since in the homogeneous approach, the right-hand side
+        of the equation is zero.
       \end{answer}
   \end{enumroman}
 \end{problem}
