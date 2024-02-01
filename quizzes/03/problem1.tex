@@ -43,11 +43,13 @@
           \end{bmatrix}}_{\bb}.
         \]
 
-        To find the least-squares estimate of $\bx$, we solve the
-        normal equations $A^T A \bx = A^T \bb$:
+        We would like to multiply both sides by the inverse of the matrix,
+        but the matrix is not square.
+        To get around this, left-multiply both sides by $A^T$
+        so that the matrix on the left becomes square,
+        then solve the normal equations $A^T A \bx = A^T \bb$.
 
         \begin{align*}
-          A^T A \bx &= A^T \bb \\
           \underbrace{\begin{bmatrix}
             x_1 & x_2 & \cdots & x_N \\
             1 & 1 & \cdots & 1
@@ -113,9 +115,11 @@
           \end{bmatrix}}_{A^T \bb}
         \end{align*}
 
-        \newpage
+        % \newpage
         The error being minimized is the sum of the square
-        \emph{vertical} distances of each point from the line:
+        \emph{vertical} distances of each point from the line,
+        or equivalently, the sum of the square of how much
+        each point deviates from the line.
         \[ \calE = \sum_{i=1}^N \abs{\abs{y_i - 
             \begin{bmatrix} a & b \end{bmatrix}
             \begin{bmatrix} x_i \\ 1 \end{bmatrix}}
@@ -167,7 +171,9 @@
           \end{tikzpicture}
           \caption{Graph of points, fitted line, and error measures.}
         \end{figure}
-        Notice that the error associated to each point varies quadratically.
+
+        The error associated with each point varies quadratically;
+        twice the offset results in four times the error.
         This is often desirable when fitting a line to points in an image
         since it penalizes points that are farther from the line by a
         greater scale than points that are closer to the line.
@@ -228,8 +234,15 @@
         \]
 
         % \newpage
-        To find the least-squares estimate of $\ell$, we solve the
-        normal equations $A^T A \ell = A^T \mathbf{0}$:
+        \step
+        This equation has a trivial solution $\ell = \mathbf{0}$,
+        which is not useful and can be ovoided by normalizing
+        the vector $\ell$ so that $\Abs{\ell} = 1$.
+        We would like to multiply both sides by the inverse of the matrix,
+        but the matrix is not square.
+        To get around this, left-multiply both sides by $A^T$
+        so that the matrix on the left becomes square,
+        then solve the normal equations $A^T A \ell = A^T \mathbf{0}$.
         \begin{align*}
           \underbrace{\begin{bmatrix}
             x_1 & x_2 & \cdots & x_N \\
@@ -284,8 +297,34 @@
           will not give us useful information about $\ell$.
         }
 
-        Instead, we want to find the \emph{null space} of $A$,
-        \[ \nul A = \set{\vec{v} \in \R^3 \mid A \vec{v} = \mathbf{0}}. \]
+        Instead, we want to use the \emph{singular value decomposition} of $A$ to find
+        the best fit line.
+
+        \step
+        \textbf{On Finding the Solutions}
+        % We compute $\bA$ to be a matrix where the $i$th row, $R_i$, is
+        % computed from the $i$th point $\bx_i = (x_i, y_i)$ as follows:
+        % \[ 
+        %   R_i = \begin{bmatrix}
+        %     x_i^2 & x_iy_i & y_i^2 & x_i & y_i & 1
+        %   \end{bmatrix}
+        % \]
+        % We solve the equation $\bA\bx = 0$ by converting $\bA$ into
+        % its singular value decomposition
+        % \[
+        %   A = U \Sigma V^T
+        % \]
+        % so that
+        % \[
+        %   U \Sigma V^T \bx = 0.
+        % \]
+
+        % \step
+        % From the singular value decomposition, we compute $V$
+        % (the transpose of $V^T$) and find the column corresponding
+        % to the smallest singular value.
+        % This column contains the coefficients of the conic
+        % fitting the points.
 
         \textbf{On finding the null space of $A^TA$:} \\
         We can find a basis for the null space of $A^TA$

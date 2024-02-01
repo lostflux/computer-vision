@@ -44,85 +44,110 @@
             0 \\
           \end{bmatrix}}_{\mathbf{0}}
         \end{align*}
-        We solve for $\bc$ by first multiplying both sides
-        by $A^T$ in order to convert the matrix on the left into a square
-        matrix, then either [1] multiplying both sides by the inverse
-        of the square matrix if the right-hand side is nonzero
-        or [2] finding the null space if the right-hand side is zero.
-        In this case, approach [2] is the desired one:
+        We solve the equation $\bA\bc = 0$ by converting $\bA$ into
+        its singular value decomposition
+        \[
+          A = U \Sigma V^T
+        \]
+        so that
+        \[
+          U \Sigma V^T \bx = 0.
+        \]
 
-        \begin{align*}
-          \underbrace{\begin{bmatrix}
-            x_1^2 & x_2^2 & \cdots & x_N^2 \\
-            x_1y_1 & x_2y_2 & \cdots & x_Ny_N \\
-            y_1^2 & y_2^2 & \cdots & y_N^2 \\
-            x_1 & x_2 & \cdots & x_N \\
-            y_1 & y_2 & \cdots & y_N \\
-            1 & 1 & \cdots & 1 \\
-          \end{bmatrix}}_{A^T}
-          \underbrace{\begin{bmatrix}
-            x_1^2 & x_1y_1 & y_1^2 & x_1 & y_1 & 1 \\
-            x_2^2 & x_2y_2 & y_2^2 & x_2 & y_2 & 1 \\
-            \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
-            x_N^2 & x_Ny_N & y_N^2 & x_N & y_N & 1 \\
-          \end{bmatrix}}_{A}
-          \underbrace{\begin{bmatrix}
-            a \\
-            b \\
-            c \\
-            d \\
-            e \\
-            f \\
-          \end{bmatrix}}_{\bc}
-          &=
-          \underbrace{\begin{bmatrix}
-            0 \\
-            0 \\
-            0 \\
-            0 \\
-            0 \\
-            0 \\
-          \end{bmatrix}}_{A \mathbf{0}}
-        \end{align*}
+        \step
+        From the singular value decomposition, we compute $V$
+        (the transpose of $V^T$) and find the column corresponding
+        to the smallest singular value.
+        This column contains the coefficients of the conic
+        fitting the points.
 
-        \begin{align*}
-          \underbrace{\begin{bmatrix}
-            \sum_{i=1}^N x_i^4 & \sum_{i=1}^N x_i^3y_i & \sum_{i=1}^N x_i^2y_i^2 & \sum_{i=1}^N x_i^3 & \sum_{i=1}^N x_i^2y_i & \sum_{i=1}^N x_i^2 \\
-            \sum_{i=1}^N x_i^3y_i & \sum_{i=1}^N x_i^2y_i^2 & \sum_{i=1}^N x_iy_i^3 & \sum_{i=1}^N x_i^2y_i & \sum_{i=1}^N x_iy_i^2 & \sum_{i=1}^N x_iy_i \\
-            \sum_{i=1}^N x_i^2y_i^2 & \sum_{i=1}^N x_iy_i^3 & \sum_{i=1}^N y_i^4 & \sum_{i=1}^N x_iy_i^2 & \sum_{i=1}^N y_i^3 & \sum_{i=1}^N y_i^2 \\
-            \sum_{i=1}^N x_i^3 & \sum_{i=1}^N x_i^2y_i & \sum_{i=1}^N x_iy_i^2 & \sum_{i=1}^N x_i^2 & \sum_{i=1}^N x_iy_i & \sum_{i=1}^N x_i \\
-            \sum_{i=1}^N x_i^2y_i & \sum_{i=1}^N x_iy_i^2 & \sum_{i=1}^N y_i^3 & \sum_{i=1}^N x_iy_i & \sum_{i=1}^N y_i^2 & \sum_{i=1}^N y_i \\
-            \sum_{i=1}^N x_i^2 & \sum_{i=1}^N x_iy_i & \sum_{i=1}^N y_i^2 & \sum_{i=1}^N x_i & \sum_{i=1}^N y_i & \sum_{i=1}^N 1 \\
-          \end{bmatrix}}_{A^TA}
-          \underbrace{\begin{bmatrix}
-            a \\
-            b \\
-            c \\
-            d \\
-            e \\
-            f \\
-          \end{bmatrix}}_{\bc}
-          &=
-          \underbrace{\begin{bmatrix}
-            0 \\
-            0 \\
-            0 \\
-            0 \\
-            0 \\
-            0 \\
-          \end{bmatrix}}_{A \mathbf{0}}
-        \end{align*}
+
+
+
+        % We solve for $\bc$ by first multiplying both sides
+        % by $A^T$ in order to convert the matrix on the left into a square
+        % matrix, then either [1] multiplying both sides by the inverse
+        % of the square matrix if the right-hand side is nonzero
+        % or [2] finding the null space if the right-hand side is zero.
+        % In this case, approach [2] is the desired one:
+
+        % \begin{align*}
+        %   \underbrace{\begin{bmatrix}
+        %     x_1^2 & x_2^2 & \cdots & x_N^2 \\
+        %     x_1y_1 & x_2y_2 & \cdots & x_Ny_N \\
+        %     y_1^2 & y_2^2 & \cdots & y_N^2 \\
+        %     x_1 & x_2 & \cdots & x_N \\
+        %     y_1 & y_2 & \cdots & y_N \\
+        %     1 & 1 & \cdots & 1 \\
+        %   \end{bmatrix}}_{A^T}
+        %   \underbrace{\begin{bmatrix}
+        %     x_1^2 & x_1y_1 & y_1^2 & x_1 & y_1 & 1 \\
+        %     x_2^2 & x_2y_2 & y_2^2 & x_2 & y_2 & 1 \\
+        %     \vdots & \vdots & \vdots & \vdots & \vdots & \vdots \\
+        %     x_N^2 & x_Ny_N & y_N^2 & x_N & y_N & 1 \\
+        %   \end{bmatrix}}_{A}
+        %   \underbrace{\begin{bmatrix}
+        %     a \\
+        %     b \\
+        %     c \\
+        %     d \\
+        %     e \\
+        %     f \\
+        %   \end{bmatrix}}_{\bc}
+        %   &=
+        %   \underbrace{\begin{bmatrix}
+        %     0 \\
+        %     0 \\
+        %     0 \\
+        %     0 \\
+        %     0 \\
+        %     0 \\
+        %   \end{bmatrix}}_{A \mathbf{0}}
+        % \end{align*}
+
+        % \begin{align*}
+        %   \underbrace{\begin{bmatrix}
+        %     \sum_{i=1}^N x_i^4 & \sum_{i=1}^N x_i^3y_i & \sum_{i=1}^N x_i^2y_i^2 & \sum_{i=1}^N x_i^3 & \sum_{i=1}^N x_i^2y_i & \sum_{i=1}^N x_i^2 \\
+        %     \sum_{i=1}^N x_i^3y_i & \sum_{i=1}^N x_i^2y_i^2 & \sum_{i=1}^N x_iy_i^3 & \sum_{i=1}^N x_i^2y_i & \sum_{i=1}^N x_iy_i^2 & \sum_{i=1}^N x_iy_i \\
+        %     \sum_{i=1}^N x_i^2y_i^2 & \sum_{i=1}^N x_iy_i^3 & \sum_{i=1}^N y_i^4 & \sum_{i=1}^N x_iy_i^2 & \sum_{i=1}^N y_i^3 & \sum_{i=1}^N y_i^2 \\
+        %     \sum_{i=1}^N x_i^3 & \sum_{i=1}^N x_i^2y_i & \sum_{i=1}^N x_iy_i^2 & \sum_{i=1}^N x_i^2 & \sum_{i=1}^N x_iy_i & \sum_{i=1}^N x_i \\
+        %     \sum_{i=1}^N x_i^2y_i & \sum_{i=1}^N x_iy_i^2 & \sum_{i=1}^N y_i^3 & \sum_{i=1}^N x_iy_i & \sum_{i=1}^N y_i^2 & \sum_{i=1}^N y_i \\
+        %     \sum_{i=1}^N x_i^2 & \sum_{i=1}^N x_iy_i & \sum_{i=1}^N y_i^2 & \sum_{i=1}^N x_i & \sum_{i=1}^N y_i & \sum_{i=1}^N 1 \\
+        %   \end{bmatrix}}_{A^TA}
+        %   \underbrace{\begin{bmatrix}
+        %     a \\
+        %     b \\
+        %     c \\
+        %     d \\
+        %     e \\
+        %     f \\
+        %   \end{bmatrix}}_{\bc}
+        %   &=
+        %   \underbrace{\begin{bmatrix}
+        %     0 \\
+        %     0 \\
+        %     0 \\
+        %     0 \\
+        %     0 \\
+        %     0 \\
+        %   \end{bmatrix}}_{A \mathbf{0}}
+        % \end{align*}
         
-        To solve for $\bc$, we need to find the null space of $A^TA$
-        in the same manner as in Problem 1. part (ii).
+        % To solve for $\bc$, we need to find the null space of $A^TA$
+        % in the same manner as in Problem 1. part (ii).
       \end{answer}
     \item In general, what is the minimum value of $N$ that
       allows a unique solution for $\bc$?
       \begin{answer}
+        The minimum value of $N$ is $5$.
+
         Since there are five unknowns in $\bc$ ---
-        $a, b, c, d, e, f$ --- we need at least five equations
+        $a, b, c, d, e$ --- we need at least five equations
         to solve for $\bc$.
         Therefore, the minimum value of $N$ is $5$.
+
+        Note that $f$ can
+        be moved to the right-hand side of the equation.
       \end{answer}
 
     \newpage
