@@ -5,7 +5,6 @@ from helper import briefMatch
 from helper import computeBrief
 from helper import corner_detection
 
-# TODO: Q3.4
 def matchPics(I1, I2):
     """
     Function to match two images
@@ -18,23 +17,26 @@ def matchPics(I1, I2):
         Image 2
     """
 
+    # TODO: Q3.4
+    
     #! hyperparameters -- vary to obtain the best results.    
     SIGMA = 0.15
     RATIO = 0.65
 
-    #? Convert Images to GrayScale
-    grayscale_1 = skimage.color.rgb2gray(I1)
-    grayscale_2 = skimage.color.rgb2gray(I2)
+    #? Convert Images to GrayScale if needed
+    if len(I1.shape) == 3:
+        gray1 = cv2.cvtColor(I1, cv2.COLOR_BGR2GRAY)
+        gray2 = cv2.cvtColor(I2, cv2.COLOR_BGR2GRAY)
 
     #? Detect Features in Both Images
-    features_1 = corner_detection(grayscale_1, sigma=SIGMA)
-    features_2 = corner_detection(grayscale_2, sigma=SIGMA)
+    features1 = corner_detection(gray1, sigma=SIGMA)
+    features2 = corner_detection(gray2, sigma=SIGMA)
 
     #? Obtain descriptors for the computed feature locations
-    descriptors_1, locations_1 = computeBrief(grayscale_1, features_1)
-    descriptors_2, locations_2 = computeBrief(grayscale_2, features_2)
+    desc1, locs1 = computeBrief(gray1, features1)
+    desc2, locs2 = computeBrief(gray2, features2)
 
     #? Match features using the descriptors
-    matches = briefMatch(descriptors_1, descriptors_2, ratio=RATIO)
+    matches = briefMatch(desc1, desc2, ratio=RATIO)
 
-    return matches, locations_1, locations_2
+    return matches, locs1, locs2

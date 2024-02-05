@@ -24,23 +24,31 @@ def harry_potterrize():
     hp_cover = cv2.imread("../data/hp_cover.jpg")
 
     #? find matches
-    matches, locations_1, locations_2 = matchPics(cv_desk, cv_cover)
+    matches, locs1, locs2 = matchPics(cv_desk, cv_cover)
     
     #? pick points
-    points_1 = np.take(locations_1, matches[:, 0], axis=0)
-    points_2 = np.take(locations_2, matches[:, 1], axis=0)
+    points1 = np.take(locs1, matches[:, 0], axis=0)
+    points2 = np.take(locs2, matches[:, 1], axis=0)
     
     #? compute homography
-    H2to1, inliers = computeH_ransac(points_1, points_2)
+    H2to1, inliers = computeH_ransac(points1, points2)
+    print(f"{H2to1 = }")
+    
+    #? test warp
+    warped_cover = cv2.warpPerspective(hp_cover, H2to1, (cv_desk.shape[1], cv_desk.shape[0]))
+    cv2.imshow("Warped Cover", warped_cover)
+    
+    #? rescale the cover
+    rescaled_cover = cv2.resize(hp_cover, (cv_cover.shape[1], cv_cover.shape[0]))
+    
 
     #? composite images
-    rescaled_cover = cv2.resize(hp_cover, (cv_cover.shape[1], cv_cover.shape[0]))
-    composite_img = compositeH(H2to1, cv_desk, rescaled_cover)
+    composite_img = compositeH(H2to1, rescaled_cover, cv_desk)
 
-    cv2.imshow("image", composite_img)
+    cv2.imshow("Composite Image", composite_img)
 
-    cv2.imwrite("../results/composite_img.jpg", composite_img)
-    cv2.waitKey(0)
+    cv2.imwrite("../results/composite-image.jpg", composite_img)
+    cv2.waitKey(0)     #! don't close window until a key is pressed
 
 if __name__ == "__main__":
     harry_potterrize()

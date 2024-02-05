@@ -28,10 +28,9 @@ def rotation_test():
 
     X, y = [], []
 
-    for i in range(1, 36):
+    for deg in range(10, 360, 10):
 
         #? Rotate Image
-        deg = i * 10
         image_rotated = scipy.ndimage.rotate(image, deg, reshape=False)
         
         #? Compute features, descriptors and Match features
