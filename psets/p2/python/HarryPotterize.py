@@ -36,7 +36,9 @@ def harry_potterrize():
     
     #? test warp
     warped_cover = cv2.warpPerspective(hp_cover, H2to1, (cv_desk.shape[1], cv_desk.shape[0]))
+    cv2.imwrite("../results/warped-cover.jpg", warped_cover)
     cv2.imshow("Warped Cover", warped_cover)
+    
     
     #? rescale the cover
     rescaled_cover = cv2.resize(hp_cover, (cv_cover.shape[1], cv_cover.shape[0]))

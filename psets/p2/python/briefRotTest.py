@@ -50,6 +50,9 @@ def rotation_test():
     plt.xlabel("Rotation (degrees)")
     plt.ylabel("Number of Matches")
     plt.title("Number of Matches vs Rotation")
+    
+    # save plot to file
+    plt.savefig("../results/rotation_test.png")
     plt.show()
     
 if __name__ == "__main__":

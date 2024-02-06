@@ -1,11 +1,15 @@
+#! /usr/bin/env python3
+# -*- coding: utf-8 -*-
+
 import numpy as np
 import cv2
 import skimage.color
 from helper import briefMatch
+from helper import plotMatches
 from helper import computeBrief
 from helper import corner_detection
 
-def matchPics(I1, I2):
+def matchPics(I1, I2, SIGMA = 0.15, RATIO = 0.65):
     """
     Function to match two images
     
@@ -20,8 +24,6 @@ def matchPics(I1, I2):
     # TODO: Q3.4
     
     #! hyperparameters -- vary to obtain the best results.    
-    SIGMA = 0.15
-    RATIO = 0.65
 
     #? Convert Images to GrayScale if needed
     if len(I1.shape) == 3:
@@ -40,3 +42,16 @@ def matchPics(I1, I2):
     matches = briefMatch(desc1, desc2, ratio=RATIO)
 
     return matches, locs1, locs2
+
+if __name__ == "__main__":
+    #? Read the images
+    image1_path = "../data/cv_cover.jpg"
+    image2_path = "../data/cv_desk.png"
+    image1 = cv2.imread(image1_path)
+    image2 = cv2.imread(image2_path)
+
+    #? Match features between the two images
+    matches, locs1, locs2 = matchPics(image1, image2, RATIO=0.8)
+
+    #? Plot matches
+    plotMatches(image1, image2, matches, locs1, locs2)
