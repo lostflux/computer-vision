@@ -1,0 +1,46 @@
+\begin{problem}
+  \begin{enumroman}
+    \item Prove that there exists a homography $\bH$ that satisfies
+      \begin{equation}~\label{eq:1}
+        \bx_1 \equiv \bH \bx_2
+      \end{equation}
+      between the 2D points (in homogeneous coordinates) $\bx_1$ and $\bx_2$
+      in the images of a \emph{plane} $\Pi$ captured by two $3 \times 4$ camera
+      projection matrices $\bP_1$ and $\bP_2$ respectively.
+      The $\equiv$ symbol is equality up to scale.
+      \emph{
+        Note: A degenerate case happens when the plane $\Pi$ contains both cameras'
+        centers, in which case there are infinite choices of $\bH$
+        satisfying the above equation.
+        You can ignore this special case in your answer.
+      }
+
+      \begin{answer}
+
+      \end{answer}
+
+    \item Prove that there exists a homography $\bH$ that satisfies equaton~\ref{eq:1}
+      given two cameras separated by a pure rotation.
+      That is, for camera $1$, $\bx_1 = \bK_1 \bmat{\bI & \bzero} \bX$,
+      and for camera $2$, $\bx_2 = \bK_2 \bmat{\bR & \bzero} \bX$.
+      Note that $\bK_1$ and $\bK_2$ are the $3 \times 3$ intrinsic matrices
+      of the two cameras and are different. $\bI$ is the $3 \times 3$ identity matrix,
+      $\bzero$ is the $3 \times 1$ zero vector, and $\bX$ is a point in 3D space.
+      $\bR$ is the $3 \times 3$ rotation matrix of the camera.
+
+      \begin{answer}
+
+      \end{answer}
+
+    \item Suppose that a camera is rotating about its center $\bC$,
+      keeping the intrinsic parameters $\bK$ constant.
+      Let $\bH$ be the homography that maps the view from one camera orientation
+      to the view at a second orientation.
+      Let $\theta$ be the angle of rotation between the two orientations.
+      Show that $\bH^2$ is the homography corresponding to a rotation of $2\theta$.
+
+      \begin{answer}
+
+      \end{answer}
+  \end{enumroman}
+\end{problem}

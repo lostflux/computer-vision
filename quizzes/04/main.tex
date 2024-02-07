@@ -1,0 +1,31 @@
+\documentclass[10pt, reqno]{amsart}
+
+\input{~/latex-common/macros}
+
+\pagestyle{fancy}                       % fancy (allow headers, footers)
+\fancyhf{}                              % clear all header/footer settings.
+\cfoot{\thepage}                        % set page-numbers in footer.
+% \lhead{\textit{\textbf{ Amittai, S}}}   % set name in header, left.
+% \rhead{\textsc{CS 83:\@ Computer Vision}}         % set class name in header, right.
+\renewcommand{\headrulewidth}{0pt}      % remove header rule
+\renewcommand{\theenumi}{\alph{enumi}}
+\renewcommand{\thefootnote}{\arabic{footnote}} 
+
+
+\begin{document}
+\setlength{\headheight}{13.0pt}
+\setlength{\footskip}{13.0pt}
+\input{cover.tex}
+\bigskip
+
+% PROBLEM 1
+\input{problem1}
+
+
+% PROBLEM 2
+\newpage
+\input{problem2}
+
+\vfill
+
+\end{document}
