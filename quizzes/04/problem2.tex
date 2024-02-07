@@ -12,5 +12,53 @@
 \end{problem}
 
 \begin{answer}
-  
+  In the special case when the camera location (but not orientation) is known,
+  we can write the camera matrix $\bP$ as:
+  \[ \bP = \bK \bmat{\bR & \bt} \]
+  where $\bK$ is the $3 \times 3$ intrinsic matrix of the camera,
+  $\bR$ is the $3 \times 3$ rotation matrix, and $\bt$ is the $3 \times 1$ translation vector,
+  which is known.
+
+  Our goal is to find $\bK$ and $\bR$ from the 3D-2D matches $\bx \leftrightarrow \bX$.
+  Suppose we have $N$ 3D-2D matches $\bx \leftrightarrow \bX$.
+  For any one correspondence $\bx_i \leftrightarrow \bX_i$, we can write:
+  \begin{align*}
+    \bx_i &= \bK \bmat{\bR &\bt} \bX_i \\
+    \bmat{x_i \\ y_i \\ z_i} &= \bmat{f_x & 0 & c_x \\ 0 & f_y & c_y \\ 0 & 0 & 1}
+    \bmat{
+      r_1 & r_2 & r_3 & t_1 \\
+      r_4 & r_5 & r_6 & t_2 \\
+      r_7 & r_8 & r_9 & 1}
+      \bmat{ X_i \\ Y_i \\ Z_i \\ 1}
+  \end{align*}
+
+  Thus, we get the following equations:
+  \begin{align*}
+    x_i &= f_x r_1 X_i + f_x r_2 Y_i + f_x r_3 Z_i + (f_x t_1 + c_x) Z_i \\
+    y_i &= f_y r_4 X_i + f_y r_5 Y_i + f_y r_6 Z_i + (f_y t_2 + c_y) Z_i
+  \end{align*}
+
+  Ignoring degenerate configurations where $\bK$ changes,
+  and ignoring the scale factor, we would have $12 - 1 = 11$ unknowns in the matrix
+  $\bmat{ \bR & \bt }$.
+  However, since $\bt \equiv \bmat{t_1 \\ t_2 \\ 1}$ is known,
+  we have $11-2 = 9$ remaining unknowns,
+  which we can solve using at least $9$ equations.
+  Since each $\bx_i \leftrightarrow \bX_i$ gives us $2$ equations,
+  we need at least $5$ 3D-2D matches to have a unique solution.
+
+  \newpage
+  \step
+  \textbf{Algorithm}
+
+  \begin{enumarabic}
+    \item For each 3D-2D match $\bx_i \leftrightarrow \bX_i$, write the equations
+      \[ x_i = f_x r_1 X_i + f_x r_2 Y_i + f_x r_3 Z_i + (f_x t_1 + c_x) Z_i \]
+      \[ y_i = f_y r_4 X_i + f_y r_5 Y_i + f_y r_6 Z_i + (f_y t_2 + c_y) Z_i \]
+    \item Stack the equations for all $N = 5$ 3D-2D matches to get a system of linear equations
+      \[ \bA \bR = \bb \]
+    \item Solve for $\bR$ using the linear least squares method.
+    \item Once $\bR$ is known, solve for $\bP$ using the equation
+      \[ \bP = \bK \bmat{\bR & \bt} \]
+  \end{enumarabic}
 \end{answer}

@@ -16,6 +16,30 @@
       }
 
       \begin{answer}
+        We can write the points $\bx_1$ and $\bx_2$ in terms of the camera
+        projection matrices $\bP_1$ and $\bP_2$ and the real-world 3D point $\bX$:
+        \[ \bx_1 = \bP_1 \bX \]
+        \[ \bx_2 = \bP_2 \bX \]
+        Then, using the fact that the plane $\Pi$ is imaged as a plane in both images,
+        we can write $\bX = \bH \bX_0$ for some $\bH$ and $\bX_0$, where $\bX_0$
+        is a point in a reference frame of the plane $\Pi$.
+        Substituting this into the above equations, we get
+        \begin{align*}
+          \bx_1 &= \bP_1 \bH \bX_0 \\
+          \bx_2 &= \bP_2 \bH \bX_0
+        \end{align*}
+
+        Expressing $\bP_1$ and $\bP_2$ in terms of their intrinsic and extrinsic parameters,
+        we get
+        \begin{align*}
+          \bx_1 &= \bK_1 \bmat{\bI & \bzero} \bH \bX_0 \\
+          \bx_2 &= \bK_2 \bmat{\bR & \bt} \bH \bX_0
+        \end{align*}
+
+        Solving for $\bH$ gives:
+        \begin{align*}
+          \bH &= \bK_2 - \bmat{\bR & \bt} \bK_1
+        \end{align*}
 
       \end{answer}
 
@@ -29,9 +53,23 @@
       $\bR$ is the $3 \times 3$ rotation matrix of the camera.
 
       \begin{answer}
+        First, to simplify the notation, note that:
+        \[ \bmat{\bR & \bzero} \bX = \bR \bmat{\bI & \bzero} \bX, \]
+        So, define $\bX' = \bmat{\bI & \bzero} \bX$.
+        Then, we can write $\bx_2 = \bK_2 \bR \bX'$ and $\bx_1 = \bK_1 \bX'$.
+        Therefore;
+        \begin{align*}
+          \bx_2 &= \bK_2 \bR \bX' \\
+                &= \bK_2 \bR \underbrace{\crim{\bK_1^{-1} \bK_1}}_{\bI} \bX' \\
+                &= \bK_2 \bR \bK_1^{-1} \underbrace{\bK_1 \bX'}_{\bx_1} \\
+                &= \bK_2 \bR \bK_1^{-1} \bx_1
+        \end{align*}
+        Thus, we can write $\bH = \bK_2 \bR \bK_1^{-1}$
+        such that $\bx_2 = \bH \bx_1$.
 
       \end{answer}
 
+    \newpage
     \item Suppose that a camera is rotating about its center $\bC$,
       keeping the intrinsic parameters $\bK$ constant.
       Let $\bH$ be the homography that maps the view from one camera orientation
@@ -40,7 +78,52 @@
       Show that $\bH^2$ is the homography corresponding to a rotation of $2\theta$.
 
       \begin{answer}
+        Let $\bH_\theta$ be the homography corresponding to a rotation of $\theta$,
+        and let $\bH_{2\theta}$ be the homography corresponding to a rotation of $2\theta$.
+        As seen above, the homography $\bH_\theta$ is given by $\bH_\theta = \bK \bR(\theta) \bK^{-1}$
+        and $\bH_{2\theta} = \bK \bR(2\theta) \bK^{-1}$.
 
+        Let us expand the rotation matrices and find an expression
+        for $\bR(2\theta)$ in terms of $\bR(\theta)$.:
+        \begin{align*}
+          \bR(\theta) &= \bmat{
+            \cos \theta & -\sin \theta \\
+            \sin \theta & \cos \theta
+          } \\
+          \bR(2\theta) &= \bmat{
+            \cos 2\theta & -\sin 2\theta \\
+            \sin 2\theta & \cos 2\theta
+          }
+        \end{align*}
+
+        Using the double-angle formulae for sine and cosine,
+        \[ \sin 2\theta = 2 \sin \theta \cos \theta \]
+        \[ \cos 2\theta = \cos^2 \theta - \sin^2 \theta. \]
+        Substituting these into the expression for $\bR(2\theta)$ gives
+        \begin{align*}
+          \bR(2\theta) &= \bmat{
+            \cos^2 \theta - \sin^2 \theta & -2 \sin \theta \cos \theta \\
+            2 \sin \theta \cos \theta & \cos^2 \theta - \sin^2 \theta
+          } \\
+          &= \bmat{
+            \cos \theta & -\sin \theta \\
+            \sin \theta & \cos \theta
+          } \bmat{
+            \cos \theta & -\sin \theta \\
+            \sin \theta & \cos \theta
+          } \\
+          &= \bR(\theta)^2
+        \end{align*}
+        Substituting this into the original expression for $\bH_{2\theta}$ gives
+        \begin{align*}
+          \bH_{2\theta} &= \bK \bR(2\theta) \bK^{-1} \\
+          &= \bK \bR(\theta)^2 \bK^{-1} \\
+          &= \bK \bR(\theta) \bR(\theta) \bK^{-1} \\
+          &= \bK \bR(\theta) \underbrace{bK^{-1} \bK}_{\bI} \bR(\theta) \bK^{-1} \\
+          &= \bK \bR(\theta) \bK^{-1} \bK \bR(\theta) \bK^{-1} \\
+          &= \parens{\bK \bR(\theta) \bK^{-1}}^2 \\
+          &= \bH_\theta^2
+        \end{align*}
       \end{answer}
   \end{enumroman}
 \end{problem}
