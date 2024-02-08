@@ -19,16 +19,31 @@
         Write the points $\bx_1$ and $\bx_2$ in terms of $\bP_1$ and $\bP_2$
         and the real-world 3D point $\bX$:
         \begin{align*}
-          \bx_1 &= \bP_1 \bX \implies \bP_1^{-1} \bx_1 = \bX \qquad \text{(left-multiply by $\bP_1^{-1}$)} \\
-          \bx_2 &= \bP_2 \bX \implies \bP_2^{-1} \bx_2 = \bX \qquad \text{(left-multiply by $\bP_2^{-1}$)}
+          \bx_1 &= \bP_1 \bX \\
+          \bx_2 &= \bP_2 \bX
         \end{align*}
-        Thus, we have:
+
+        While we cannot invert $\bP_1$ and $\bP_2$ directly (since they are$3 \times 4$ matrices),
+        we can transform then into invertible matrices as follows:
         \begin{align*}
-          \bP_1^{-1} \bx_1 &= \bP_2^{-1} \bx_2 \\
-          \intertext{So, we have: }
-          \bx_1 &= \bP_1 \bP_2^{-1} \bx_2.
+          \bx_1 &= \bP_1 \bX \\
+          \bP_1^T \bx_1 &= \bP_1^T \bP_1 \bX \\
+          \parens{\bP_1^T \bP_1}^{-1} \bP_1^T \bx_1 &= \bX
         \end{align*}
-        Thus, we can write $\bH = \bP_1 \bP_2^{-1}$ such that $\bx_1 \equiv \bH \bx_2$.
+        Transforming $\bP_2$ in the same way gives us the following equations:
+        \begin{align*}
+          \bX &= \parens{\bP_1^T \bP_1}^{-1} \bP_1^T \bx_1 \\
+          \bX &= \parens{\bP_2^T \bP_2}^{-1} \bP_2^T \bx_2
+        \end{align*}
+        By equating the two expressions for $\bX$, we have:
+        \begin{align*}
+          \parens{\bP_1^T \bP_1}^{-1} \bP_1^T \bx_1 &= \parens{\bP_2^T \bP_2}^{-1} \bP_2^T \bx_2 \\
+          \bP_1^{T} \bx_1 &= \crim{\parens{\bP_1^T \bP_1}} \parens{\bP_2^T \bP_2}^{-1} \bP_2^T \bx_2 \\
+          \crim{\bP_1} \bP_1^{T} \bx_1 &= \crim{\bP_1} \parens{\bP_1^T \bP_1} \parens{\bP_2^T \bP_2}^{-1} \bP_2^T \bx_2 \\
+          \bx_1 &= \crim{\parens{\bP_1 \bP_1^{T}}^{-1}} \bP_1 \parens{\bP_1^T \bP_1} \parens{\bP_2^T \bP_2}^{-1} \bP_2^T \bx_2 
+        \end{align*}
+        
+        Thus, we can write $\bH = \parens{\bP_1 \bP_1^{T}}^{-1} \bP_1 \parens{\bP_1^T \bP_1} \parens{\bP_2^T \bP_2}^{-1} \bP_2^T$ such that $\bx_1 \equiv \bH \bx_2$.
 
       \end{answer}
 
