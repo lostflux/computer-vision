@@ -29,32 +29,42 @@
       r_1 & r_2 & r_3 & t_1 \\
       r_4 & r_5 & r_6 & t_2 \\
       r_7 & r_8 & r_9 & 1}
-      \bmat{ X_i \\ Y_i \\ Z_i \\ 1}
+      \bmat{ X_i \\ Y_i \\ Z_i \\ 1} \\
+    \intertext{So, we have:}
+    &= \bmat{
+      f_x r_1 + c_x r_7 & f_x r_2 + c_x r_8 & f_x r_3 + c_x r_9 & f_x t_1 + c_x \\
+      f_y r_4 + c_y r_7 & f_y r_5 + c_y r_8 & f_y r_6 + c_y r_9 & f_y t_2 + c_y \\
+      r_7 & r_8 & r_9 & 1} \bmat{X_i \\ Y_i \\ Z_i \\ 1} \\
   \end{align*}
 
   Thus, we get the following equations:
   \begin{align*}
-    x_i &= f_x r_1 X_i + f_x r_2 Y_i + f_x r_3 Z_i + (f_x t_1 + c_x) Z_i \\
-    y_i &= f_y r_4 X_i + f_y r_5 Y_i + f_y r_6 Z_i + (f_y t_2 + c_y) Z_i
+    \bx_i &= (f_x r_1 + c_x r_7)\bX_i + (f_x r_2 + c_x r_8)\bY_i + (f_x r_3 + c_x r_9) \bZ_i + (f_x t_1 + c_x) \\
+    \by_i &= (f_y r_4 + c_y r_7)\bX_i + (f_y r_5 + c_y r_8)\bY_i + (f_y r_6 + c_y r_9) \bZ_i + (f_y t_2 + c_y) \\
+    \bz_i &= r_7 \bX_i + r_8 \bY_i + r_9 \bZ_i + 1
   \end{align*}
 
+  $z_i$ is the scale factor, since
+  \[ \bmat{\bx_i \\ \by_i \\ \bz_i} \equiv \bmat{\bx_i/\bz_i \\ \by_i/\bz_i \\ 1}. \]
+  Thus, each 3D-2D match gives us two useful equations.
   Ignoring degenerate configurations where $\bK$ changes,
   and ignoring the scale factor, we would have $12 - 1 = 11$ unknowns in the matrix
-  $\bmat{ \bR & \bt }$.
+  $\bmat{ \bR & \bt }$ if $\bt$ was unknown.
   However, since $\bt \equiv \bmat{t_1 \\ t_2 \\ 1}$ is known,
   we have $11-2 = 9$ remaining unknowns,
-  which we can solve using at least $9$ equations.
-  Since each $\bx_i \leftrightarrow \bX_i$ gives us $2$ equations,
-  we need at least $5$ 3D-2D matches to have a unique solution.
+  so we need \emph{at least} $9$ equations to solve for the unknowns uniquely.
+  Since each $\bx_i \leftrightarrow \bX_i$ correspondence gives us $2$ equations,
+  we need at least $\ceil{\frac{9}{2}} = 5$ 3D-2D matches to have a unique solution.
 
-  \newpage
   \step
   \textbf{Algorithm}
-
   \begin{enumarabic}
     \item For each 3D-2D match $\bx_i \leftrightarrow \bX_i$, write the equations
-      \[ x_i = f_x r_1 X_i + f_x r_2 Y_i + f_x r_3 Z_i + (f_x t_1 + c_x) Z_i \]
-      \[ y_i = f_y r_4 X_i + f_y r_5 Y_i + f_y r_6 Z_i + (f_y t_2 + c_y) Z_i \]
+    \begin{align*}
+      \bx_i &= (f_x r_1 + c_x r_7)\bX_i + (f_x r_2 + c_x r_8)\bY_i + (f_x r_3 + c_x r_9) \bZ_i + (f_x t_1 + c_x) \\
+      \by_i &= (f_y r_4 + c_y r_7)\bX_i + (f_y r_5 + c_y r_8)\bY_i + (f_y r_6 + c_y r_9) \bZ_i + (f_y t_2 + c_y) \\
+      \bz_i &= r_7 \bX_i + r_8 \bY_i + r_9 \bZ_i + 1
+    \end{align*}
     \item Stack the equations for all $N = 5$ 3D-2D matches to get a system of linear equations
       \[ \bA \bR = \bb \]
     \item Solve for $\bR$ using the linear least squares method.
