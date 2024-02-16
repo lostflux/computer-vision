@@ -7,12 +7,94 @@
   \begin{enumroman}
     \item Derive an expression for the essential matrix $\bE$ of a rectified pair.
       \begin{answer}
-
+        Let $C1$ and $C2$ be two rectified pair cameras,
+        with $\bT = \bmat{t_x \\ t_y \\ t_z}$ as the translation vector from $C1$ to $C2$.
+        The essential matrix $\bE \colonequals [\bT]_\times \bR$, with $\bR = \ell_3$
+        (since there is no rotation between the two cameras),
+        is then given by:
+        \begin{align*}
+          \bE &= [\bT]_\times \bR \\
+              &= \begin{bmatrix}
+                0 & -t_z & t_y \\
+                t_z & 0 & -t_x \\
+                -t_y & t_x & 0
+              \end{bmatrix} \begin{bmatrix}
+                1 & 0 & 0 \\
+                0 & 1 & 0 \\
+                0 & 0 & 1
+              \end{bmatrix}
+              \qquad = \qquad \begin{bmatrix}
+                0 & -t_z & t_y \\
+                t_z & 0 & -t_x \\
+                -t_y & t_x & 0
+              \end{bmatrix}
+        \end{align*}
+        As stated in the problem, the translation will be along the $x$- or the $y$-axis,
+        meaning that $t_z = 0$, and either $t_x = 0$ or $t_y = 0$.
+        Therefore, the essential matrix $\bE$ will be equivalent to:
+        % two columns
+        \begin{align*}
+          \bE_x = \begin{bmatrix}
+            0 & 0 & 0 \\
+            0 & 0 & -t_x \\
+            0 & t_x & 0
+          \end{bmatrix} \qquad \text{ or } \qquad
+          \bE_y = \begin{bmatrix}
+            0 & 0 & t_y \\
+            0 & 0 & 0 \\
+            -t_y & 0 & 0
+          \end{bmatrix}
+        \end{align*}
       \end{answer}
+    
+      \newpage
     \item Prove that the epipolar lines of a rectified pair are parallel to
       the axis of translation.
       \begin{answer}
+        The epipolar lines given by
+        $\ell' = \bE \bx$ and $\ell = \bE^\top \bx'$.
+        \begin{enumarabic}
+          \item For $\bE_x$:
+            The epipolar lines are given by
+            \begin{align*}
+              \ell' &= \bE_x \bmat{x \\ y \\ 1}
+                    &= \bmat{0 & 0 & 0 \\ 0 & 0 & -t_x \\ 0 & t_x & 0} \bmat{x \\ y \\ 1}
+                    &= \bmat{0 \\ -t_x \\ t_x y}
+                    & \equiv \bmat{0 \\ \frac{-t_x}{t_x y}  \\ 1}  \\
+              \ell &= \bE_x^\top \bmat{x' \\ y' \\ 1}
+                    &= \bmat{0 & 0 & 0 \\ 0 & 0 & t_x \\ 0 & -t_x & 0} \bmat{x' \\ y' \\ 1}
+                    &= \bmat{0 \\ t_x \\ -t_x y'}
+                    & \equiv \bmat{0 \\ \frac{-t_x}{t_x y'} \\ 1}
+            \end{align*}
+            Thus the lines are given by
+            \[
+              \ell'_y = \frac{-t_x}{t_x y} \quad \text{and} \quad \ell_y = \frac{-t_x}{t_x y'}.
+            \]
+            Since the original points do not change, the epipolar lines are of
+            the form $y = k$, where $k$ is a constant, and are therefore parallel to the $x$-axis.
 
+          \item For $\bE_y$:
+            The epipolar lines are given by
+            \begin{align*}
+              \ell' &= \bE_y \bmat{x \\ y \\ 1}
+                    &= \bmat{0 & 0 & t_y \\ 0 & 0 & 0 \\ -t_y & 0 & 0} \bmat{x \\ y \\ 1}
+                    &= \bmat{t_y \\ 0 \\ -t_y x}
+                    & \equiv \bmat{\frac{- t_y}{t_y x} \\ 0 \\ 1} \\
+              \ell &= \bE_y^\top \bmat{x' \\ y' \\ 1}
+                    &= \bmat{0 & 0 & -t_y \\ 0 & 0 & 0 \\ t_y & 0 & 0} \bmat{x' \\ y' \\ 1}
+                    &= \bmat{-t_y \\ 0 \\ t_y x'}
+                    & \equiv \bmat{\frac{-t_y}{t_y x'} \\ 0 \\ 1}
+            \end{align*}
+
+            Thus the lines are given by
+            \[
+              \ell'_x = \frac{-t_y}{t_y x} \quad \text{and} \quad \ell_x = \frac{-t_y}{t_y x'}.
+            \]
+            Since the original points do not change, the epipolar lines are of
+            the form $x = k$, where $k$ is a constant, and are therefore parallel to the $y$-axis.
+
+            
+        \end{enumarabic}
       \end{answer}
   \end{enumroman}
 \end{problem}
