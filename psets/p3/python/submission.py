@@ -119,8 +119,7 @@ def epipolar_correspondences(im1, im2, F, pts1, window=20):
     
     #? for each point
     for i in range(pts1.shape[0]):
-        #? get window around point in first image
-        
+
         #? get x, y coordinates (z should be 1)
         x, y, _ = pts1[i]
         x, y = int(x), int(y)
@@ -189,14 +188,6 @@ def essential_matrix(F, K1, K2):
 
 
 
-"""
-Q3.1.4 Triangulation
-       [I] P1, camera projection matrix 1 (3x4 matrix)
-           pts1, points in image 1 (Nx2 matrix)
-           P2, camera projection matrix 2 (3x4 matrix)
-           pts2, points in image 2 (Nx2 matrix)
-       [O] pts3d, 3D points in space (Nx3 matrix)
-"""
 def triangulate(P1, pts1, P2, pts2):
     """
         Triangulation
