@@ -95,8 +95,7 @@ def epipolar_correspondences(im1, im2, F, pts1, window=20):
     im1 = cv2.cvtColor(im1, cv2.COLOR_BGR2GRAY)
     im2 = cv2.cvtColor(im2, cv2.COLOR_BGR2GRAY)
     
-    #? change pts1 datatype to int and convert points to homogeneous
-    # pts1 = 
+    #? convert points to homogeneous coordinates
     pts1 = np.hstack( (pts1, np.ones((pts1.shape[0], 1))) )
     
     #? compute epipolar lines
