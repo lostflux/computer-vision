@@ -11,7 +11,6 @@ Submission Functions
 # import packages here
 import numpy as np
 import cv2
-from scipy.signal import correlate
 
 import helper
 
@@ -402,6 +401,8 @@ def estimate_pose(x, X):
     #? the camera matrix is the last column of V
     P = V[-1].reshape(3, 4)
     
+    print(f"{P = }")
+    
     return P
 
 
@@ -424,15 +425,18 @@ def estimate_params(P):
     
     #? compute camera center using SVD
     _, _, V = np.linalg.svd(P)
-    c = V[-1]
-    c = c / c[-1]     #! norm by z
-    c = c[:3]         #! convert to heterogenous
+    c = V[-1] / V[-1, -1]          #! norm by z
+    c = c[ :3]                     #! convert to heterogenous
     
     #? compute camera intrinsics K and rotation R using QR decomposition
-    K, R = np.linalg.qr(P[:, :3])
+    R, K = np.linalg.qr(P[:, :3])
     
     #? compute camera extrinsics translation t
-    t = -R @ c
+    t = -(R @ c)
+    
+    print(f"{K = }")
+    print(f"{R = }")
+    print(f"{t = }")
     
     return K, R, t
     
@@ -455,6 +459,8 @@ def test_eight_point():
     
     M = max(im1.shape)
     F = eight_point(pts1, pts2, M)
+    
+    print(f"{F = }")
     
     # convert images to homogeneous
     helper.displayEpipolarF(im1, im2, F)

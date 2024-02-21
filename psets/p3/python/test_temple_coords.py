@@ -40,6 +40,8 @@ K1 = intrinsics['K1']
 K2 = intrinsics['K2']
 E = sub.essential_matrix(F, K1, K2)
 
+print(f"ESSENTIAL MATRIX: {E}")
+
 print(f"{K2 = }")
 P1 = np.hstack((K1, np.zeros((3,1))))
 
@@ -69,13 +71,13 @@ pts1_reproj = P1 @ np.vstack((pts3d.T, np.ones((1, pts3d.shape[0]))))
 pts1_reproj = pts1_reproj / pts1_reproj[2, :]
 pts1_reproj = pts1_reproj[:2, :].T
 reprojection_error1 = np.linalg.norm(pts1_reproj - pts1, axis=1).mean()
-print(f"PTS1 ERROR: {reprojection_error1 }")
+print(f"PTS1 ERROR: {reprojection_error1}")
 
 pts2_reproj = P2 @ np.vstack((pts3d.T, np.ones((1, pts3d.shape[0]))))
 pts2_reproj = pts2_reproj / pts2_reproj[2, :]
 pts2_reproj = pts2_reproj[:2, :].T
 reprojection_error2 = np.linalg.norm(pts2_reproj - pts2, axis=1).mean()
-print(f"PTS2 ERROR: {reprojection_error2 }")
+print(f"PTS2 ERROR: {reprojection_error2}")
 
 #? 9. Scatter plot the correct 3D points
 
