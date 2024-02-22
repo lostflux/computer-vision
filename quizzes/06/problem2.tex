@@ -1,0 +1,189 @@
+\begin{problem}
+  In this question, we will derive the \underline{Baker-Matthews}
+  (or inverse compositional) image alignment algorithm for a simpler case.
+  Consider first the \emph{warp function} $\bW(\bx; \bp)$ that maps
+  coordinate vectors $\bx \in \R^2$ to other coordinate vectors in $\R^2$:
+  \begin{equation}
+    \bW(\bx; \bp) =
+      \bmat{ p_1 & 0 \\ 0 & p_2 }
+      \bmat{x \\ y}
+      = \bmat{p_1 x \\ p_2 y}
+      \qquad \text{where} \qquad
+      \bp \colonequals \bmat{p_1 \\ p_2},
+      \bx \colonequals \bmat{x \\ y},
+    \label{eq:2.1}
+  \end{equation}
+
+  where the mapping depends on a set of parameters $\bp \in \R^2$.
+  Given an image $I(\bx)$ and a template $T(\bx)$, we want to find the
+  parameters $\bp$ such that the warp function $\bW(\bx; \bp)$
+  (representing a scaling operation) best aligns the image with the
+  template in terms of sum-of-squared differences (SSD) error.
+
+  The idea behind the Baker-Matthews alignment algorithm is to
+  iteratively find incremental warp parameter $\Delta \bp$ that
+  minimize the following objective:
+  \begin{equation}
+    \min_{\Delta \bp} \sum_\bx \brackets{T(\bW(\bx; \Delta \bp)) - I(\bW(\bx; \bp))}^2.
+    \label{eq:2.2}
+  \end{equation}
+  We will use the Gauss-Newton algorithm to solve this non-linear and
+  non-parametric least-squares problem to compute the incremental warp
+  parameters $\Delta \bp$.
+
+  \begin{enumroman}
+    \item The \underline{Baker-Matthews} alignment algorithm assumes that
+      $\bW(\bx; \bzero)$ is the identity warp, i.e., $\bW(\bx; \bzero) = \bx$.
+      However, the current warp function in Equation~(\ref{eq:2.1}) does not
+      satisfy this property. Propose a modified form of this scaling warp function
+      that satisfies the identity assumption and write out its corresponding
+      Jacobian $\frac{\partial \bW}{\partial \bp}$. \\
+      \emph{(Note that there are multiple valid solutions for this part of the quiz.)}
+
+      \begin{answer}
+        The current warp function $\bW(\bx; \bp)$ in Equation~(\ref{eq:2.1})
+        has the problem that
+        \[
+          \bW(\bx; \bzero) = \bmat{0 x \\ 0 y} = \bzero \neq \bx.
+        \]
+        To make it satisfy the identity assumption, we can add a translation
+        term to the warp function:
+        \begin{align*}
+          \bW(\bx; \bp) &=
+          \bmat{ p_1 & 0 \\ 0 & p_2 }
+          \bmat{x \\ y} + \bmat{x \\ y} \\
+          &= \bmat{ p_1 & 0 \\ 0 & p_2 }
+          \bmat{x \\ y} + \bmat{1 & 0 \\ 0 & 1} \bmat{x \\ y} \\
+          &= \bmat{ p_1 + 1 & 0 \\ 0 & p_2 + 1 } \bmat{x \\ y}.
+        \end{align*}
+        The Jacobian of this modified warp function with respect to the warp
+        parameters $\bp$ is given by:
+        \begin{equation}
+          \frac{\partial \bW}{\partial \bp} =
+          \bmat{ x & 0 \\ 0 & y }.
+          \label{eq:ans:2.1}
+        \end{equation}
+      \end{answer}
+
+    \item Use the first-order Taylor expansion to linearize the composite
+      function $T(\bW(\bx; \Delta \bp))$ with respect to $\Delta \bp$ around
+      the value $\bzero$. Write out the expression for this Taylor expansion.
+      Plug this expression back into Equation~(\ref{eq:2.2}).
+
+      \begin{answer}
+        The general form of the first-order Taylor expansion of a function
+        $f$ around a point $x$ is given by:
+        \begin{align*}
+          f(x + h) &\approx f(x) + f'(x) \cdot h.
+        \end{align*}
+        Plugging in the composite function $T(\bW(\bx; \Delta \bp))$ and centering
+        the expansion at $\bzero$, the approximation for
+        $\Delta \bp$ in the neighborhood of $\bzero$ is given by:
+        \begin{align*}
+          T(\bW(\bx; \Delta \bp)) &\approx
+          T(\crim{\bW(\bx; \bzero)}) + \frac{\d T}{\d \bp}(\crim{\bW(\bx; \bzero)}) \Delta p \\
+          &\approx T(\crim{\bx}) + \frac{\d T}{\d \bp}(\crim{\bx}) \Delta \bp
+          \qquad \text{ since } \bW(\bx; \bzero) = \bx
+        \end{align*}
+        where $\frac{\d T}{\d \bp}$ is the template gradient with respect to the warp parameters,
+        equivalent to:
+        \[
+          \frac{\d T}{\d \bp}(\bx) = \nabla T(\bx) \frac{\d \bW}{\d \bp}
+          = \nabla T(\bx) \bmat{ x & 0 \\ 0 & y }.
+        \]
+        Thus, we can solve the optimization problem of Equation~(\ref{eq:2.2})
+        by solving the following optimization problem:
+        \begin{align*}
+          \mathbb{E} &= \min_{\Delta \bp} \sum_\bx \Abs{T(\bW(\bx; \Delta \bp)) - I(\bW(\bx; \bp))}^2 \\
+                     &= \min_{\Delta \bp} \sum_\bx \Abs{T(\crim{\bW(\bx; \bzero)}) +
+                     \frac{\d T}{\d \bp}(\crim{\bW(\bx; \bzero)}) \Delta \bp - I(\bW(\bx; \bp))}^2 \\
+                     &= \min_{\Delta \bp} \sum_\bx \Abs{T(\bx) + \frac{\d T}{\d \bp}(\bx)
+                     \Delta \bp - I(\bW(\bx; \bp))}^2 \quad \text{ since $\crim{\bW(\bx; \bzero)} = \bx$}.
+          \label{eq:ans:2.2}
+        \end{align*}
+      \end{answer}
+
+      \newpage
+    \item Show that this approximation to the optimization problem can be rewritten
+      in the form:
+      \begin{equation}
+        \min_{\Delta \bp} \Abs{\bA \Delta \bp - \bb}^2,
+        \label{eq:2.3}
+      \end{equation}
+      for some matrix $\bA$ and vector $\bb$.
+      Show how to solve the optimization problem of Equation~(\ref{eq:2.3})
+      for the parameter update $\Delta \bp$, and write out an expression
+      for this solution.
+
+      \begin{answer}
+        Substituting the approximation from Equation~(\ref{eq:ans:2.2}) into
+        the loss function of Equation~(\ref{eq:2.2}) gives:
+        \begin{align*}
+          \min_{\Delta \bp} \Abs{T(\bx) + \frac{\d T}{\d \bp}(\bx) \Delta \bp - I(\bW(\bx; \bp)}^2 &\approx
+          \min_{\Delta \bp} \Abs{\frac{\d T}{\d \bp}(\bx) \Delta \bp - (I(\bW(\bx; \bp) - T(\bx))}^2 \\
+          &\approx \min_{\Delta \bp} \Abs{\bA \Delta \bp - \bb}^2,
+        \end{align*}
+        where $\bx = \bmat{x \\ y}$ is the image point and
+        $\bA$ is the Jacobian matrix $\frac{\d T}{\d \bp}(\bx)$ given by
+        \[
+          \bA \colonequals \frac{\d T}{\d \bp}(\bx) =
+          \nabla T(\bx) \bmat{ \frac{\partial \bW}{\partial p_1} \\ \frac{\partial \bW}{\partial p_2}} =
+          \nabla T(\bx) \bmat{ x & 0 \\ 0 & y } =
+          \bmat{ T_x(\bx) \cdot x \\ T_y(\bx) \cdot y }
+        \]
+        and $\bb$ is the residual vector
+        \[ \bb \colonequals I(\bW(\bx; \bp)) - T(\bx). \]
+        The solution to the optimization problem of Equation~(\ref{eq:2.3}) is given by:
+        \begin{equation}
+          \Delta \bp = \brackets{\bA^T \bA}^{-1} \bA^T \bb.
+          \label{eq:ans:2.3}
+        \end{equation}
+
+      \end{answer}
+
+    \newpage
+    \item Finally, you will need to compute your new warp parameter $\bp'$
+      by using the following update rule for the inverse compositional algorithm:
+      \begin{equation}
+        \bW(\bx; \bp') \gets \bW(\bx; \bp) \circ \bW(\bx; \Delta \bp)^{-1}.
+        \label{eq:2.4}
+      \end{equation}
+      Given your modified warp function from part 1, write down an expression
+      for the new parameters $\bp'$ in terms of $\bp$ and $\Delta \bp$.
+
+    \begin{answer}
+      The warp function $\bW(\bx; \bp')$ is given by:
+      \begin{align*}
+        \bW(\bx; \bp') &= \bW(\bx; \bp) \circ \bW(\bx; \Delta \bp)^{-1} \\
+        &= \bW(\bW(\bx; \Delta \bp); \bp) \\
+        &= \bW(\bmat{\Delta p_1 + 1 & 0 \\ 0 & \Delta p_2 + 1} \bmat{x \\ y}; \bp) \\
+        &= \bW(\bmat{\Delta p_1 x + x \\ \Delta p_2 y + y}; \bp) \\
+        &= \bmat{p_1 + 1 & 0 \\ 0 & p_2 + 1} \bmat{\Delta p_1 x + x \\ \Delta p_2 y + y} \\
+        &= \bmat{
+          (p_1 + 1)(\Delta p_1 x + x) \\
+          (p_2 + 1)(\Delta p_2 y + y)
+        } \\
+        &= \bmat{
+          p_1 \Delta p_1 x + p_1 x + \Delta p_1 x + x \\
+          p_2 \Delta p_2 y + p_2 y + \Delta p_2 y + y
+        } \\
+        &= \bmat{
+          (p_1 \cdot \Delta p_1 + 1) x + x \\
+          (p_2 \cdot \Delta p_2 + 1) y + y
+        } \\
+        &= \bmat{
+          (p_1 \cdot \Delta p_1 + 1) + 1 \\
+          (p_2 \cdot \Delta p_2 + 1) + 1
+        } \bmat{x \\ y} \\
+        &= \bW(\bx; \bp \cdot \Delta \bp + \bone).
+      \end{align*}
+      Thus, the new warp parameters $\bp'$ are given by
+      \begin{equation}
+        \bp' = \bp \cdot \Delta \bp + \bone,
+        \label{eq:ans:2.4}
+      \end{equation}
+      where $(\cdot)$ denotes element-wise multiplication of the vectors
+      (i.e. $\bmat{a \\ b} \cdot \bmat{c \\ d} = \bmat{ab \\ cd}$). 
+    \end{answer}
+  \end{enumroman}
+\end{problem}

@@ -1,0 +1,174 @@
+\begin{problem}
+  You will derive the \underline{Lucas Kanade} (or forward-additive)
+  image alignment algorithm by replicating the derivation learned in class.
+  Consider first a \emph{warp function} $\bW(\bx; \bp)$ that maps
+  coordinate vectors $\bx \in \R^2$ to other coordinate vectors in $\R^2$,
+  with the mapping depending on a set of parameters $\bp \in \R^N$.
+  Given an image $I(\bx)$ and a template $T(\bx)$, we want to find the
+  parameters $\bp$ such that the warp function $\bW(\bx; \bp)$ best aligns
+  the image with the template in terms of sum-of-squared differences (SSD)
+  error. That is, we want to find the parameters $\bp$ that minimize the
+  loss function:
+  \begin{equation}
+    \min_\bp \sum_\bx \brackets{I(\bW(\bx; \bp)) - T(\bx)}^2
+    \label{eq:1.1}
+  \end{equation}
+
+  The Lucas-Kanade alignment algorithm minimizes Equation~(\ref{eq:1.1}) using the
+  Gauss-Newton algorithm. To this end, given some initial set of parameters
+  $\bp_0$, they are updated iteratively as:
+  \begin{equation}
+    \bp^{t+1} = \bp^t + \Delta \bp^t
+    \label{eq:1.2}
+  \end{equation}
+  for $t = 0, 1, 2, \ldots, T$, where the number of iterations $T$
+  can be selected based on any of the common convergence criteria.
+  Then, the Gauss-Newton algorithm corresponds to selecting
+  a specific form for the update vector $\Delta \bp^t$,
+  which you will derive below step-by-step.
+
+  \newpage
+  \begin{enumroman}
+    \item Use the first-order Taylor expansion to linearize the composite
+      function $I(\bW(\bx; \bp))$ with respect to $\bp$ around the value $\bp^t$.
+      Write out the expression for this Taylor expansion.
+
+      \begin{answer}
+        The general form of the first-order Taylor expansion of a function
+        $f$ around a point $x$ is given by:
+        \begin{align*}
+          f(x + h) &\approx f(x) + f'(x) \cdot h.
+        \end{align*}
+        Plugging in the composite function $I(\bW(\bx; \bp))$ and centering
+        the expansion at $\bp^t$, the approximation for
+        $\bp$ in the neighborhood of $\bp^t$ is given by:
+        \begin{equation}
+          I(\bW(\bx; \bp)) \approx
+          I(\bW(\bx; \bp^t)) + \frac{\d I}{\d \bp} (\bW(\bx; \bp^t)) \brackets{\bp - \bp^t}.
+          \label{eq:ans:1.1}
+        \end{equation}
+      \end{answer}
+
+    \item Combine the Taylor expansion expression with Equation~(\ref{eq:1.2})
+      to obtain an approximation for $I(\bW(\bx; \bp^t + \Delta \bp^t))$.
+
+      \begin{answer}
+        Substituting $\bp \colonequals \bp^t + \Delta \bp^t$ into the first-order
+        Taylor expansion (~\ref{eq:ans:1.1}) gives:
+        \begin{equation}
+          I(\bW(\bx; \bp^{t+1})) = I(\bW(\bx; \bp^t + \Delta \bp^t)) \approx
+          I(\bW(\bx; \bp^t)) + \frac{\d I}{\d \bp} (\bW(\bx; \bp^t)) \Delta \bp^t,
+          \label{eq:ans:1.2}
+        \end{equation}
+        where $\frac{\d I}{\d \bp}$ is the
+        image gradient with respect to the warp parameters,
+        equivalent to $\displaystyle \nabla I \brackets{\frac{\d \bW}{\d \bp}}$.
+      \end{answer}
+    \item Show that, using this approximation, the approximation problem
+      of Equation~(\ref{eq:1.1}) can be written in the form:
+      \begin{equation}
+        \min_{\Delta \bp^t} \Abs{I(\bW(\bx; \bp^t + \Delta \bp^t)) - T(\bx)}^2
+        \label{eq:1.3}
+      \end{equation}
+      for some matrix $\bA$ and vector $\bb$.
+      
+      \begin{answer}
+        Substituting the approximation from Equation~(\ref{eq:ans:1.2}) into
+        the loss function of Equation~(\ref{eq:1.1}) gives:
+        \begin{align*}
+          \min_{\Delta \bp^t} \Abs{I(\bW(\bx; \bp^t + \Delta \bp^t)) - T(\bx)}^2 &\approx
+          \min_{
+            \Delta \bp^t} \Abs{I(\bW(\bx; \bp^t)) +
+            \frac{\d I}{\d \bp} (\bW(\bx; \bp^t))
+            \Delta \bp^t - T(\bx)}^2 \\
+          &\approx \min_{
+            \Delta \bp^t} \Abs{\crim{\frac{\d I}{\d \bp} (\bW(\bx; \bp^t))
+            \Delta \bp^t} - \zaff{\brackets{T(\bx) - I(\bW(\bx; \bp^t))}}}^2 \\
+          &\approx \min_{\Delta \bp^t} \Abs{\crim{\bA \Delta \bp^t} - \zaff{\bb}}^2,
+        \end{align*}
+        where
+        \[
+          \bA \colonequals \frac{\d I}{\d \bp} (\bW(\bx; \bp^t)) = \bmat{
+              \frac{\partial I_x}{\partial p_1}
+            & \frac{\partial I_x}{\partial p_2}
+            & \cdots
+            & \frac{\partial I_x}{\partial p_N} \\
+              \frac{\partial I_y}{\partial p_1}
+            & \frac{\partial I_y}{\partial p_2}
+            & \cdots
+            & \frac{\partial I_y}{\partial p_N} \\
+          }(\bW(\bx; \bp^t)) \qquad \text{ and } \qquad  
+          \bb \colonequals T(\bx) - I(\bW(\bx; \bp^t)). \]
+        Note that $x \in \R^2$ and $\bp \in \R^N$, so $\bA$ is not necessarily square!
+      \end{answer}
+
+    \item Show how to solve the optimization problem of Equation~(\ref{eq:1.3})
+      for the parameter update $\Delta \bp^t$, and write out an expression
+      for this solution.
+
+      \begin{answer}
+        The solution to the optimization problem of Equation~(\ref{eq:1.3})
+        is given by the least-squares solution to the linear system
+        $\bA \Delta \bp^t = \bb$. This solution is given by:
+        \begin{align*}
+          \bA \Delta \bp^t - b &= 0 \\
+          \bA \Delta \bp^t &= \bb \\
+          \underbrace{\crim{\bA^T} \bA}_{2 \times 2} \Delta \bp^t &= \crim{\bA^T} \bb \\
+          \Delta \bp^t &= \crim{\brackets{\bA^T \bA}^{-1}} \bA^T \bb.
+        \end{align*}
+        Thus, we can solve for the parameter update $\Delta \bp^t$ using the expression
+        \begin{equation}
+          \Delta \bp^t = \brackets{\bA^T \bA}^{-1} \bA^T \bb.
+          \label{eq:ans:1.3}
+        \end{equation}
+      \end{answer}
+
+    \newpage
+    \item Finally, explain how this expression for $\Delta \bp^t$ can be
+      evaluated, using image convolutions, warps, element-wise operations,
+      and matrix-vector operations. You can either explain this in words
+      or provide pseudocode, but make sure to explain each step clearly.
+
+      \begin{answer}
+        The expression for $\Delta \bp^t$ in Equation~(\ref{eq:ans:1.3}) can be
+        evaluated using the following steps:
+        \begin{enumarabic}
+          \item Warp the image $I(\bx)$ using the current warp parameters
+            $\bp^t$ to obtain the warped image $I(\bW(\bx; \bp^t))$.
+          \item Compute the image gradients
+            $\displaystyle\nabla I(\bx') \colonequals \bmat{I_x(\bx') \\ I_y(\bx')}$
+            by convolving the warped image with the appropriate filters,
+            such as the Sobel kernel.
+            Note that $\bx' = \bW(\bx; \bp^t)$.
+          \item Compute the Jacobian $\frac{\partial \bW}{\partial \bp}$,
+            by taking the partial derivatives of the warp function $\bW(\bx; \bp^t)$
+            with respect to the warp parameters $\bp^t$.
+          \item Compute the \emph{matrix} of image gradients with respect to the warp
+            parameters, $\frac{\d I}{\d \bp} = (\nabla I) \frac{\partial \bW}{\partial \bp}$.
+          \item Compute the Jacobian matrix $\bA$ by taking the partial
+            derivatives of the image $I$ with respect to the warp parameters
+            $\bp$. This can be done by convolving the image with the
+            appropriate kernel, such as the Sobel kernel, to compute the
+            image gradients $I_x$ and $I_y$. Then, the Jacobian matrix
+            is the cross-product of the image gradients with the partial-derivative
+            operators for the warp parameters:
+            \[
+              \bA = \bmat{ I_x(\bW(\bx; \bp^t)) \\ I_y(\bW(\bx; \bp^t)) }
+              \bmat{
+                \frac{\partial}{\partial p_1} &
+                \frac{\partial}{\partial p_2} &
+                \cdots &
+                \frac{\partial}{\partial p_N}
+              }.
+            \]
+            
+          \item Compute the residual vector $\bb$ by taking the difference
+            between the template $T(\bx)$ and the warped image $I(\bW(\bx; \bp^t))$.
+          \item Compute the matrix $\bA^T \bA$ and the vector $\bA^T \bb$.
+          \item Solve the linear system $\bA \Delta \bp^t = \bb$
+            by solving Equation~(\ref{eq:ans:1.3});
+            \[ \Delta \bp^t = \brackets{\bA^T \bA}^{-1} \bA^T \bb. \]
+        \end{enumarabic}
+      \end{answer}
+  \end{enumroman}
+\end{problem}
