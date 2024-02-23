@@ -67,7 +67,7 @@
     \item Show that, using this approximation, the approximation problem
       of Equation~(\ref{eq:1.1}) can be written in the form:
       \begin{equation}
-        \min_{\Delta \bp^t} \Abs{I(\bW(\bx; \bp^t + \Delta \bp^t)) - T(\bx)}^2
+        \min_{\Delta \bp^t} \Abs{\bA \Delta \bp^t - \bb}^2
         \label{eq:1.3}
       \end{equation}
       for some matrix $\bA$ and vector $\bb$.
@@ -111,7 +111,7 @@
         is given by the least-squares solution to the linear system
         $\bA \Delta \bp^t = \bb$. This solution is given by:
         \begin{align*}
-          \bA \Delta \bp^t - b &= 0 \\
+          \bA \Delta \bp^t - \bb &= 0 \\
           \bA \Delta \bp^t &= \bb \\
           \underbrace{\crim{\bA^T} \bA}_{2 \times 2} \Delta \bp^t &= \crim{\bA^T} \bb \\
           \Delta \bp^t &= \crim{\brackets{\bA^T \bA}^{-1}} \bA^T \bb.
@@ -145,7 +145,7 @@
             with respect to the warp parameters $\bp^t$.
           \item Compute the \emph{matrix} of image gradients with respect to the warp
             parameters, $\frac{\d I}{\d \bp} = (\nabla I) \frac{\partial \bW}{\partial \bp}$.
-          \item Compute the Jacobian matrix $\bA$ by taking the partial
+          \item Compute the matrix $\bA$ by taking the partial
             derivatives of the image $I$ with respect to the warp parameters
             $\bp$. This can be done by convolving the image with the
             appropriate kernel, such as the Sobel kernel, to compute the
@@ -159,7 +159,7 @@
                 \frac{\partial}{\partial p_2} &
                 \cdots &
                 \frac{\partial}{\partial p_N}
-              }.
+              } (\bW(\bx; \bp)).
             \]
             
           \item Compute the residual vector $\bb$ by taking the difference

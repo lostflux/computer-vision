@@ -1,10 +1,10 @@
 \begin{problem}
   In this question, we will derive the \underline{Baker-Matthews}
   (or inverse compositional) image alignment algorithm for a simpler case.
-  Consider first the \emph{warp function} $\bW(\bx; \bp)$ that maps
+  Consider first the \emph{warp function} $\bW(\bx; \Delta \bp)$ that maps
   coordinate vectors $\bx \in \R^2$ to other coordinate vectors in $\R^2$:
   \begin{equation}
-    \bW(\bx; \bp) =
+    \bW(\bx; \Delta \bp) =
       \bmat{ p_1 & 0 \\ 0 & p_2 }
       \bmat{x \\ y}
       = \bmat{p_1 x \\ p_2 y}
@@ -16,7 +16,7 @@
 
   where the mapping depends on a set of parameters $\bp \in \R^2$.
   Given an image $I(\bx)$ and a template $T(\bx)$, we want to find the
-  parameters $\bp$ such that the warp function $\bW(\bx; \bp)$
+  parameters $\bp$ such that the warp function $\bW(\bx; \Delta \bp)$
   (representing a scaling operation) best aligns the image with the
   template in terms of sum-of-squared differences (SSD) error.
 
@@ -24,7 +24,7 @@
   iteratively find incremental warp parameter $\Delta \bp$ that
   minimize the following objective:
   \begin{equation}
-    \min_{\Delta \bp} \sum_\bx \brackets{T(\bW(\bx; \Delta \bp)) - I(\bW(\bx; \bp))}^2.
+    \min_{\Delta \bp} \sum_\bx \brackets{T(\bW(\bx; \Delta \bp)) - I(\bW(\bx; \Delta \bp))}^2.
     \label{eq:2.2}
   \end{equation}
   We will use the Gauss-Newton algorithm to solve this non-linear and
@@ -41,7 +41,7 @@
       \emph{(Note that there are multiple valid solutions for this part of the quiz.)}
 
       \begin{answer}
-        The current warp function $\bW(\bx; \bp)$ in Equation~(\ref{eq:2.1})
+        The current warp function $\bW(\bx; \Delta \bp)$ in Equation~(\ref{eq:2.1})
         has the problem that
         \[
           \bW(\bx; \bzero) = \bmat{0 x \\ 0 y} = \bzero \neq \bx.
@@ -49,7 +49,7 @@
         To make it satisfy the identity assumption, we can add a translation
         term to the warp function:
         \begin{align*}
-          \bW(\bx; \bp) &=
+          \bW(\bx; \Delta \bp) &=
           \bmat{ p_1 & 0 \\ 0 & p_2 }
           \bmat{x \\ y} + \bmat{x \\ y} \\
           &= \bmat{ p_1 & 0 \\ 0 & p_2 }
@@ -60,9 +60,9 @@
         parameters $\bp$ is given by:
         \begin{equation}
           \frac{\partial \bW}{\partial \bp} =
-          \bmat{ x & 0 \\ 0 & y }.
+          \bmat{ x & 0 \\ 0 & y }
           \label{eq:ans:2.1}
-        \end{equation}
+        \end{equation}\vspace{-1em}
       \end{answer}
 
     \item Use the first-order Taylor expansion to linearize the composite
@@ -88,17 +88,17 @@
         where $\frac{\d T}{\d \bp}$ is the template gradient with respect to the warp parameters,
         equivalent to:
         \[
-          \frac{\d T}{\d \bp}(\bx) = \nabla T(\bx) \frac{\d \bW}{\d \bp}
+          \frac{\d T}{\d \bp}(\bx) = \nabla T(\bx) \frac{\partial \bW}{\d \bp}
           = \nabla T(\bx) \bmat{ x & 0 \\ 0 & y }.
         \]
         Thus, we can solve the optimization problem of Equation~(\ref{eq:2.2})
         by solving the following optimization problem:
         \begin{align*}
-          \mathbb{E} &= \min_{\Delta \bp} \sum_\bx \Abs{T(\bW(\bx; \Delta \bp)) - I(\bW(\bx; \bp))}^2 \\
+          \mathbb{E} &= \min_{\Delta \bp} \sum_\bx \Abs{T(\bW(\bx; \Delta \bp)) - I(\bW()}^2 \\
                      &= \min_{\Delta \bp} \sum_\bx \Abs{T(\crim{\bW(\bx; \bzero)}) +
-                     \frac{\d T}{\d \bp}(\crim{\bW(\bx; \bzero)}) \Delta \bp - I(\bW(\bx; \bp))}^2 \\
+                     \frac{\d T}{\d \bp}(\crim{\bW(\bx; \bzero)}) \Delta \bp - I(\bW(\bx; \Delta \bp))}^2 \\
                      &= \min_{\Delta \bp} \sum_\bx \Abs{T(\bx) + \frac{\d T}{\d \bp}(\bx)
-                     \Delta \bp - I(\bW(\bx; \bp))}^2 \quad \text{ since $\crim{\bW(\bx; \bzero)} = \bx$}.
+                     \Delta \bp - I(\bW(\bx; \Delta \bp))}^2 \quad \text{ since $\crim{\bW(\bx; \bzero)} = \bx$}.
           \label{eq:ans:2.2}
         \end{align*}
       \end{answer}
@@ -119,8 +119,8 @@
         Substituting the approximation from Equation~(\ref{eq:ans:2.3}) into
         the loss function of Equation~(\ref{eq:2.2}) gives:
         \begin{align*}
-          \min_{\Delta \bp} \Abs{T(\bx) + \frac{\d T}{\d \bp}(\bx) \Delta \bp - I(\bW(\bx; \bp)}^2 &\approx
-          \min_{\Delta \bp} \Abs{\frac{\d T}{\d \bp}(\bx) \Delta \bp - (I(\bW(\bx; \bp) - T(\bx))}^2 \\
+          \min_{\Delta \bp} \Abs{T(\bx) + \frac{\d T}{\d \bp}(\bx) \Delta \bp - I(\bW(\bx; \Delta \bp))}^2 &\approx
+          \min_{\Delta \bp} \Abs{\frac{\d T}{\d \bp}(\bx) \Delta \bp - (I(\bW(\bx; \Delta \bp)) - T(\bx))}^2 \\
           &\approx \min_{\Delta \bp} \Abs{\bA \Delta \bp - \bb}^2,
         \end{align*}
         where $\bx = \bmat{x \\ y}$ is the image point and
@@ -132,13 +132,14 @@
           \bmat{ T_x(\bx) \cdot x \\ T_y(\bx) \cdot y }
         \]
         and $\bb$ is the residual vector
-        \[ \bb \colonequals I(\bW(\bx; \bp)) - T(\bx). \]
+        \[ \bb \colonequals I(\bW(\bx; \Delta \bp)) - T(\bx). \]
         The solution to the optimization problem of Equation~(\ref{eq:2.3}) is given by:
         \begin{equation}
-          \Delta \bp = \brackets{\bA^T \bA}^{-1} \bA^T \bb.
+          \Delta \bp = \brackets{\bA^T \bA}^{-1} \bA^T \bb,
           \label{eq:ans:2.3}
         \end{equation}
-
+        which can be solved using singular value decomposition (SVD) or
+        inverting the matrix $A^T A$ if it is invertible.
       \end{answer}
 
     \newpage
@@ -168,18 +169,18 @@
           p_2 \Delta p_2 y + p_2 y + \Delta p_2 y + y
         } \\
         &= \bmat{
-          (p_1 \cdot \Delta p_1 + 1) x + x \\
-          (p_2 \cdot \Delta p_2 + 1) y + y
+          (p_1 \cdot \Delta p_1 + p_1 + \Delta p_1) x + x \\
+          (p_2 \cdot \Delta p_2 + p_2 + \Delta p_2) y + y
         } \\
         &= \bmat{
-          (p_1 \cdot \Delta p_1 + 1) + 1 \\
-          (p_2 \cdot \Delta p_2 + 1) + 1
+          (p_1 \cdot \Delta p_1 + p_1 + \Delta p_1) + 1 \\
+          (p_2 \cdot \Delta p_2 + p_2 + \Delta p_2) + 1
         } \bmat{x \\ y} \\
-        &= \bW(\bx; \bp \cdot \Delta \bp + \bone).
+        &= \bW(\bx; \bp \Delta \bp + \bp + \Delta \bp)
       \end{align*}
       Thus, the new warp parameters $\bp'$ are given by
       \begin{equation}
-        \bp' = \bp \cdot \Delta \bp + \bone,
+        \bp' = \bp \Delta \bp + \bp + \Delta \bp.
         \label{eq:ans:2.4}
       \end{equation}
       where $(\cdot)$ denotes element-wise multiplication of the vectors
