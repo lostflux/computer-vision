@@ -1,0 +1,76 @@
+\begin{problem}
+  As we discussed in class, the Lambertian and the specular BRDF are the
+  two most commonly used reflectance models in physics-based vision.
+  \begin{enumroman}
+    \item For Lambertian surfaces, the BRDF is a constant function of the input
+      and the output directions. For such a material, we often describe the
+      reflectance in terms of its \emph{albedo}, which is given the symbol $\rho$.
+      For a Lambertian surface, the BRDF and the albedo are related by
+      $f_r(\hat{\bv}_i, \hat{\bv}_r) = \rho/\pi$.
+      Using conservation of energy, prove that $0 \leq \rho \leq 1$.
+      \begin{answer}
+        First, note that the albedo is a measure of the fraction of incident
+        light that is reflected by the surface. Therefore,
+        it cannot be negatie, so $0 \leq \rho$.
+        We shall show that $\rho \leq 1$ by using the energy conservation
+        principle in reflectance which stipulates that
+        the energy reflected by a surface cannot exceed the energy incident
+        on the surface. In other words, the integral of the BRDF over the
+        hemisphere must be less than or equal to 1:
+        \[
+          \int_{\Omega} f_r(\hat{\bv}_i, \hat{\bv}_r) \cos\theta \d\omega \leq 1.
+        \]
+        Substituting in the known values gives:
+        \begin{align*}
+          \int_{\Omega} \frac{\rho}{\pi} \cos\theta_i \d\omega &\leq 1 \\
+          \frac{\rho}{\pi} \int_{\Omega} \cos\theta \frac{\d A}{r^2} &\leq 1
+          \qquad\blue{\text{ (since $\omega = \frac{A}{r^2} \implies \frac{\d A}{r^2}$)}} \\
+          \frac{\rho}{\pi} \int_{\Omega} \cos\theta \frac{r^2 \sin \theta \d \theta \d \phi}{r^2} &\leq 1
+          \qquad\blue{\text{(since $\d A = r^2 \sin \theta \d \theta \d \phi$)}}\\
+          \frac{\rho}{\pi} \int_{\Omega} \cos\theta \sin \theta \d \theta \d \phi &\leq 1 \\
+          \frac{\rho}{\pi} \int\limits_{0}^{2\pi} \int\limits_{0}^{\pi/2} \cos\theta \sin \theta \d \theta \d \phi &\leq 1 \\
+          \frac{\rho}{\pi} \int\limits_{0}^{2\pi} \brackets{\frac{\sin^2\theta}{2} }_0^{\pi/2} \d \phi &\leq 1
+          \qquad\blue{\parens{\text{since }\int \cos\theta \sin\theta \d \theta = \frac{\sin^2\theta}{2}}} \\
+          \frac{\rho}{2\pi} \int\limits_{0}^{2\pi} \d \phi &\leq 1 \\
+          \frac{\rho}{2\pi} \cdot \brackets{\phi}_0^{2 \pi} &\leq 1
+          \qquad\blue{\parens{\text{since }\int 1 \d \phi = \phi}} \\
+          \frac{\rho}{2\pi} \cdot 2\pi &\leq 1 \\
+          \rho &\leq 1.
+        \end{align*}
+      \end{answer}
+
+    \newpage
+    \item A specular surface perfectly reflects \emph{radiance} in the
+      \emph{mirror direction}. Concretely, consider a (non-absorbing)
+      specular surface patch with normal $\hat{\bn}$.
+      For any incident direction $\hat{\bv}_i$, the mirror direction
+      equals $\hat{\bv}_s = 2(\hat{\bn}^\top \hat{\bv}_i)\hat{\bn} - \hat{\bv}_i$,
+      and $L(\hat{\bv}_s) = L(\hat{\bv}_i)$.
+      Given this property, derive an expression for the specular BRDF.
+      \begin{answer}
+        The BRDF is defined as the ratio of the radiance reflected in the
+        direction $\hat{\bv}_r$ to the irradiance incident from the direction
+        $\hat{\bv}_i$. For a specular surface, the BRDF is a Dirac delta function
+        centered at the mirror direction:
+        \[
+          f_r(\hat{\bv}_i, \hat{\bv}_r) = k \delta(\hat{\bv}_r - \hat{\bv}_s),
+        \]
+        where $k$ is a constant. The constant $k$ is chosen so that the integral
+        of the BRDF over the hemisphere is 1. Therefore, we have:
+        \[
+          \int_{\Omega} f_r(\hat{\bv}_i, \hat{\bv}_r) \cos\theta \d\omega = 1.
+        \]
+        Substituting in the known values gives:
+        \begin{align*}
+          \int_{\Omega} k \delta(\hat{\bv}_r - \hat{\bv}_s) \cos\theta_i \d\omega &= 1 \\
+          k \int_{\Omega} \delta(\hat{\bv}_r - \hat{\bv}_s) \cos\theta_i \d\omega &= 1 \\
+          k \cos\theta_i &= 1 \\
+          k &= \frac{1}{\cos\theta_i}.
+        \end{align*}
+        Therefore, the BRDF for a specular surface is:
+        \[
+          f_r(\hat{\bv}_i, \hat{\bv}_r) = \frac{1}{\cos\theta_i} \delta(\hat{\bv}_r - \hat{\bv}_s).
+        \]
+      \end{answer}
+  \end{enumroman}
+\end{problem}
