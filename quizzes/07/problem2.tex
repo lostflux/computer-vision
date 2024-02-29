@@ -18,16 +18,16 @@
         on the surface. In other words, the integral of the BRDF over the
         hemisphere must be less than or equal to 1:
         \[
-          \int_{\Omega} f_r(\hat{\bv}_i, \hat{\bv}_r) \cos\theta \d\omega \leq 1.
+          \int_{H^2} f_r(\hat{\bv}_i, \hat{\bv}_r) \cos \theta \d\vec{\omega}_i \leq 1.
         \]
         Substituting in the known values gives:
         \begin{align*}
-          \int_{\Omega} \frac{\rho}{\pi} \cos\theta_i \d\omega &\leq 1 \\
-          \frac{\rho}{\pi} \int_{\Omega} \cos\theta \frac{\d A}{r^2} &\leq 1
-          \qquad\blue{\text{ (since $\omega = \frac{A}{r^2} \implies \frac{\d A}{r^2}$)}} \\
-          \frac{\rho}{\pi} \int_{\Omega} \cos\theta \frac{r^2 \sin \theta \d \theta \d \phi}{r^2} &\leq 1
+          \int_{H^2} \frac{\rho}{\pi} \cos \theta \d\vec{\omega}_i &\leq 1 \\
+          \frac{\rho}{\pi} \int_{H^2} \frac{\d A \cos\theta }{r^2} &\leq 1
+          \qquad\blue{ \parens{\text{since $\d \vec{\omega}_i = \frac{\d A}{r^2}$}}} \\
+          \frac{\rho}{\pi} \int_{H^2} \frac{r^2 \cos\theta \sin \theta \d \theta \d \phi}{r^2} &\leq 1
           \qquad\blue{\text{(since $\d A = r^2 \sin \theta \d \theta \d \phi$)}}\\
-          \frac{\rho}{\pi} \int_{\Omega} \cos\theta \sin \theta \d \theta \d \phi &\leq 1 \\
+          \frac{\rho}{\pi} \int_{H^2} \cos\theta \sin \theta \d \theta \d \phi &\leq 1 \\
           \frac{\rho}{\pi} \int\limits_{0}^{2\pi} \int\limits_{0}^{\pi/2} \cos\theta \sin \theta \d \theta \d \phi &\leq 1 \\
           \frac{\rho}{\pi} \int\limits_{0}^{2\pi} \brackets{\frac{\sin^2\theta}{2} }_0^{\pi/2} \d \phi &\leq 1
           \qquad\blue{\parens{\text{since }\int \cos\theta \sin\theta \d \theta = \frac{\sin^2\theta}{2}}} \\
@@ -48,29 +48,43 @@
       and $L(\hat{\bv}_s) = L(\hat{\bv}_i)$.
       Given this property, derive an expression for the specular BRDF.
       \begin{answer}
-        The BRDF is defined as the ratio of the radiance reflected in the
-        direction $\hat{\bv}_r$ to the irradiance incident from the direction
-        $\hat{\bv}_i$. For a specular surface, the BRDF is a Dirac delta function
-        centered at the mirror direction:
-        \[
-          f_r(\hat{\bv}_i, \hat{\bv}_r) = k \delta(\hat{\bv}_r - \hat{\bv}_s),
-        \]
-        where $k$ is a constant. The constant $k$ is chosen so that the integral
-        of the BRDF over the hemisphere is 1. Therefore, we have:
-        \[
-          \int_{\Omega} f_r(\hat{\bv}_i, \hat{\bv}_r) \cos\theta \d\omega = 1.
-        \]
-        Substituting in the known values gives:
+        The BRDF of an ideal specular reflection is a Dirac delta function as follows:
         \begin{align*}
-          \int_{\Omega} k \delta(\hat{\bv}_r - \hat{\bv}_s) \cos\theta_i \d\omega &= 1 \\
-          k \int_{\Omega} \delta(\hat{\bv}_r - \hat{\bv}_s) \cos\theta_i \d\omega &= 1 \\
-          k \cos\theta_i &= 1 \\
-          k &= \frac{1}{\cos\theta_i}.
+          f_r(\bx, \vec{\omega}_i, \vec{\omega}_r) &= F_r(\vec{\omega}_i)
+            \frac{\delta(\vec{\omega}_i - R(\vec{\omega}_r, \hat{\bn}))}{\cos \theta_i} \\
+          &= F_r(\vec{\omega}_i) \frac{\delta(\vec{\omega}_i - R(\vec{\omega}_r,
+            \hat{\bn}))}{\cos \theta_i} \\
+          &= \frac{\delta(\hat{\bv}_i - \hat{\bv}_s)}{\hat{\bv}_i \cdot \hat{\bn}} \\
+          &= \frac{\delta(\hat{\bv}_i - 2(\hat{\bn}^\top \hat{\bv}_i)\hat{\bn}
+            + \hat{\bv}_i)}{\hat{\bv}_i \cdot \hat{\bn}} \\
+          &= \frac{\delta(2\hat{\bv}_i - 2(\hat{\bn}^\top \hat{\bv}_i)\hat{\bn})}
+              {\hat{\bv}_i \cdot \hat{\bn}}
         \end{align*}
-        Therefore, the BRDF for a specular surface is:
-        \[
-          f_r(\hat{\bv}_i, \hat{\bv}_r) = \frac{1}{\cos\theta_i} \delta(\hat{\bv}_r - \hat{\bv}_s).
-        \]
       \end{answer}
+      % \begin{answer}
+      %   The BRDF is defined as the ratio of the radiance reflected in the
+      %   direction $\hat{\bv}_r$ to the irradiance incident from the direction
+      %   $\hat{\bv}_i$. For a specular surface, the BRDF is a Dirac delta function
+      %   centered at the mirror direction:
+      %   \[
+      %     f_r(\hat{\bv}_i, \hat{\bv}_r) = k \delta(\hat{\bv}_r - \hat{\bv}_s),
+      %   \]
+      %   where $k$ is a constant. The constant $k$ is chosen so that the integral
+      %   of the BRDF over the hemisphere is 1. Therefore, we have:
+      %   \[
+      %     \int_{H^2} f_r(\hat{\bv}_i, \hat{\bv}_r) \cos\theta \d\vec{\omega}_i = 1.
+      %   \]
+      %   Substituting in the known values gives:
+      %   \begin{align*}
+      %     \int_{H^2} k \delta(\hat{\bv}_r - \hat{\bv}_s) \cos\theta_i \d\vec{\omega}_i &= 1 \\
+      %     k \int_{H^2} \delta(\hat{\bv}_r - \hat{\bv}_s) \cos\theta_i \d\vec{\omega}_i &= 1 \\
+      %     k \cos\theta_i &= 1 \\
+      %     k &= \frac{1}{\cos\theta_i}.
+      %   \end{align*}
+      %   Therefore, the BRDF for a specular surface is:
+      %   \[
+      %     f_r(\hat{\bv}_i, \hat{\bv}_r) = \frac{1}{\cos\theta_i} \delta(\hat{\bv}_r - \hat{\bv}_s).
+      %   \]
+      % \end{answer}
   \end{enumroman}
 \end{problem}
