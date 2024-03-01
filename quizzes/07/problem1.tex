@@ -43,15 +43,42 @@
         \end{enumarabic}
       \end{answer}
     \newpage
-    \item Calculate the irradiance $E$ incident on the plane at points $X_1$ and $X_2$,
-      and calculate the ratio $E(X_1)/E(X_2)$.
+    \item Calculate the irradiance $E$ incident on the plane at points
+      $X_1$ and $X_2$, and calculate the ratio $E(X_1)/E(X_2)$.
       \begin{answer}
-        The irradiance $E$ incident on a point $\bx$ is given by
+        The irradiance $E$ incident at a point $\bx$ is given by
+        \[
+          E(\bx) = \int_{H^2} L(\bx, \omega) \cos\theta \d\omega.
+        \]
+        To find the irradiance at single points $X_1$ and $X_2$,
+        we do not have to integrate over the entire hemisphere
+        but simply calculate
+        \[
+          E(\bx) = L \cos\theta \d \omega
+        \]
+        at the two points:
         \begin{enumarabic}
           \item The irradiance $E(X_1)$ incident on $X_1$ is given by
+            \begin{align*}
+              E(X_1) &= L \cdot \cos\theta_{X_1} \cdot \omega_{X_1} \\
+              &= L \cdot \cos0 \cdot \frac{\d A}{D^2} \\
+              &= \blue{ \frac{L \cdot \d A}{D^2} }.
+            \end{align*}
             
           \item The irradiance $E(X_2)$ incident on $X_2$ is given by
+            \begin{align*}
+              E(X_2) &= L \cdot \cos \theta_{X_2} \cdot \omega_{X_2} \\
+              &= L \cdot \cos\alpha \cdot \frac{\d A \cos^3\alpha}{D^2} \\
+              &=\blue{\frac{L \cdot \d A \cos^4\alpha}{D^2}}
+            \end{align*}
+
           \item The ratio $E(X_1)/E(X_2)$ is given by
+            \begin{align*}
+              \frac{E(X_1)}{E(X_2)} &= \frac{\frac{L \cdot \d A}{D^2}}{\frac{L \cdot \d A \cos^4\alpha}{D^2}} \\
+              &= \frac{L \cdot \d A}{D^2} \cdot \frac{D^2}{L \cdot \d A \cos^4\alpha} \\
+              &= \frac{1}{\cos^4\alpha} \\
+              &= \blue{\sec^4\alpha}.
+            \end{align*}
           \end{enumarabic}
       \end{answer}
   \end{enumroman}
