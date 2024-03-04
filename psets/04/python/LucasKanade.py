@@ -1,7 +1,15 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+"""
+    Lucas-Kanade algorithm
+"""
+
 import numpy as np
 from scipy.interpolate import RectBivariateSpline
+from typing import Tuple
 
-def LucasKanade(It, It1, rect):
+def LucasKanade(It, It1, rect) -> Tuple[float, float]:
     """
         Lucas Kanade Algorithm
         
@@ -16,69 +24,60 @@ def LucasKanade(It, It1, rect):
         -------
         p: movement vector dx, dy
     """
-    # set up the threshold
+    
+    # TODO: set up the threshold
     threshold = 0.01875
     maxIters = 100
     p = np.zeros(2)          
-    x1,y1,x2,y2 = rect
+    x1, y1, x2, y2 = rect
 
     # put your implementation here
+    image, template = It1, It
     
-
-
-    # the jacobian for translation matrix
-    jacobian = np.eye(2)
+    # TODO: jacobian matrix
+    jacobian = np.eye(2)                                            #! jacobian is just IDENTITY
     
-    # interpolate both the input images
-    x = np.arange(0, It.shape[1])
-    y = np.arange(0, It.shape[0])
-    It_spline = RectBivariateSpline(x, y, It.T)                 # spline of template image
-    It1_spline = RectBivariateSpline(x, y, It1.T)               # spline of current image
+    # TODO: splines for both images
+    x_range = np.arange(0, It.shape[1])
+    y_range = np.arange(0, It.shape[0])
+    
+    template_spline = RectBivariateSpline(x_range, y_range, template.T)
+    image_spline = RectBivariateSpline(x_range, y_range, image.T)
 
-    # create grid of points for template
-    xt, yt = createGrid(x1, y1, x2, y2)   # creating points for grid
+    # TODO: meshgrid for the template image
+    xt, yt = np.meshgrid(np.arange(x1, x2+1, 1), np.arange(y1, y2+1, 1))     
     xt, yt = xt.ravel(), yt.ravel()
 
-    # create template
-    T_window = It_spline.ev(xt, yt)                             # required window from the template spline
-    T = T_window                                                # turn into vector
+    # TODO: evaluate template spline at the meshgrid
+    template_eval = template_spline.ev(xt, yt)
 
-    delta_p = np.array([2, 2])                                  # starting parameters > threshold to run the loop
-    iter = 0                                                    # number of iterations so far
-    # run until the magnitude of delta_p is greater than the threshold or until we reached maxIters
-    while np.hypot(delta_p[0], delta_p[1]) >= threshold and iter < maxIters:
-        # shift the coordiantes by translation parameters
-        # create grid of translated points for the warped image
+    # TODO: iterate until maxIters OR convergence
+    for _ in range(maxIters):
+        
+        #? find the warped points
         xi, yi = xt + p[0], yt + p[1]
-        I = It1_spline.ev(xi, yi)                               # use .ev() to get values in warped image
+        
+        #? evaluate the image spline at the warped points
+        image_eval = image_spline.ev(xi, yi)
 
-        # get image gradient using .ev() and unroll matrices
-        I_x = It1_spline.ev(xi, yi, dx=1)                       # x derivative
-        I_y = It1_spline.ev(xi, yi, dy=1)                       # y derivative
-        I_grad = np.stack((I_x, I_y), 1)                        # create gradient matrix
+        #? error image
+        b = template_eval - image_eval
+        
+        #? image gradients
+        image_grad = np.stack([
+            image_spline.ev(xi, yi, dx=1),
+            image_spline.ev(xi, yi, dy=1)
+        ], 1)
 
-        # error image
-        b = T - I
+        # TODO: calculate the least squares change for delta_p
+        H = image_grad # @ jacobian                                 #! jacobian is just IDENTITY
+        delta_p = np.linalg.lstsq(H, b, rcond=None)[0]
+        
+        # TODO: update the parameters
+        p += delta_p
+        
+        # TODO: check if within threshold
+        if np.linalg.norm(delta_p) < threshold:
+            break
 
-        # compute delta_p using lstsq
-        J = I_grad @ jacobian                                   # Hessian = J.T @ J
-        delta_p = np.linalg.lstsq(J, b, rcond=None)[0]          # calculate least squares solution
-        p = p + delta_p                                         # update parameter
-
-        iter += 1
-
-    return p
-
-
-
-# helper function to create grid of points between top left and bottom right corners of bounding box
-# returns grid of points to be used by RectBivariateSpline.ev()
-def createGrid(x1, y1, x2, y2):
-    # to get x and y points on grid, can be fractional
-    x_range = np.arange(x1, x2+1, 1)
-    y_range = np.arange(y1, y2+1, 1)
-
-    # creating points for grid
-    xi, yi = np.meshgrid(x_range, y_range)          
-
-    return xi, yi
+    return p[0], p[1]

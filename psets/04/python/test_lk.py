@@ -8,7 +8,9 @@ import matplotlib.patches as patches
 from LucasKanade import LucasKanade
 from file_utils import mkdir_if_missing
 
-data_name = 'landing'      # could choose from (car1, car2, landing)
+data_name = 'landing'      # could choose from (car1, car2, landing) 
+data_name = "car1"
+data_name = "car2"
 
 # load data name
 data = np.load('../data/%s.npy' % data_name)
