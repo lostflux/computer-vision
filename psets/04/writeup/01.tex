@@ -1,0 +1,94 @@
+\section{Theory Questions}
+
+\begin{problem}
+  Assuming the affine warp model
+  $\displaystyle \bW = \begin{bmatrix}
+      1 + p_1 & p_3 & p_5 \\ p_2 & 1 + p_4 & p_6 \\ 0 & 0 & 1 \end{bmatrix}$,
+  derive the expression for the Jacobian matrix
+  $\bJ$ in terms of the warp parameters $\bp = [p_1, p_2, p_3, p_4, p_5, p_6]^\top$.
+
+  \begin{answer}
+    The Jacobian matrix $\bJ$ is the matrix of partial derivatives of the warp
+    $\bW$ with respect to the warp parameters $\bp$. We have
+    \begin{align*}
+      \bW &= \begin{bmatrix}
+        1 + p_1 & p_3 & p_5 \\ p_2 & 1 + p_4 & p_6 \\ 0 & 0 & 1
+      \end{bmatrix} \\
+      \bJ &= \begin{bmatrix}
+        \frac{\partial \bW}{\partial p_1} & \frac{\partial \bW}{\partial p_2}
+        & \frac{\partial \bW}{\partial p_3} & \frac{\partial \bW}{\partial p_4}
+        & \frac{\partial \bW}{\partial p_5} & \frac{\partial \bW}{\partial p_6}
+      \end{bmatrix}
+    \end{align*}
+    We can compute the partial derivatives of $\bW$ with respect to the warp
+    parameters $\bp$ as follows:
+    \begin{alignat*}{5}
+      &\frac{\partial \bW}{\partial p_1} &= \begin{bmatrix}
+        x \\ 0
+      \end{bmatrix}, \qquad
+      &&\frac{\partial \bW}{\partial p_2} &= \begin{bmatrix}
+        0 \\ x
+      \end{bmatrix}, \qquad
+      &&\frac{\partial \bW}{\partial p_3} &= \begin{bmatrix}
+      y \\ 0
+      \end{bmatrix}, \\
+      &\frac{\partial \bW}{\partial p_4} &= \begin{bmatrix}
+        0 \\ y
+      \end{bmatrix}, \qquad
+      &&\frac{\partial \bW}{\partial p_5} &= \
+      \begin{bmatrix}
+        1 \\ 0
+      \end{bmatrix}, \qquad
+      &&\frac{\partial \bW}{\partial p_6} &= \begin{bmatrix}
+        0 \\ 1
+      \end{bmatrix}
+    \end{alignat*}
+    Therefore, the Jacobian matrix $\bJ$ is:
+    \[
+      \blue{\bJ = \begin{bmatrix}
+        x & 0 & y & 0 & 1 & 0 \\ 0 & x & 0 & y & 0 & 1
+      \end{bmatrix}}
+    \]
+    
+    \emph{
+      \underline{Note}: Since the last row of $\bW$ is always $[0, 0, 1]$
+      and therefore leaves the $x$-coordinate (in homogeneous coordinates)
+      unchanged, we do not need to include the partial derivatives of the
+      last row of $\bW$ with respect to the warp parameters $\bp$
+      since the last row would be all zeros.
+    }
+  \end{answer}
+\end{problem}
+
+\newpage
+\begin{problem}
+  Find the computational complexity (Big O notation) for the initialization
+  step (pre-computing $\bJ$ and $\bH^{-1}$) and for each runtime iteration
+  (Equation 13) of the Matthews-Baker method:
+  \[
+    \Delta \bp^\ast = \bH^{-1} \bJ^\top \brackets{\bI(\bW(\bx; \bp)) - \bT}
+  \]
+  Express your answers in terms of $n$, $m$, and $p$, where
+  \begin{enumroman}
+    \item $n$ is the number of pixels in the template $\bT$,
+    \item $m$ is the number of pixels in an input image $\bI$, and
+    \item $p$ is the number of parameters used to describe the warp $\bW$.
+  \end{enumroman}
+  How does this compare to the runtime of the regular Lucas-Kanade method?
+  \begin{answer}
+    \begin{enumarabic}
+      \item \textbf{Initialization Step}:
+        \begin{enumalph}
+          \item \textbf{Pre-computing $\bJ$}:
+            The computational complexity of pre-computing $\bJ$ is
+            $\blue{O(np)}$ since we need to compute the partial derivatives
+            of the warp $\bW$ with respect to each of the warp parameters $\bp$,
+            for each of the $n$ pixels in the image.
+          \item \textbf{Pre-computing $\bH^{-1}$}:
+            The computational complexity of pre-computing $\bH^{-1}$ is
+            $\blue{O(p^3)}$ since we need to compute the inverse of the
+            Hessian matrix $\bH$.
+        \end{enumalph}
+    \end{enumarabic}
+  \end{answer}
+\end{problem}

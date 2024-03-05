@@ -45,18 +45,12 @@ def LucasKanadeAffine(It, It1, rect):
 
     # TODO: jacobian matrix
     n = 2 * x_mesh.shape[0]
-    jacobian = np.zeros((n, 6))
 
-    jacobian[np.arange(0, n, 2), 0] = x_mesh
-    jacobian[np.arange(1, n, 2), 1] = x_mesh
-    
-    jacobian[np.arange(0, n, 2), 2] = y_mesh
-    jacobian[np.arange(1, n, 2), 3] = y_mesh
-
-    jacobian[np.arange(0, n, 2), 4] = 1
-    jacobian[np.arange(1, n, 2), 5] = 1
-    
-    jacobian = jacobian.reshape(n // 2, 2, 6)
+    jacobian = np.array([
+        [[x, 0, y, 0, 1, 0],
+         [0, x, 0, y, 0, 1]]
+        for x, y in zip(x_mesh, y_mesh)
+    ]).reshape(n // 2, 2, 6)
     
     # TODO: iterate until maxIters OR convergence
     for _ in range(maxIters):

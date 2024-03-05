@@ -42,32 +42,26 @@ def InverseCompositionAffine(It, It1, rect) -> NDArray[np.float64]:
     template_spline = RectBivariateSpline(x_range, y_range, It.T)
 
     # TODO: meshgrid for the template image
-    xt, yt = np.meshgrid(np.arange(x1, x2+1, 1), np.arange(y1, y2+1, 1))     
-    xt, yt = xt.ravel(), yt.ravel()                                         #? flatten
+    x_mesh, y_mesh = np.meshgrid(np.arange(x1, x2+1, 1), np.arange(y1, y2+1, 1))     
+    x_mesh, y_mesh = x_mesh.ravel(), y_mesh.ravel()                                         #? flatten
 
     #? evaluate the template spline at the meshgrid
-    template_eval = template_spline.ev(xt, yt)
+    template_eval = template_spline.ev(x_mesh, y_mesh)
     
     # TODO: template gradient
     template_grad = np.stack([
-        template_spline.ev(xt, yt, dx=1)[:, np.newaxis],
-        template_spline.ev(xt, yt, dy=1)[:, np.newaxis]
+        template_spline.ev(x_mesh, y_mesh, dx=1)[:, np.newaxis],
+        template_spline.ev(x_mesh, y_mesh, dy=1)[:, np.newaxis]
     ], 2)       
 
     # TODO: jacobian matrix
-    n = 2*xt.shape[0]
-    jacobian = np.zeros((n, 6))
+    n = 2 * x_mesh.shape[0]
 
-    jacobian[np.arange(0, n, 2), 0] = xt
-    jacobian[np.arange(1, n, 2), 1] = xt
-    
-    jacobian[np.arange(0, n, 2), 2] = yt
-    jacobian[np.arange(1, n, 2), 3] = yt
-
-    jacobian[np.arange(0, n, 2), 4] = 1
-    jacobian[np.arange(1, n, 2), 5] = 1
-    
-    jacobian = jacobian.reshape(n // 2, 2, 6)
+    jacobian = np.array([
+        [[x, 0, y, 0, 1, 0],
+         [0, x, 0, y, 0, 1]]
+        for x, y in zip(x_mesh, y_mesh)
+    ]).reshape(n // 2, 2, 6)
     
 
     # TODO: hessian matrix and its pseudo-inverse
@@ -76,7 +70,7 @@ def InverseCompositionAffine(It, It1, rect) -> NDArray[np.float64]:
     H_inv = np.linalg.pinv(H)                                       #? pseudo-inverse
 
     # TODO: homogenize points
-    points = np.vstack((xt, yt, np.ones(xt.shape[0])))
+    points = np.vstack((x_mesh, y_mesh, np.ones(x_mesh.shape[0])))
     
     W = np.eye(3)                                                   #? start with identity warp
     
@@ -87,7 +81,7 @@ def InverseCompositionAffine(It, It1, rect) -> NDArray[np.float64]:
         warped_points = W @ points
 
         #? interpolate to compute intensity of warped points
-        xt, yt = warped_points[0], warped_points[1]
+        x_mesh, y_mesh = warped_points[0], warped_points[1]
         image_eval = image_spline.ev(warped_points[0], warped_points[1])
         
         #? compute the error image
