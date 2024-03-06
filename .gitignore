@@ -284,3 +284,7 @@ TSWLatexianTemp*
 # ignore assignment results
 results
 **submit*
+
+*.zip
+
+# f004h9s

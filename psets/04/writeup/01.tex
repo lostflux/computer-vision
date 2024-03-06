@@ -76,19 +76,46 @@
   \end{enumroman}
   How does this compare to the runtime of the regular Lucas-Kanade method?
   \begin{answer}
+    \underline{Matthews-Baker method}:
     \begin{enumarabic}
-      \item \textbf{Initialization Step}:
-        \begin{enumalph}
-          \item \textbf{Pre-computing $\bJ$}:
-            The computational complexity of pre-computing $\bJ$ is
-            $\blue{O(np)}$ since we need to compute the partial derivatives
-            of the warp $\bW$ with respect to each of the warp parameters $\bp$,
-            for each of the $n$ pixels in the image.
-          \item \textbf{Pre-computing $\bH^{-1}$}:
-            The computational complexity of pre-computing $\bH^{-1}$ is
-            $\blue{O(p^3)}$ since we need to compute the inverse of the
-            Hessian matrix $\bH$.
-        \end{enumalph}
+      \item \textbf{Pre-computing $J$ and $H^{-1}$:}
+        \begin{itemize}
+          \item $J$ is the Jacobian of the image warp with respect to the parameters,
+            which involves computing the gradient at each pixel in the template $T$ for each parameter.
+            This gives a computational complexity of $O(np)$.
+          % \item $H$ is the Hessian matrix, computed as $J^T J$, with a complexity of'
+          %   $O(n p^2)$ since it is a $p \times p$ matrix computed for each of the $n$ pixels.
+          \item The inversion of the Hessian matrix $H^{-1}$ has a complexity of
+            $O(p^3)$ using standard matrix inversion methods such as \textsc{LU}-decomposition.
+          \item \blue{
+            In total, the computational complexity of the initialization step is
+            $O(np + p^3)$.
+          }
+        \end{itemize}
+
+      \item \textbf{Runtime Iteration (Equation 13):}
+        \begin{itemize}
+          \item Computing $[I(W(x; p)) - T]$ involves warping points from the input image
+              (\blue{$O(np)$ since we only warp the template region of the input image})
+              and then computing the difference from the template, which has a complexity of $O(n)$,
+              for a total of $O(np)$.
+          \item The computation of $J^T [I(W(x; p)) - T]$ involves multiplying a
+            $p \times n$ matrix with an $n \times 1$ vector, which gives complexity of $O(n p)$.
+          \item The matrix-vector multiplication $\blue{H^{-1}} \crim{J^T [I(W(x; p)) - T]}$
+            has a computational complexity of $O(p^2)$ since it involves multiplying a
+            $p \times p$ matrix with a $p \times 1$ vector.
+          \item \blue{
+            In total, this gives a computational complexity of $O(np + p^2)$.
+            Given that $n \gg p > 1$, this complexity is dominated by $O(np)$.
+          }
+        \end{itemize}
     \end{enumarabic}
+
+    \step
+    \underline{Lucas-Kanade method}: \\
+    In comparison, the regular Lucas-Kanade method has a computational complexity of
+    $O(np^2 + p^3)$ per iteration. This is larger than the complexity of the Matthews-Baker method
+    because the Matthews-Baker method is able to factor out the computation of the Jacobian and
+    Hessian matrixes out of the iteration, so they are only computed once in the initialization step.
   \end{answer}
 \end{problem}
